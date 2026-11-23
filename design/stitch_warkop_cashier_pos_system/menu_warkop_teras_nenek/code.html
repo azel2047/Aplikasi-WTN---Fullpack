@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+
+<html lang="id"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"on-surface":"#1d1b18","inverse-primary":"#ffb598","secondary":"#755849","on-primary":"#ffffff","on-surface-variant":"#54433d","primary-container":"#a3593a","error":"#B3402E","background":"#fef8f3","on-secondary":"#ffffff","surface-cream":"#FFFCF7","on-error":"#ffffff","on-secondary-container":"#795c4d","warning":"#7A5A0A","on-primary-container":"#ffece6","tertiary-container":"#667158","on-primary-fixed":"#370e00","on-background":"#1d1b18","on-tertiary-container":"#e8f5d6","warning-subtle":"#F6E7BF","on-primary-fixed-variant":"#743418","surface-dim":"#ded9d4","tertiary-fixed":"#dbe7c8","on-tertiary":"#ffffff","surface-tint":"#914b2d","inverse-on-surface":"#f6f0eb","on-primary-subtle":"#7A3F27","accent-terracotta":"#B76E4B","on-secondary-fixed":"#2b170b","error-subtle":"#F5DAD3","surface-variant":"#e7e1dd","on-tertiary-fixed":"#151e0b","on-secondary-fixed-variant":"#5b4133","text-muted":"#7A6757","primary-fixed":"#ffdbce","success-subtle":"#E4E8DA","secondary-container":"#ffd8c4","primary-subtle":"#F3DDD0","border-strong":"#9C8570","secondary-fixed":"#ffdbca","surface":"#fef8f3","surface-container":"#f3ede8","surface-container-highest":"#e7e1dd","canvas-cream":"#F6F0E6","surface-container-high":"#ede7e2","on-error-container":"#93000a","inverse-surface":"#32302d","primary":"#854225","nav-espresso":"#3B2922","secondary-fixed-dim":"#e4bfac","tertiary-fixed-dim":"#bfcbad","border-sand":"#D9C5AA","outline-variant":"#d9c2b9","tertiary":"#4d5841","error-container":"#ffdad6","surface-bright":"#fef8f3","primary-fixed-dim":"#ffb598","surface-container-low":"#f8f3ed","outline":"#87736c","surface-container-lowest":"#ffffff","on-tertiary-fixed-variant":"#404a34"},borderRadius:{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},spacing:{"gutter-tablet":"1.25rem","margin":"1rem","margin-desktop":"2rem","space-sm":"0.5rem","space-lg":"1rem","space-xl":"1.5rem","margin-tablet":"1.5rem","space-xs":"0.25rem","space-md":"0.75rem","gutter":"1rem"},fontFamily:{"headline-md":["Plus Jakarta Sans"],"headline-lg-mobile":["Plus Jakarta Sans"],"body-md":["Plus Jakarta Sans"],"title-md":["Plus Jakarta Sans"],"title-lg":["Plus Jakarta Sans"],"headline-sm":["Plus Jakarta Sans"],"headline-lg":["Plus Jakarta Sans"],"body-lg":["Plus Jakarta Sans"],"caption":["Plus Jakarta Sans"],"label-md":["Plus Jakarta Sans"],"label-lg":["Plus Jakarta Sans"]},fontSize:{"headline-md":["24px",{lineHeight:"32px",letterSpacing:"-0.01em",fontWeight:"700"}],"headline-lg-mobile":["26px",{lineHeight:"32px",letterSpacing:"-0.01em",fontWeight:"700"}],"body-md":["14px",{lineHeight:"20px",fontWeight:"400"}],"title-md":["16px",{lineHeight:"22px",fontWeight:"600"}],"title-lg":["18px",{lineHeight:"24px",fontWeight:"600"}],"headline-sm":["20px",{lineHeight:"28px",fontWeight:"600"}],"headline-lg":["32px",{lineHeight:"40px",letterSpacing:"-0.02em",fontWeight:"700"}],"body-lg":["16px",{lineHeight:"24px",fontWeight:"400"}],"caption":["12px",{lineHeight:"16px",fontWeight:"500"}],"label-md":["12px",{lineHeight:"16px",letterSpacing:"0.02em",fontWeight:"600"}],"label-lg":["14px",{lineHeight:"20px",fontWeight:"600"}]}}}};</script></head><body class="bg-canvas-cream font-body-md text-on-surface antialiased min-h-screen"><aside class="fixed left-0 top-0 h-screen w-60 bg-nav-espresso z-50 flex flex-col justify-between overflow-y-auto text-surface-cream shadow-[0_1px_8px_rgba(0,0,0,0.06)]"><div class="flex flex-col"><div class="h-16 px-space-lg flex items-center gap-space-md"><div class="w-10 h-10 rounded-lg bg-primary flex items-center justify-center text-on-primary font-headline-sm font-bold tracking-tight shadow-sm">WTN</div><div class="flex flex-col"><span class="font-title-md text-surface-cream leading-tight">Teras Nenek</span><span class="font-caption text-border-sand leading-none">Owner Workspace</span></div></div><nav class="flex flex-col px-space-md py-space-sm space-y-space-md" data-active-classes="bg-primary-container text-on-primary-container font-semibold rounded-lg shadow-sm"><div class="flex flex-col gap-space-xs"><span class="px-space-md py-space-xs font-caption tracking-wider uppercase text-border-sand opacity-75">Operasional</span><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-surface-cream/80 hover:bg-surface-cream/10 hover:text-surface-cream transition-all" data-path="overview" href="#"><span class="material-symbols-outlined text-[20px]">grid_view</span><span class="font-body-md">Overview</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-surface-cream/80 hover:bg-surface-cream/10 hover:text-surface-cream transition-all" data-path="pesanan" href="#"><span class="material-symbols-outlined text-[20px]">receipt_long</span><span class="font-body-md">Pesanan</span></a><a aria-current="page" class="flex items-center gap-space-md px-space-md py-space-sm transition-all bg-primary-container text-on-primary-container font-semibold rounded-lg shadow-sm" data-path="menu" href="#"><span class="material-symbols-outlined text-[20px]">local_cafe</span><span class="font-body-md">Menu</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-surface-cream/80 hover:bg-surface-cream/10 hover:text-surface-cream transition-all" data-path="meja-qr" href="#"><span class="material-symbols-outlined text-[20px]">qr_code_2</span><span class="font-body-md">Meja &amp; QR</span></a></div><div class="flex flex-col gap-space-xs"><span class="px-space-md py-space-xs font-caption tracking-wider uppercase text-border-sand opacity-75">Stok &amp; Keuangan</span><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-surface-cream/80 hover:bg-surface-cream/10 hover:text-surface-cream transition-all" data-path="inventory" href="#"><span class="material-symbols-outlined text-[20px]">inventory_2</span><span class="font-body-md">Inventory</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-surface-cream/80 hover:bg-surface-cream/10 hover:text-surface-cream transition-all" data-path="keuangan" href="#"><span class="material-symbols-outlined text-[20px]">payments</span><span class="font-body-md">Keuangan</span></a></div><div class="flex flex-col gap-space-xs"><span class="px-space-md py-space-xs font-caption tracking-wider uppercase text-border-sand opacity-75">Laporan</span><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-surface-cream/80 hover:bg-surface-cream/10 hover:text-surface-cream transition-all" data-path="laporan-karyawan" href="#"><span class="material-symbols-outlined text-[20px]">badge</span><span class="font-body-md">Laporan Karyawan</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-surface-cream/80 hover:bg-surface-cream/10 hover:text-surface-cream transition-all" data-path="rating" href="#"><span class="material-symbols-outlined text-[20px]">star</span><span class="font-body-md">Rating</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-surface-cream/80 hover:bg-surface-cream/10 hover:text-surface-cream transition-all" data-path="analitik" href="#"><span class="material-symbols-outlined text-[20px]">monitoring</span><span class="font-body-md">Analitik</span></a></div><div class="flex flex-col gap-space-xs"><span class="px-space-md py-space-xs font-caption tracking-wider uppercase text-border-sand opacity-75">Sistem</span><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-surface-cream/80 hover:bg-surface-cream/10 hover:text-surface-cream transition-all" data-path="pengaturan" href="#"><span class="material-symbols-outlined text-[20px]">settings</span><span class="font-body-md">Pengaturan</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-surface-cream/80 hover:bg-surface-cream/10 hover:text-surface-cream transition-all" data-path="audit-log" href="#"><span class="material-symbols-outlined text-[20px]">history_toggle_off</span><span class="font-body-md">Audit Log</span></a></div></nav></div><div class="p-space-md bg-nav-espresso/80 mt-space-md"><div class="flex items-center justify-between p-space-sm rounded-lg bg-surface-cream/5"><div class="flex items-center gap-space-md"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><div class="flex flex-col"><span class="font-label-md text-surface-cream">Owner</span><span class="font-caption text-border-sand">Warkop Pusat</span></div></div><a class="p-space-xs rounded hover:bg-surface-cream/10 text-border-sand hover:text-surface-cream transition-colors" data-path="login" href="#" title="Keluar"><span class="material-symbols-outlined text-[20px]">logout</span></a></div></div></aside><div class="pl-60 min-h-screen flex flex-col"><header class="fixed top-0 left-60 right-0 h-16 bg-surface-cream/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(59,41,34,0.05)] z-40 flex items-center justify-between px-space-xl"><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-sm font-label-md text-on-surface-variant"><span class="material-symbols-outlined text-[18px] text-primary">storefront</span><span>Kedai Jl. Rawa Kopi No. 12</span><span class="text-border-strong">•</span><span class="inline-flex items-center gap-1.5 px-space-sm py-0.5 rounded-full bg-success-subtle text-tertiary font-caption font-semibold"><span class="w-2 h-2 rounded-full bg-tertiary animate-pulse"></span>Buka</span></div></div><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-sm px-space-md py-space-xs rounded-lg bg-surface-container-high/60 text-on-surface-variant"><span class="material-symbols-outlined text-[18px]">calendar_today</span><span class="font-caption font-medium">Hari ini, Shift Pagi</span></div><div class="flex items-center gap-space-sm"><button class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-[20px]">notifications</span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full pt-16 flex-1 px-space-xl py-space-xl bg-canvas-cream"><div class="flex flex-col w-full pb-12">
+<!-- Topbar Header -->
+<div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-space-lg mb-space-xl">
+<div class="flex flex-col">
+<h1 class="font-headline-md text-on-surface tracking-tight">Menu</h1>
+<p class="font-body-md text-on-surface-variant mt-0.5">Kelola daftar produk, harga, ketersediaan, dan formulasi resep HPP</p>
+</div>
+<div class="flex items-center gap-space-md flex-wrap sm:flex-nowrap">
+<!-- Search Input -->
+<div class="relative w-full sm:w-72">
+<span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-text-muted text-[20px] pointer-events-none">search</span>
+<input class="w-full h-12 pl-11 pr-4 bg-surface-cream rounded-xl text-on-surface font-body-md placeholder:text-text-muted/70 shadow-sm focus:outline-none focus:bg-surface-container-lowest transition-colors" placeholder="Cari menu..." type="text"/>
+</div>
+<!-- Add Menu Button -->
+<button class="h-12 px-space-lg bg-primary-container hover:bg-primary text-surface-cream font-label-lg rounded-xl flex items-center justify-center gap-2 shadow-sm transition-all active:scale-[0.98] shrink-0" type="button">
+<span class="material-symbols-outlined text-[20px]">add</span>
+<span>Tambah Menu</span>
+</button>
+</div>
+</div>
+<!-- Main Dual-Column Layout (Split 60% Left / 40% Right) -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+<!-- LEFT COLUMN: Product List & Categories (~60% = 7 Cols) -->
+<div class="lg:col-span-7 flex flex-col gap-4">
+<!-- Category Chips Row -->
+<div class="flex items-center justify-between gap-2 overflow-x-auto pb-1">
+<div class="flex items-center gap-2 shrink-0">
+<button class="h-10 px-4 rounded-full bg-nav-espresso text-canvas-cream font-label-md transition-colors shadow-sm" type="button">
+            Semua
+          </button>
+<button class="h-10 px-4 rounded-full bg-surface-container text-on-surface-variant hover:bg-surface-container-high font-label-md transition-colors" type="button">
+            Kopi
+          </button>
+<button class="h-10 px-4 rounded-full bg-surface-container text-on-surface-variant hover:bg-surface-container-high font-label-md transition-colors" type="button">
+            Teh &amp; Non-Kopi
+          </button>
+<button class="h-10 px-4 rounded-full bg-surface-container text-on-surface-variant hover:bg-surface-container-high font-label-md transition-colors" type="button">
+            Makanan Berat
+          </button>
+<button class="h-10 px-4 rounded-full bg-surface-container text-on-surface-variant hover:bg-surface-container-high font-label-md transition-colors" type="button">
+            Camilan
+          </button>
+</div>
+<a class="inline-flex items-center gap-1.5 text-primary hover:text-on-primary-subtle font-label-md shrink-0 ml-2 transition-colors" href="#">
+<span class="material-symbols-outlined text-[18px]">folder_managed</span>
+<span>Kelola kategori</span>
+</a>
+</div>
+<!-- Warning Callout Banner -->
+<div class="bg-warning-subtle text-warning rounded-xl p-3.5 flex items-center gap-3 shadow-sm">
+<span class="material-symbols-outlined text-[22px] shrink-0">info</span>
+<p class="font-caption leading-relaxed">
+          Produk tanpa resep tidak mengurangi stok bahan otomatis saat transaksi kasir atau QR.
+        </p>
+</div>
+<!-- Product Table Card -->
+<div class="bg-surface-cream rounded-2xl shadow-sm overflow-hidden flex flex-col">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low text-on-surface-variant text-caption uppercase tracking-wider font-label-md">
+<th class="py-3 px-4 w-14 text-center">Foto</th>
+<th class="py-3 px-4">Nama Menu</th>
+<th class="py-3 px-3">Kategori</th>
+<th class="py-3 px-3 text-right">Harga Jual</th>
+<th class="py-3 px-3 text-center">Tersedia</th>
+<th class="py-3 px-4 text-center">Status Resep</th>
+</tr>
+</thead>
+<tbody class="text-on-surface font-body-md divide-y-0">
+<!-- Row 1: Kopi Hitam -->
+<tr class="hover:bg-surface-container/40 transition-colors group cursor-pointer">
+<td class="py-3.5 px-4 text-center">
+<div class="w-11 h-11 rounded-lg overflow-hidden bg-surface-container flex items-center justify-center shrink-0">
+<img class="w-full h-full object-cover" data-alt="Traditional Indonesian black coffee tubruk in a vintage glass with coarse coffee grounds settling at bottom, warm rustic timber table backdrop, natural earthy lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCuM6xcsz--YP5izvS4wffXpT1DWbcUlw6WvrnO9w6SoL0zDjEOhvEEiBhmcENkM0Peoat-DeZFFV4wvLWFg-s2e3lJZ2bEBl0OVsXcj72AD727m1x5CygQnii-g9N0CS_f_86ed8LbSvNsopfC6zU7O9B_gSpRoZWS80XPAjGr7NaQAJqCefi5eKEGG6cxbFEthlfUDqZDWYkfJvlWmQV_9e1UiotKAfJqllbwwwU"/>
+</div>
+</td>
+<td class="py-3.5 px-4 font-title-md text-on-surface">Kopi Hitam</td>
+<td class="py-3.5 px-3">
+<span class="inline-block px-2.5 py-0.5 rounded-full text-caption bg-surface-container text-on-surface-variant font-medium">Kopi</span>
+</td>
+<td class="py-3.5 px-3 text-right font-label-lg tabular-nums text-on-surface">Rp 6.000</td>
+<td class="py-3.5 px-3 text-center">
+<label class="inline-flex items-center gap-1.5 cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-9 h-5 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-surface-cream after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-surface-cream after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-tertiary relative"></div>
+<span class="font-caption text-tertiary font-semibold hidden xl:inline">Aktif</span>
+</label>
+</td>
+<td class="py-3.5 px-4 text-center">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-success-subtle text-tertiary font-caption font-semibold">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+<span>Resep lengkap</span>
+</span>
+</td>
+</tr>
+<!-- Row 2: Kopi Susu Gula Aren (SELECTED) -->
+<tr class="bg-primary-subtle/40 relative shadow-inner cursor-pointer">
+<td class="py-3.5 px-4 text-center relative">
+<div class="absolute left-0 top-0 bottom-0 w-1.5 bg-nav-espresso rounded-r"></div>
+<div class="w-11 h-11 rounded-lg overflow-hidden bg-surface-container flex items-center justify-center shrink-0 ring-2 ring-nav-espresso/30">
+<img class="w-full h-full object-cover" data-alt="Iced Indonesian palm sugar latte kopi susu gula aren with rich creamy layers of fresh milk, espresso and liquid brown palm sugar in a clear glass on rustic wooden counter" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDHNX5yAB2DvQU0ZtWLafy_3qbLZaEXTXo-yziRlNV9RgGiPvipb629rOelD8saS6SrUiU1oMPyvizcRb6-gBbukjd9r1mrHdl5tRgB8hTbUc7t7n_MlgFttgSHX_a6H-rYOXr_JRwfsD1PrWRUDyXvmK0rj-ZDIjaSsPwd1_dtRyk2VMak_NQ4BI_G04UuT_r7w2l0N72-HMcrF8cHGBBxdVtkr2AtcAG3BN86CCM"/>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex items-center gap-2">
+<span class="font-title-md text-on-surface font-bold">Kopi Susu Gula Aren</span>
+<span class="inline-flex items-center px-1.5 py-0.2 rounded text-[10px] bg-nav-espresso text-surface-cream font-label-md">Edit</span>
+</div>
+</td>
+<td class="py-3.5 px-3">
+<span class="inline-block px-2.5 py-0.5 rounded-full text-caption bg-surface-container text-on-surface-variant font-medium">Kopi</span>
+</td>
+<td class="py-3.5 px-3 text-right font-label-lg font-bold tabular-nums text-primary">Rp 12.000</td>
+<td class="py-3.5 px-3 text-center">
+<label class="inline-flex items-center gap-1.5 cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-9 h-5 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-surface-cream after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-surface-cream after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-tertiary relative"></div>
+<span class="font-caption text-tertiary font-semibold hidden xl:inline">Aktif</span>
+</label>
+</td>
+<td class="py-3.5 px-4 text-center">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-success-subtle text-tertiary font-caption font-semibold">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+<span>Resep lengkap</span>
+</span>
+</td>
+</tr>
+<!-- Row 3: Teh Tarik -->
+<tr class="hover:bg-surface-container/40 transition-colors group cursor-pointer">
+<td class="py-3.5 px-4 text-center">
+<div class="w-11 h-11 rounded-lg overflow-hidden bg-surface-container flex items-center justify-center shrink-0">
+<img class="w-full h-full object-cover" data-alt="Traditional frothy milk tea teh tarik poured into clear glass with aromatic foam top on warm terracotta textured cafe surface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJ7gr7UfdBtpoBBtM_jSzNjSCsDeLS9ffTw3gOdHsOLRaLxQXnJsZr6KJVF67nt5WL2LFHTXRxvO1AYBpuNMZZpTXcHwahUgpgnJhamPwT35PubtxeqGyc44AbBRl5SnHJ119neIdL_IiHeWEHcdDsp0XZQEdyyoFphGSoRY30vB3SAjXc2PU7hwaG0cnOlNaukW74zlzmTzEajlIHXv7wSkBTGSiA64FeVDEwViQ"/>
+</div>
+</td>
+<td class="py-3.5 px-4 font-title-md text-on-surface">Teh Tarik</td>
+<td class="py-3.5 px-3">
+<span class="inline-block px-2.5 py-0.5 rounded-full text-caption bg-surface-container text-on-surface-variant font-medium">Teh &amp; Non-Kopi</span>
+</td>
+<td class="py-3.5 px-3 text-right font-label-lg tabular-nums text-on-surface">Rp 10.000</td>
+<td class="py-3.5 px-3 text-center">
+<label class="inline-flex items-center gap-1.5 cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-9 h-5 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-surface-cream after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-surface-cream after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-tertiary relative"></div>
+<span class="font-caption text-tertiary font-semibold hidden xl:inline">Aktif</span>
+</label>
+</td>
+<td class="py-3.5 px-4 text-center">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-success-subtle text-tertiary font-caption font-semibold">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+<span>Resep lengkap</span>
+</span>
+</td>
+</tr>
+<!-- Row 4: Indomie Goreng Telur -->
+<tr class="hover:bg-surface-container/40 transition-colors group cursor-pointer">
+<td class="py-3.5 px-4 text-center">
+<div class="w-11 h-11 rounded-lg overflow-hidden bg-surface-container flex items-center justify-center shrink-0">
+<img class="w-full h-full object-cover" data-alt="Indonesian stir fried instant noodle indomie goreng with sunny side up egg runny yolk, crispy shallots and sliced bird eye chili on ceramic plate in warkop" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDEdroAWh1S39zfk7dp8aTBEf6bwWJWGhJGFiR2-tZjCigJd5SzWFFaJHobY3cYsfz1LIXi-Yzfjdy16-_GXvS3ihBXbDvw1Ke5FiIM1-pt3PpuQiWcarHToA_q78AQNPYOz8rJjfDzLv1VbuxZvLW1HLmSwhRs4_YYgAKHDwVRRIT4cm2GlQyXH2fnF2If9s-v4CbZ5iZ-BhAMgidGwRRHPCmPlrHC-l5ZCl8OboY"/>
+</div>
+</td>
+<td class="py-3.5 px-4 font-title-md text-on-surface">Indomie Goreng Telur</td>
+<td class="py-3.5 px-3">
+<span class="inline-block px-2.5 py-0.5 rounded-full text-caption bg-surface-container text-on-surface-variant font-medium">Makanan Berat</span>
+</td>
+<td class="py-3.5 px-3 text-right font-label-lg tabular-nums text-on-surface">Rp 13.000</td>
+<td class="py-3.5 px-3 text-center">
+<label class="inline-flex items-center gap-1.5 cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-9 h-5 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-surface-cream after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-surface-cream after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-tertiary relative"></div>
+<span class="font-caption text-tertiary font-semibold hidden xl:inline">Aktif</span>
+</label>
+</td>
+<td class="py-3.5 px-4 text-center">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-success-subtle text-tertiary font-caption font-semibold">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+<span>Resep lengkap</span>
+</span>
+</td>
+</tr>
+<!-- Row 5: Pisang Goreng (5 pcs) -->
+<tr class="hover:bg-surface-container/40 transition-colors group cursor-pointer">
+<td class="py-3.5 px-4 text-center">
+<div class="w-11 h-11 rounded-lg overflow-hidden bg-surface-container flex items-center justify-center shrink-0">
+<img class="w-full h-full object-cover" data-alt="Golden crisp Indonesian fried banana fritters pisang goreng arranged on banana leaf in bamboo basket, soft morning terrace cafe light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBElNNHCbDLF4OmVp3cld7rxDjixdAICvP45G9m_VSZ8aqFGJVfKv6sJpVJDLTE-xQWSoFTZtt1xz1-duaJMzxacE0JujakwdXbdc7eoYc-0cMG7VBfnWeZ0OggXM2n6ijRZa-NQ8xBecls4LA778pvro54FQWyHXdRujpjPSX0MCt3jjTflC3V8ScAxewGkobhFE1EQi60S6jGGf77VbQ-RPQ3KuppUrqclbeUGqc"/>
+</div>
+</td>
+<td class="py-3.5 px-4 font-title-md text-on-surface">Pisang Goreng (5 pcs)</td>
+<td class="py-3.5 px-3">
+<span class="inline-block px-2.5 py-0.5 rounded-full text-caption bg-surface-container text-on-surface-variant font-medium">Camilan</span>
+</td>
+<td class="py-3.5 px-3 text-right font-label-lg tabular-nums text-on-surface">Rp 10.000</td>
+<td class="py-3.5 px-3 text-center">
+<label class="inline-flex items-center gap-1.5 cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-9 h-5 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-surface-cream after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-surface-cream after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-tertiary relative"></div>
+<span class="font-caption text-tertiary font-semibold hidden xl:inline">Aktif</span>
+</label>
+</td>
+<td class="py-3.5 px-4 text-center">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-warning-subtle text-warning font-caption font-semibold">
+<span class="material-symbols-outlined text-[14px]">warning</span>
+<span>Resep belum diisi</span>
+</span>
+</td>
+</tr>
+<!-- Row 6: Roti Bakar Cokelat Keju (Out of Stock) -->
+<tr class="hover:bg-surface-container/40 transition-colors group cursor-pointer opacity-85">
+<td class="py-3.5 px-4 text-center">
+<div class="w-11 h-11 rounded-lg overflow-hidden bg-surface-container flex items-center justify-center shrink-0 grayscale opacity-60">
+<img class="w-full h-full object-cover" data-alt="Toasted sandwich bread filled with melted chocolate and grated cheddar cheese roti bakar on enamel plate, authentic cozy warkop setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAsFUfCIf2DT2ZTc3Lb2iTUV-Ys1dkh6xuFZHf3a14FginNNK-aEWLWkkBzHfCHZMGtuiEnAZsKcSpNq1ZmZnRYIGk15CC59cUTvW8nZ6o4dSibxwVsR3SGNxaHIUHIqg0WnGYr2YGjDJoQ1SYdT9-lIHBN0JuJ-PWITb553OaFpqjWvMTi2JlJbNuiLJLoPOHRMBPo_yfUf2Pg073ZUbiInTcOJcbKhN5m_oh1fXA"/>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="font-title-md text-on-surface">Roti Bakar Cokelat Keju</div>
+<div class="mt-0.5">
+<span class="inline-flex items-center px-1.5 py-0.5 rounded text-[11px] bg-error-subtle text-error font-caption font-semibold">
+                      Stok bahan habis
+                    </span>
+</div>
+</td>
+<td class="py-3.5 px-3">
+<span class="inline-block px-2.5 py-0.5 rounded-full text-caption bg-surface-container text-on-surface-variant font-medium">Camilan</span>
+</td>
+<td class="py-3.5 px-3 text-right font-label-lg tabular-nums text-text-muted">Rp 15.000</td>
+<td class="py-3.5 px-3 text-center">
+<label class="inline-flex items-center gap-1.5 cursor-pointer">
+<input class="sr-only peer" type="checkbox"/>
+<div class="w-9 h-5 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-surface-cream after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-surface-cream after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-tertiary relative"></div>
+<span class="font-caption text-text-muted font-medium hidden xl:inline">Nonaktif</span>
+</label>
+</td>
+<td class="py-3.5 px-4 text-center">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-success-subtle text-tertiary font-caption font-semibold">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+<span>Resep lengkap</span>
+</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Footer -->
+<div class="p-4 bg-surface-container-low/70 flex items-center justify-between text-caption text-on-surface-variant">
+<span>Menampilkan <strong>6</strong> dari <strong>24</strong> menu aktif · <strong>1</strong> nonaktif otomatis</span>
+<div class="flex items-center gap-1 font-label-md">
+<button class="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-surface-container transition-colors disabled:opacity-30" disabled="" type="button">
+<span class="material-symbols-outlined text-[18px]">chevron_left</span>
+</button>
+<span class="px-2 py-0.5 rounded bg-surface-cream shadow-sm font-semibold">1</span>
+<button class="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-surface-container transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- RIGHT COLUMN: Edit Panel for "Kopi Susu Gula Aren" (~40% = 5 Cols) -->
+<div class="lg:col-span-5 flex flex-col">
+<div class="bg-surface-cream rounded-2xl p-6 shadow-sm flex flex-col gap-5 sticky top-20">
+<!-- Header Section -->
+<div class="flex items-start justify-between gap-2">
+<div class="flex flex-col">
+<h2 class="font-title-lg text-on-surface font-bold">Edit Detail Menu</h2>
+<span class="font-caption text-text-muted mt-0.5">Kopi Susu Gula Aren (ID: MNU-002)</span>
+</div>
+<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-primary-subtle text-on-primary-subtle font-caption font-semibold shrink-0">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span>Sedang Diedit</span>
+</span>
+</div>
+<!-- Photo & Main Inputs -->
+<div class="flex items-start gap-4">
+<!-- Thumbnail & Change Photo -->
+<div class="flex flex-col items-center gap-1.5 shrink-0">
+<div class="w-20 h-20 rounded-xl overflow-hidden bg-surface-container shadow-inner">
+<img class="w-full h-full object-cover" data-alt="Close up iced coffee latte with fresh milk layer and dark palm sugar syrup on wooden surface warm ambient light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAoP5a9nq7KIBFtWhinjYe86Tqzg12wby5v25VX2eIVlcyQvMiOug56O2SemtxgAPEyud1I7j7OE5Ucm6JOJVBXPybGneUMZL0kI3_NvxT-RfBzdZp8Jp0HoCq1EdVYyJQYPJjcsMIJ5rLV8icUFecTKqdWMqeT-DbixO0WNb8RiWd9EXinxe8PkvpasXHRDW-e-8W8Ub3UqykTuARXNZBkCWJcZkDX2g7dblkWWh0"/>
+</div>
+<button class="font-caption text-primary hover:text-on-primary-subtle font-semibold transition-colors" type="button">
+              Ganti foto
+            </button>
+</div>
+<!-- Name & Price Fields -->
+<div class="flex-1 flex flex-col gap-3">
+<div class="flex flex-col gap-1">
+<label class="font-caption text-on-surface-variant font-semibold">Nama Menu</label>
+<input class="h-11 px-3.5 rounded-xl bg-surface-container-lowest text-on-surface font-title-md font-semibold focus:outline-none focus:bg-surface-cream shadow-sm" type="text" value="Kopi Susu Gula Aren"/>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-caption text-on-surface-variant font-semibold">Harga Jual</label>
+<input class="h-11 px-3.5 rounded-xl bg-surface-container-lowest text-on-surface font-title-md font-bold tabular-nums focus:outline-none focus:bg-surface-cream shadow-sm" type="text" value="Rp 12.000"/>
+</div>
+</div>
+</div>
+<!-- Category & Description -->
+<div class="flex flex-col gap-3">
+<div class="flex flex-col gap-1">
+<label class="font-caption text-on-surface-variant font-semibold">Kategori</label>
+<div class="relative">
+<select class="w-full h-11 px-3.5 pr-10 rounded-xl bg-surface-container-lowest text-on-surface font-body-md appearance-none focus:outline-none shadow-sm cursor-pointer">
+<option selected="" value="kopi">Kopi</option>
+<option value="teh">Teh &amp; Non-Kopi</option>
+<option value="makanan">Makanan Berat</option>
+<option value="camilan">Camilan</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none">expand_more</span>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-caption text-on-surface-variant font-semibold">Deskripsi</label>
+<textarea class="w-full p-3 rounded-xl bg-surface-container-lowest text-on-surface font-body-md focus:outline-none shadow-sm resize-none leading-relaxed" rows="3">Perpaduan kopi robusta house-blend Teras Nenek dengan susu murni segar dan saus gula aren cair asli.</textarea>
+</div>
+</div>
+<!-- Variants & Extra Modifiers Summary Box -->
+<div class="bg-surface-container-low rounded-xl p-3.5 flex flex-col gap-2.5">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-on-surface flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-primary">tune</span>
+<span>Grup Opsi &amp; Modifikasi</span>
+</span>
+<button class="font-caption text-primary hover:text-on-primary-subtle font-semibold transition-colors" type="button">
+              Atur opsi
+            </button>
+</div>
+<div class="flex flex-col gap-1.5 text-caption text-on-surface-variant">
+<div class="flex items-start gap-2">
+<span class="font-semibold text-on-surface w-20 shrink-0">Suhu:</span>
+<span class="text-text-muted">Panas, Dingin</span>
+</div>
+<div class="flex items-start gap-2">
+<span class="font-semibold text-on-surface w-20 shrink-0">Level Gula:</span>
+<span class="text-text-muted">100%, 75%, 50%, 25%</span>
+</div>
+<div class="flex items-start gap-2">
+<span class="font-semibold text-on-surface w-20 shrink-0">Tambahan:</span>
+<span class="text-text-muted">Extra shot (+Rp 4.000), Susu tambahan (+Rp 3.000)</span>
+</div>
+</div>
+</div>
+<!-- Recipe Per 1 Portion (HPP) Section -->
+<div class="flex flex-col gap-2.5">
+<div class="flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-label-lg text-on-surface font-bold">Resep per 1 porsi</span>
+<span class="text-[11px] text-text-muted">Bahan otomatis berkurang dari stok inventory tiap pesanan selesai</span>
+</div>
+<a class="inline-flex items-center gap-1 text-[11px] text-on-surface-variant hover:text-primary transition-colors underline underline-offset-2 shrink-0" href="#">
+<span class="material-symbols-outlined text-[14px]">history</span>
+<span>Riwayat</span>
+</a>
+</div>
+<!-- Recipe Table -->
+<div class="rounded-xl overflow-hidden bg-surface-container-lowest shadow-sm">
+<table class="w-full text-left border-collapse text-caption">
+<thead>
+<tr class="bg-surface-container-high/60 text-on-surface-variant font-label-md">
+<th class="py-2 px-3 font-semibold">Bahan</th>
+<th class="py-2 px-2 text-right font-semibold">Jumlah</th>
+<th class="py-2 px-2 text-left font-semibold">Satuan</th>
+<th class="py-2 px-3 text-right font-semibold">Biaya</th>
+</tr>
+</thead>
+<tbody class="divide-y-0 text-on-surface font-body-md text-caption">
+<tr class="hover:bg-surface-container/20">
+<td class="py-2 px-3 font-medium">Biji kopi robusta</td>
+<td class="py-2 px-2 text-right tabular-nums">9</td>
+<td class="py-2 px-2 text-text-muted">g</td>
+<td class="py-2 px-3 text-right tabular-nums font-medium">Rp 2.520</td>
+</tr>
+<tr class="hover:bg-surface-container/20 bg-surface-container-low/30">
+<td class="py-2 px-3 font-medium">Susu cair</td>
+<td class="py-2 px-2 text-right tabular-nums">120</td>
+<td class="py-2 px-2 text-text-muted">ml</td>
+<td class="py-2 px-3 text-right tabular-nums font-medium">Rp 2.160</td>
+</tr>
+<tr class="hover:bg-surface-container/20">
+<td class="py-2 px-3 font-medium">Gula aren</td>
+<td class="py-2 px-2 text-right tabular-nums">20</td>
+<td class="py-2 px-2 text-text-muted">g</td>
+<td class="py-2 px-3 text-right tabular-nums font-medium">Rp 440</td>
+</tr>
+<tr class="hover:bg-surface-container/20 bg-surface-container-low/30">
+<td class="py-2 px-3 font-medium">Es batu</td>
+<td class="py-2 px-2 text-right tabular-nums">100</td>
+<td class="py-2 px-2 text-text-muted">g</td>
+<td class="py-2 px-3 text-right tabular-nums font-medium">Rp 300</td>
+</tr>
+<tr class="hover:bg-surface-container/20">
+<td class="py-2 px-3 font-medium">Gelas plastik</td>
+<td class="py-2 px-2 text-right tabular-nums">1</td>
+<td class="py-2 px-2 text-text-muted">pcs</td>
+<td class="py-2 px-3 text-right tabular-nums font-medium">Rp 700</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Add Ingredient Action -->
+<button class="w-full py-2.5 rounded-xl bg-surface-container-low hover:bg-surface-container text-primary font-label-md flex items-center justify-center gap-1.5 transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">add_circle</span>
+<span>Tambah bahan baku</span>
+</button>
+<!-- HPP & Profit Margin Summary Banner -->
+<div class="bg-surface-container rounded-xl p-3.5 flex items-center justify-between shadow-sm">
+<div class="flex flex-col">
+<span class="text-[11px] text-text-muted">Estimasi HPP</span>
+<span class="font-title-md font-bold text-on-surface tabular-nums">Rp 6.120</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-caption text-text-muted">Keuntungan kotor</span>
+<span class="px-3 py-1 rounded-full bg-success-subtle text-tertiary font-label-md font-bold">
+                Margin 49%
+              </span>
+</div>
+</div>
+</div>
+<!-- Audit Disclaimer Note -->
+<div class="flex items-center gap-2 text-caption text-text-muted bg-surface-container-lowest/50 p-2.5 rounded-lg">
+<span class="material-symbols-outlined text-[16px] shrink-0 text-text-muted">security_update_good</span>
+<span>Perubahan harga dan resep berlaku untuk pesanan baru dan tercatat di Audit Log.</span>
+</div>
+<!-- Action Buttons -->
+<div class="flex items-center justify-end gap-3 pt-3">
+<button class="h-12 px-6 rounded-xl bg-surface-container-high hover:bg-surface-dim text-on-surface font-label-lg transition-colors active:scale-[0.98]" type="button">
+            Batal
+          </button>
+<button class="h-12 px-6 rounded-xl bg-primary-container hover:bg-primary text-surface-cream font-label-lg font-semibold shadow-sm transition-all active:scale-[0.98] flex items-center gap-2" type="button">
+<span class="material-symbols-outlined text-[20px]">save</span>
+<span>Simpan Perubahan</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div></main></div></body></html>

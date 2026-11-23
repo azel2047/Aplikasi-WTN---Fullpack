@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+
+<html lang="id"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{"colors":{"inverse-primary":"#ffb598","surface-dim":"#ded9d4","on-secondary":"#ffffff","on-tertiary":"#ffffff","surface-variant":"#EFE6D8","surface-container":"#f3ede8","on-secondary-fixed-variant":"#5b4133","surface":"#fef8f3","primary-container":"#a3593a","primary-fixed":"#ffdbce","success-subtle":"#E4E8DA","on-tertiary-fixed":"#151e0b","error-container":"#ffdad6","canvas-cream":"#F6F0E6","warning-subtle":"#F6E7BF","primary-subtle":"#F3DDD0","outline":"#87736c","tertiary":"#4d5841","surface-container-low":"#f8f3ed","on-primary":"#ffffff","primary-fixed-dim":"#ffb598","tertiary-container":"#667158","nav-espresso":"#3B2922","surface-container-lowest":"#ffffff","tertiary-fixed":"#dbe7c8","on-error":"#ffffff","surface-container-high":"#ede7e2","background":"#fef8f3","outline-variant":"#d9c2b9","secondary-fixed-dim":"#e4bfac","text-muted":"#7A6757","secondary-container":"#ffd8c4","on-tertiary-fixed-variant":"#404a34","warning":"#7A5A0A","on-background":"#1d1b18","primary":"#854225","surface-bright":"#fef8f3","error":"#B3402E","on-surface":"#1d1b18","surface-container-highest":"#e7e1dd","accent-terracotta":"#B76E4B","on-tertiary-container":"#e8f5d6","border-strong":"#9C8570","on-primary-fixed":"#370e00","on-error-container":"#93000a","surface-tint":"#914b2d","on-primary-container":"#ffece6","on-primary-subtle":"#7A3F27","on-primary-fixed-variant":"#743418","secondary":"#755849","surface-cream":"#FFFCF7","error-subtle":"#F5DAD3","secondary-fixed":"#ffdbca","border-sand":"#D9C5AA","tertiary-fixed-dim":"#bfcbad","on-secondary-fixed":"#2b170b","on-surface-variant":"#54433d","inverse-surface":"#32302d","inverse-on-surface":"#f6f0eb","on-secondary-container":"#795c4d"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"spacing":{"gutter-tablet":"1.25rem","space-lg":"1rem","margin":"1rem","margin-tablet":"1.5rem","gutter":"1rem","space-xl":"1.5rem","margin-desktop":"2rem","space-md":"0.75rem","space-xs":"0.25rem","space-sm":"0.5rem"},"fontFamily":{"label-md":["Plus Jakarta Sans"],"title-md":["Plus Jakarta Sans"],"headline-lg-mobile":["Plus Jakarta Sans"],"headline-lg":["Plus Jakarta Sans"],"caption":["Plus Jakarta Sans"],"label-lg":["Plus Jakarta Sans"],"title-lg":["Plus Jakarta Sans"],"headline-md":["Plus Jakarta Sans"],"body-lg":["Plus Jakarta Sans"],"headline-sm":["Plus Jakarta Sans"],"body-md":["Plus Jakarta Sans"]},"fontSize":{"label-md":["12px",{"lineHeight":"16px","letterSpacing":"0.02em","fontWeight":"600"}],"title-md":["16px",{"lineHeight":"22px","fontWeight":"600"}],"headline-lg-mobile":["26px",{"lineHeight":"32px","letterSpacing":"-0.01em","fontWeight":"700"}],"headline-lg":["32px",{"lineHeight":"40px","letterSpacing":"-0.02em","fontWeight":"700"}],"caption":["12px",{"lineHeight":"16px","fontWeight":"500"}],"label-lg":["14px",{"lineHeight":"20px","fontWeight":"600"}],"title-lg":["18px",{"lineHeight":"24px","fontWeight":"600"}],"headline-md":["24px",{"lineHeight":"32px","letterSpacing":"-0.01em","fontWeight":"700"}],"body-lg":["16px",{"lineHeight":"24px","fontWeight":"400"}],"headline-sm":["20px",{"lineHeight":"28px","fontWeight":"600"}],"body-md":["14px",{"lineHeight":"20px","fontWeight":"400"}]}}}};</script></head><body class="bg-canvas-cream font-body-md text-on-surface"><aside class="fixed left-0 top-0 h-full w-60 bg-nav-espresso text-canvas-cream z-50 flex flex-col justify-between py-space-xl"><div class="flex flex-col overflow-y-auto"><div class="px-space-xl mb-space-xl flex items-center gap-space-md"><div class="w-9 h-9 rounded-lg bg-primary-container text-on-primary flex items-center justify-center font-title-md text-title-md">WTN</div><span class="font-title-md text-title-md text-canvas-cream">Warkop Teras Nenek</span></div><nav class="flex flex-col gap-space-lg px-space-md" data-active-classes="bg-inverse-surface text-canvas-cream font-semibold border-l-[3px] border-primary-container"><div class="flex flex-col gap-space-xs"><span class="px-space-md font-label-md text-label-md uppercase text-outline-variant">OPERASIONAL</span><a class="flex items-center px-space-md py-space-sm rounded-lg text-canvas-cream hover:bg-inverse-surface hover:text-canvas-cream transition-colors" data-path="overview" href="#"><span class="font-body-md text-body-md">Overview</span></a><a class="flex items-center px-space-md py-space-sm rounded-lg text-canvas-cream hover:bg-inverse-surface hover:text-canvas-cream transition-colors" data-path="pesanan" href="#"><span class="font-body-md text-body-md">Pesanan</span></a><a class="flex items-center px-space-md py-space-sm rounded-lg text-canvas-cream hover:bg-inverse-surface hover:text-canvas-cream transition-colors" data-path="menu" href="#"><span class="font-body-md text-body-md">Menu</span></a><a class="flex items-center px-space-md py-space-sm rounded-lg text-canvas-cream hover:bg-inverse-surface hover:text-canvas-cream transition-colors" data-path="meja-dan-qr" href="#"><span class="font-body-md text-body-md">Meja &amp; QR</span></a></div><div class="flex flex-col gap-space-xs"><span class="px-space-md font-label-md text-label-md uppercase text-outline-variant">STOK &amp; KEUANGAN</span><a class="flex items-center px-space-md py-space-sm rounded-lg text-canvas-cream hover:bg-inverse-surface hover:text-canvas-cream transition-colors" data-path="inventory" href="#"><span class="font-body-md text-body-md">Inventory</span></a><a class="flex items-center px-space-md py-space-sm rounded-lg text-canvas-cream hover:bg-inverse-surface hover:text-canvas-cream transition-colors" data-path="keuangan" href="#"><span class="font-body-md text-body-md">Keuangan</span></a></div><div class="flex flex-col gap-space-xs"><span class="px-space-md font-label-md text-label-md uppercase text-outline-variant">LAPORAN</span><a class="flex items-center px-space-md py-space-sm rounded-lg text-canvas-cream hover:bg-inverse-surface hover:text-canvas-cream transition-colors" data-path="laporan-karyawan" href="#"><span class="font-body-md text-body-md">Laporan Karyawan</span></a><a class="flex items-center px-space-md py-space-sm rounded-lg text-canvas-cream hover:bg-inverse-surface hover:text-canvas-cream transition-colors" data-path="rating" href="#"><span class="font-body-md text-body-md">Rating</span></a><a class="flex items-center px-space-md py-space-sm rounded-lg text-canvas-cream hover:bg-inverse-surface hover:text-canvas-cream transition-colors" data-path="analitik" href="#"><span class="font-body-md text-body-md">Analitik</span></a></div><div class="flex flex-col gap-space-xs"><span class="px-space-md font-label-md text-label-md uppercase text-outline-variant">SISTEM</span><a class="flex items-center px-space-md py-space-sm rounded-lg text-canvas-cream hover:bg-inverse-surface hover:text-canvas-cream transition-colors" data-path="pengaturan" href="#"><span class="font-body-md text-body-md">Pengaturan</span></a><a class="flex items-center px-space-md py-space-sm rounded-lg text-canvas-cream hover:bg-inverse-surface hover:text-canvas-cream transition-colors" data-path="audit-log" href="#"><span class="font-body-md text-body-md">Audit Log</span></a></div></nav></div><div class="px-space-xl pt-space-lg flex items-center justify-between"><div class="flex items-center gap-space-sm"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><span class="font-label-lg text-label-lg text-canvas-cream">Owner</span></div><a class="flex items-center gap-space-xs font-label-md text-label-md text-outline-variant hover:text-canvas-cream transition-colors" data-path="masuk" href="#"><span class="material-symbols-outlined text-[18px]">logout</span><span>Keluar</span></a></div></aside><div class="pl-60"><header class="fixed top-0 left-60 right-0 bg-canvas-cream z-40"><div class="h-20 px-margin-desktop flex items-center justify-between"><div class="flex items-center gap-space-md"><span class="font-body-md text-body-md text-text-muted">Senin, 23 November 2026 · Diperbarui 14.40</span></div><div class="flex items-center gap-space-md"><button class="h-11 px-space-lg bg-surface-cream border border-border-sand rounded-xl flex items-center gap-space-sm font-label-lg text-label-lg text-on-surface hover:bg-surface-container transition-colors" type="button"><span>Hari ini</span><span class="material-symbols-outlined text-[20px] text-text-muted">expand_more</span></button><div class="h-11 px-space-lg bg-surface-cream border border-border-sand rounded-full flex items-center gap-space-sm"><span class="w-2.5 h-2.5 rounded-full bg-tertiary"></span><span class="font-label-lg text-label-lg text-on-surface">Rina · Shift Pagi</span></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="relative pt-20 bg-canvas-cream px-margin-desktop pb-margin-desktop min-h-screen"><div class="flex flex-col w-full gap-space-xl">
+<!-- PAGE HEADER SECTION -->
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-lg pb-space-sm">
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center gap-space-md">
+<h1 class="font-headline-md text-headline-md text-on-surface tracking-tight">Meja &amp; QR</h1>
+<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-success-subtle text-tertiary font-label-md text-label-md">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span>
+<span>9 meja aktif</span>
+</div>
+</div>
+<p class="font-body-md text-body-md text-text-muted">
+        Kelola 9 meja pelanggan dan konfigurasi unik QR stand meja.
+      </p>
+</div>
+<!-- Header Actions -->
+<div class="flex items-center gap-space-md flex-wrap">
+<button class="h-12 min-w-[150px] px-space-lg bg-surface-cream rounded-xl flex items-center justify-center gap-space-sm font-label-lg text-label-lg text-on-surface shadow-sm hover:bg-surface-variant transition-colors" style="box-shadow: 0 1px 2px rgba(59, 41, 34, 0.05), 0 8px 20px rgba(59, 41, 34, 0.06);" type="button">
+<span class="material-symbols-outlined text-[20px] text-primary">download</span>
+<span>Unduh Semua QR</span>
+</button>
+<button class="h-12 min-w-[150px] px-space-lg bg-primary-container text-on-primary rounded-xl flex items-center justify-center gap-space-sm font-label-lg text-label-lg shadow-sm hover:bg-primary transition-transform active:scale-[0.98]" type="button">
+<span class="material-symbols-outlined text-[20px]">print</span>
+<span>Cetak Semua QR</span>
+</button>
+</div>
+</div>
+<!-- MAIN 2-COLUMN LAYOUT -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-xl items-start">
+<!-- LEFT COLUMN: TABLE LIST (approx 60% -> 7 cols) -->
+<div class="lg:col-span-7 flex flex-col bg-surface-cream rounded-[20px] shadow-sm overflow-hidden" style="box-shadow: 0 1px 2px rgba(59, 41, 34, 0.05), 0 8px 20px rgba(59, 41, 34, 0.06);">
+<!-- Card Top Bar -->
+<div class="p-space-xl flex flex-col sm:flex-row sm:items-center justify-between gap-space-md bg-surface-cream">
+<div>
+<h2 class="font-title-lg text-title-lg text-on-surface">Daftar Meja &amp; Status Sesi</h2>
+<span class="font-caption text-caption text-text-muted">Status perbaruan waktu nyata dari kasir</span>
+</div>
+<div class="inline-flex items-center gap-space-xs px-3.5 py-1.5 rounded-full bg-surface-variant text-secondary font-label-md text-label-md self-start sm:self-auto">
+<span class="w-2 h-2 rounded-full bg-accent-terracotta"></span>
+<span>3 Meja Terisi · 6 Meja Kosong</span>
+</div>
+</div>
+<!-- Quick Search & Filter Strip -->
+<div class="px-space-xl pb-space-md">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-text-muted text-[20px]">search</span>
+<input class="w-full h-11 pl-11 pr-space-lg rounded-xl bg-canvas-cream text-on-surface font-body-md text-body-md placeholder:text-text-muted focus:outline-none focus:bg-surface-container transition-all" placeholder="Cari meja berdasarkan kode atau nama..." type="text"/>
+</div>
+</div>
+<!-- Table View -->
+<div class="w-full overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-variant/60 text-text-muted font-label-md text-label-md">
+<th class="py-3 px-space-lg pl-space-xl">Kode</th>
+<th class="py-3 px-space-md">Nama Meja</th>
+<th class="py-3 px-space-md">Status QR</th>
+<th class="py-3 px-space-md">Sesi Meja</th>
+<th class="py-3 px-space-md">Scan Terakhir</th>
+<th class="py-3 px-space-lg pr-space-xl text-right">Aksi</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-variant font-body-md text-body-md text-on-surface">
+<!-- Row 1: TBL-01 -->
+<tr class="hover:bg-surface-container/50 transition-colors">
+<td class="py-3.5 px-space-lg pl-space-xl font-label-lg text-label-lg [font-variant-numeric:tabular-nums] text-nav-espresso">TBL-01</td>
+<td class="py-3.5 px-space-md font-medium">Meja 1</td>
+<td class="py-3.5 px-space-md">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-success-subtle text-tertiary font-label-md text-label-md">
+<span class="material-symbols-outlined text-[13px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span>Aktif</span>
+</span>
+</td>
+<td class="py-3.5 px-space-md">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-surface-variant text-on-surface-variant font-label-md text-label-md">
+                  Kosong
+                </span>
+</td>
+<td class="py-3.5 px-space-md text-text-muted [font-variant-numeric:tabular-nums]">11.58 WIB</td>
+<td class="py-3.5 px-space-lg pr-space-xl text-right">
+<button class="font-label-lg text-label-lg text-primary hover:text-primary-container px-2 py-1 rounded transition-colors" type="button">Lihat</button>
+</td>
+</tr>
+<!-- Row 2: TBL-02 -->
+<tr class="hover:bg-surface-container/50 transition-colors">
+<td class="py-3.5 px-space-lg pl-space-xl font-label-lg text-label-lg [font-variant-numeric:tabular-nums] text-nav-espresso">TBL-02</td>
+<td class="py-3.5 px-space-md font-medium">Meja 2</td>
+<td class="py-3.5 px-space-md">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-success-subtle text-tertiary font-label-md text-label-md">
+<span class="material-symbols-outlined text-[13px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span>Aktif</span>
+</span>
+</td>
+<td class="py-3.5 px-space-md">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-primary-subtle text-on-primary-subtle font-label-md text-label-md">
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container"></span>
+<span>Terisi</span>
+</span>
+</td>
+<td class="py-3.5 px-space-md text-text-muted [font-variant-numeric:tabular-nums]">14.20 WIB</td>
+<td class="py-3.5 px-space-lg pr-space-xl text-right">
+<button class="font-label-lg text-label-lg text-primary hover:text-primary-container px-2 py-1 rounded transition-colors" type="button">Lihat</button>
+</td>
+</tr>
+<!-- Row 3: TBL-03 -->
+<tr class="hover:bg-surface-container/50 transition-colors">
+<td class="py-3.5 px-space-lg pl-space-xl font-label-lg text-label-lg [font-variant-numeric:tabular-nums] text-nav-espresso">TBL-03</td>
+<td class="py-3.5 px-space-md font-medium">Meja 3</td>
+<td class="py-3.5 px-space-md">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-success-subtle text-tertiary font-label-md text-label-md">
+<span class="material-symbols-outlined text-[13px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span>Aktif</span>
+</span>
+</td>
+<td class="py-3.5 px-space-md">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-surface-variant text-on-surface-variant font-label-md text-label-md">
+                  Kosong
+                </span>
+</td>
+<td class="py-3.5 px-space-md text-text-muted [font-variant-numeric:tabular-nums]">13.12 WIB</td>
+<td class="py-3.5 px-space-lg pr-space-xl text-right">
+<button class="font-label-lg text-label-lg text-primary hover:text-primary-container px-2 py-1 rounded transition-colors" type="button">Lihat</button>
+</td>
+</tr>
+<!-- Row 4: TBL-04 (SELECTED ROW) -->
+<tr class="bg-surface-container-low relative shadow-inner">
+<td class="py-4 px-space-lg pl-space-xl font-label-lg text-label-lg [font-variant-numeric:tabular-nums] text-nav-espresso font-bold flex items-center gap-2">
+<span class="w-1.5 h-6 bg-nav-espresso rounded-full inline-block"></span>
+<span>TBL-04</span>
+</td>
+<td class="py-4 px-space-md font-semibold text-on-surface">Meja 4</td>
+<td class="py-4 px-space-md">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-success-subtle text-tertiary font-label-md text-label-md font-semibold">
+<span class="material-symbols-outlined text-[13px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span>Aktif</span>
+</span>
+</td>
+<td class="py-4 px-space-md">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-primary-subtle text-on-primary-subtle font-label-md text-label-md font-semibold">
+<span class="w-2 h-2 rounded-full bg-primary-container animate-pulse"></span>
+<span>Terisi</span>
+</span>
+</td>
+<td class="py-4 px-space-md text-on-surface font-medium [font-variant-numeric:tabular-nums]">14.33 WIB</td>
+<td class="py-4 px-space-lg pr-space-xl text-right">
+<span class="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-nav-espresso text-canvas-cream font-label-md text-label-md">
+<span class="material-symbols-outlined text-[14px]">visibility</span>
+<span>Sedang Dilihat</span>
+</span>
+</td>
+</tr>
+<!-- Row 5: TBL-05 -->
+<tr class="hover:bg-surface-container/50 transition-colors">
+<td class="py-3.5 px-space-lg pl-space-xl font-label-lg text-label-lg [font-variant-numeric:tabular-nums] text-nav-espresso">TBL-05</td>
+<td class="py-3.5 px-space-md font-medium">Meja 5</td>
+<td class="py-3.5 px-space-md">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-success-subtle text-tertiary font-label-md text-label-md">
+<span class="material-symbols-outlined text-[13px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span>Aktif</span>
+</span>
+</td>
+<td class="py-3.5 px-space-md">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-surface-variant text-on-surface-variant font-label-md text-label-md">
+                  Kosong
+                </span>
+</td>
+<td class="py-3.5 px-space-md text-text-muted [font-variant-numeric:tabular-nums]">12.40 WIB</td>
+<td class="py-3.5 px-space-lg pr-space-xl text-right">
+<button class="font-label-lg text-label-lg text-primary hover:text-primary-container px-2 py-1 rounded transition-colors" type="button">Lihat</button>
+</td>
+</tr>
+<!-- Row 6: TBL-06 -->
+<tr class="hover:bg-surface-container/50 transition-colors">
+<td class="py-3.5 px-space-lg pl-space-xl font-label-lg text-label-lg [font-variant-numeric:tabular-nums] text-nav-espresso">TBL-06</td>
+<td class="py-3.5 px-space-md font-medium">Meja 6</td>
+<td class="py-3.5 px-space-md">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-success-subtle text-tertiary font-label-md text-label-md">
+<span class="material-symbols-outlined text-[13px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span>Aktif</span>
+</span>
+</td>
+<td class="py-3.5 px-space-md">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-surface-variant text-on-surface-variant font-label-md text-label-md">
+                  Kosong
+                </span>
+</td>
+<td class="py-3.5 px-space-md text-text-muted [font-variant-numeric:tabular-nums]">12.05 WIB</td>
+<td class="py-3.5 px-space-lg pr-space-xl text-right">
+<button class="font-label-lg text-label-lg text-primary hover:text-primary-container px-2 py-1 rounded transition-colors" type="button">Lihat</button>
+</td>
+</tr>
+<!-- Row 7: TBL-07 -->
+<tr class="hover:bg-surface-container/50 transition-colors">
+<td class="py-3.5 px-space-lg pl-space-xl font-label-lg text-label-lg [font-variant-numeric:tabular-nums] text-nav-espresso">TBL-07</td>
+<td class="py-3.5 px-space-md font-medium">Meja 7</td>
+<td class="py-3.5 px-space-md">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-success-subtle text-tertiary font-label-md text-label-md">
+<span class="material-symbols-outlined text-[13px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span>Aktif</span>
+</span>
+</td>
+<td class="py-3.5 px-space-md">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-primary-subtle text-on-primary-subtle font-label-md text-label-md">
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container"></span>
+<span>Terisi</span>
+</span>
+</td>
+<td class="py-3.5 px-space-md text-text-muted [font-variant-numeric:tabular-nums]">14.28 WIB</td>
+<td class="py-3.5 px-space-lg pr-space-xl text-right">
+<button class="font-label-lg text-label-lg text-primary hover:text-primary-container px-2 py-1 rounded transition-colors" type="button">Lihat</button>
+</td>
+</tr>
+<!-- Row 8: TBL-08 -->
+<tr class="hover:bg-surface-container/50 transition-colors">
+<td class="py-3.5 px-space-lg pl-space-xl font-label-lg text-label-lg [font-variant-numeric:tabular-nums] text-nav-espresso">TBL-08</td>
+<td class="py-3.5 px-space-md font-medium">Meja 8</td>
+<td class="py-3.5 px-space-md">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-success-subtle text-tertiary font-label-md text-label-md">
+<span class="material-symbols-outlined text-[13px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span>Aktif</span>
+</span>
+</td>
+<td class="py-3.5 px-space-md">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-surface-variant text-on-surface-variant font-label-md text-label-md">
+                  Kosong
+                </span>
+</td>
+<td class="py-3.5 px-space-md text-text-muted [font-variant-numeric:tabular-nums]">10.17 WIB</td>
+<td class="py-3.5 px-space-lg pr-space-xl text-right">
+<button class="font-label-lg text-label-lg text-primary hover:text-primary-container px-2 py-1 rounded transition-colors" type="button">Lihat</button>
+</td>
+</tr>
+<!-- Row 9: TBL-09 -->
+<tr class="hover:bg-surface-container/50 transition-colors">
+<td class="py-3.5 px-space-lg pl-space-xl font-label-lg text-label-lg [font-variant-numeric:tabular-nums] text-nav-espresso">TBL-09</td>
+<td class="py-3.5 px-space-md font-medium">Meja 9</td>
+<td class="py-3.5 px-space-md">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-success-subtle text-tertiary font-label-md text-label-md">
+<span class="material-symbols-outlined text-[13px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span>Aktif</span>
+</span>
+</td>
+<td class="py-3.5 px-space-md">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-surface-variant text-on-surface-variant font-label-md text-label-md">
+                  Kosong
+                </span>
+</td>
+<td class="py-3.5 px-space-md text-text-muted [font-variant-numeric:tabular-nums]">Kemarin 20.44 WIB</td>
+<td class="py-3.5 px-space-lg pr-space-xl text-right">
+<button class="font-label-lg text-label-lg text-primary hover:text-primary-container px-2 py-1 rounded transition-colors" type="button">Lihat</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Footer Summary -->
+<div class="p-space-lg px-space-xl bg-surface-cream flex items-center justify-between text-text-muted font-body-md text-body-md">
+<span>Menampilkan 9 dari 9 meja · Kapasitas 36 kursi</span>
+<a class="font-label-lg text-label-lg text-primary hover:underline flex items-center gap-1" href="#">
+<span>Riwayat Sesi Meja</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</div>
+</div>
+<!-- RIGHT COLUMN: QR DETAIL PANEL (approx 40% -> 5 cols) -->
+<div class="lg:col-span-5 flex flex-col gap-space-lg">
+<!-- Primary Card: QR Stand Preview & Details -->
+<div class="bg-surface-cream rounded-[20px] p-space-xl flex flex-col gap-space-xl shadow-sm" style="box-shadow: 0 1px 2px rgba(59, 41, 34, 0.05), 0 8px 20px rgba(59, 41, 34, 0.06);">
+<!-- Panel Header -->
+<div class="flex items-start justify-between">
+<div class="flex flex-col">
+<div class="flex items-center gap-space-sm">
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Detail QR — Meja 4</h2>
+<span class="font-label-md text-label-md px-2 py-0.5 rounded bg-surface-variant text-nav-espresso [font-variant-numeric:tabular-nums]">TBL-04</span>
+</div>
+<span class="font-body-md text-body-md text-text-muted mt-0.5">Konfigurasi token akrilik terpasang</span>
+</div>
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-success-subtle text-tertiary font-label-md text-label-md">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span>
+<span>Aktif</span>
+</span>
+</div>
+<!-- Acrylic Table Stand Mockup (Quiet zone + authentic styling) -->
+<div class="flex justify-center">
+<div class="w-full max-w-[340px] bg-canvas-cream rounded-2xl p-6 shadow-md flex flex-col items-center text-center relative overflow-hidden" style="box-shadow: 0 8px 24px rgba(59, 41, 34, 0.08);">
+<!-- Subtle acrylic shine aesthetic strip -->
+<div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-accent-terracotta via-primary-container to-nav-espresso"></div>
+<div class="w-10 h-10 rounded-full bg-surface-cream flex items-center justify-center mb-3 shadow-sm">
+<span class="material-symbols-outlined text-primary-container text-[22px]">coffee</span>
+</div>
+<span class="font-label-md text-label-md tracking-wider uppercase text-text-muted mb-4">Warkop Teras Nenek</span>
+<!-- SVG QR Code Canvas (vector precision, 220px) -->
+<div class="w-[220px] h-[220px] bg-surface-cream p-4 rounded-xl shadow-inner flex items-center justify-center">
+<svg class="w-full h-full text-nav-espresso" fill="currentColor" viewbox="0 0 160 160">
+<!-- Top-Left Finder Square -->
+<rect fill="none" height="40" rx="4" stroke="currentColor" stroke-width="8" width="40" x="10" y="10"></rect>
+<rect fill="currentColor" height="16" rx="2" width="16" x="22" y="22"></rect>
+<!-- Top-Right Finder Square -->
+<rect fill="none" height="40" rx="4" stroke="currentColor" stroke-width="8" width="40" x="110" y="10"></rect>
+<rect fill="currentColor" height="16" rx="2" width="16" x="122" y="22"></rect>
+<!-- Bottom-Left Finder Square -->
+<rect fill="none" height="40" rx="4" stroke="currentColor" stroke-width="8" width="40" x="10" y="110"></rect>
+<rect fill="currentColor" height="16" rx="2" width="16" x="22" y="122"></rect>
+<!-- High-density QR Matrix Mock Patterns -->
+<!-- Top row dots -->
+<rect height="8" rx="1.5" width="8" x="60" y="14"></rect>
+<rect height="8" rx="1.5" width="16" x="76" y="14"></rect>
+<rect height="16" rx="1.5" width="8" x="60" y="30"></rect>
+<rect height="8" rx="1.5" width="8" x="84" y="28"></rect>
+<rect height="8" rx="1.5" width="16" x="72" y="40"></rect>
+<!-- Middle horizontal band -->
+<rect height="8" rx="1.5" width="16" x="14" y="60"></rect>
+<rect height="16" rx="1.5" width="8" x="36" y="60"></rect>
+<rect height="8" rx="1.5" width="20" x="52" y="60"></rect>
+<rect height="12" rx="2" width="12" x="80" y="56"></rect>
+<rect height="8" rx="1.5" width="16" x="100" y="60"></rect>
+<rect height="8" rx="1.5" width="22" x="124" y="60"></rect>
+<rect height="16" rx="1.5" width="8" x="14" y="76"></rect>
+<rect height="8" rx="1.5" width="16" x="28" y="84"></rect>
+<rect height="24" rx="2" width="12" x="52" y="76"></rect>
+<rect height="8" rx="1.5" width="8" x="72" y="76"></rect>
+<rect height="16" rx="2" width="16" x="88" y="76"></rect>
+<rect height="8" rx="1.5" width="12" x="112" y="76"></rect>
+<rect height="16" rx="1.5" width="14" x="132" y="80"></rect>
+<!-- Bottom patterns -->
+<rect height="8" rx="1.5" width="16" x="60" y="110"></rect>
+<rect height="20" rx="1.5" width="8" x="84" y="110"></rect>
+<rect height="8" rx="1.5" width="20" x="100" y="104"></rect>
+<rect height="8" rx="1.5" width="18" x="128" y="110"></rect>
+<rect height="14" rx="1.5" width="8" x="60" y="126"></rect>
+<rect height="8" rx="1.5" width="24" x="76" y="132"></rect>
+<rect height="20" rx="1.5" width="12" x="108" y="120"></rect>
+<rect height="14" rx="1.5" width="18" x="128" y="126"></rect>
+</svg>
+</div>
+<!-- Stand Text Content -->
+<div class="mt-4 flex flex-col items-center">
+<span class="font-headline-sm text-headline-sm text-on-surface">Meja 4</span>
+<p class="font-body-md text-body-md text-secondary font-medium mt-0.5">Pindai untuk Buka Menu &amp; Pesan Mandiri</p>
+<span class="font-caption text-caption text-text-muted mt-2">Koneksi WiFi: WarkopTeras_Tamu (Bebas Sandi)</span>
+</div>
+</div>
+</div>
+<!-- Masked Security Token Label -->
+<div class="bg-surface-variant/70 rounded-xl p-space-md flex flex-col gap-1 text-center sm:text-left">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+<span class="font-label-md text-label-md text-text-muted uppercase tracking-wider">Token Keamanan</span>
+<span class="font-label-lg text-label-lg font-mono text-nav-espresso [font-variant-numeric:tabular-nums]">Token: a8F3…k29x</span>
+</div>
+<div class="flex items-center gap-1.5 text-tertiary font-caption text-caption justify-center sm:justify-start">
+<span class="material-symbols-outlined text-[14px]">verified_user</span>
+<span>Tervalidasi SHA-256 · Sesi terenkripsi dinamis</span>
+</div>
+</div>
+<!-- Action Buttons Row (Meja 4) -->
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-space-sm pt-space-xs">
+<button class="h-12 px-space-md bg-surface-cream text-on-surface rounded-xl flex items-center justify-center gap-2 font-label-lg text-label-lg shadow-sm hover:bg-surface-variant transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">file_download</span>
+<span>Unduh PNG</span>
+</button>
+<button class="h-12 px-space-md bg-surface-cream text-on-surface rounded-xl flex items-center justify-center gap-2 font-label-lg text-label-lg shadow-sm hover:bg-surface-variant transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">print</span>
+<span>Cetak</span>
+</button>
+<button class="h-12 px-space-md bg-transparent text-error rounded-xl flex items-center justify-center gap-1.5 font-label-lg text-label-lg hover:bg-error-subtle transition-colors shadow-sm" onclick="document.getElementById('modal-ganti-qr').classList.remove('hidden')" type="button">
+<span class="material-symbols-outlined text-[18px]">restart_alt</span>
+<span>Ganti QR</span>
+</button>
+</div>
+<!-- Control Switch & Security Rules Box -->
+<div class="flex flex-col gap-space-md pt-space-sm">
+<!-- Toggle Row -->
+<div class="flex items-center justify-between p-space-md bg-surface-container rounded-xl">
+<div class="flex flex-col pr-space-md">
+<span class="font-label-lg text-label-lg text-on-surface">Status Pemesanan via QR</span>
+<span class="font-caption text-caption text-text-muted">Aktif (Menerima Pesanan Pelanggan)</span>
+</div>
+<!-- Interactive Switch -->
+<button aria-label="Toggle QR Status" class="w-12 h-7 bg-tertiary-container rounded-full p-1 flex items-center justify-end transition-colors cursor-pointer" type="button">
+<span class="w-5 h-5 rounded-full bg-surface-cream shadow-sm block"></span>
+</button>
+</div>
+<!-- Informative Warning Note Box -->
+<div class="p-space-md bg-warning-subtle text-warning rounded-xl flex items-start gap-space-sm">
+<span class="material-symbols-outlined text-[20px] shrink-0 mt-0.5">info</span>
+<div class="flex flex-col gap-1 font-body-md text-body-md leading-relaxed">
+<p>QR yang dicabut atau diganti tidak bisa membuka sesi baru. Sesi aktif yang sedang berjalan tetap dapat menyelesaikan pembayaran di kasir.</p>
+<span class="font-caption text-caption text-text-muted mt-1">Setiap regenerasi atau pergantian QR dicatat di Audit Log Owner.</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- SENSITIVE OWNER CONFIRMATION MODAL (GANTI QR MEJA 4) -->
+<div class="hidden fixed inset-0 z-50 flex items-center justify-center p-space-lg bg-nav-espresso/60 backdrop-blur-sm" id="modal-ganti-qr">
+<div class="bg-surface-cream w-full max-w-md rounded-[20px] p-space-xl flex flex-col gap-space-lg shadow-xl" style="box-shadow: 0 16px 36px rgba(59, 41, 34, 0.25);">
+<!-- Modal Header -->
+<div class="flex items-start gap-space-md">
+<div class="w-12 h-12 rounded-xl bg-error-subtle text-error flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[26px]">warning</span>
+</div>
+<div class="flex flex-col">
+<h3 class="font-title-lg text-title-lg text-error">Ganti QR Meja 4?</h3>
+<span class="font-label-md text-label-md text-text-muted [font-variant-numeric:tabular-nums]">Target Meja: TBL-04 (Lantai 1)</span>
+</div>
+</div>
+<!-- Modal Body -->
+<p class="font-body-md text-body-md text-on-surface leading-relaxed">
+        QR lama langsung tidak berlaku seketika. Anda wajib mencetak ulang dan memasang lembar QR baru di akrilik meja agar pelanggan dapat memesan kembali.
+      </p>
+<!-- Security Requirement Input -->
+<div class="flex flex-col gap-space-xs bg-surface-variant/50 p-space-md rounded-xl">
+<label class="font-label-md text-label-md text-on-surface" for="owner-pin">PIN Verifikasi Owner (6 digit)</label>
+<div class="relative">
+<input class="w-full h-12 px-4 rounded-xl bg-surface-cream text-center text-title-lg tracking-[0.5em] font-mono text-on-surface focus:outline-none focus:ring-2 focus:ring-primary-container" id="owner-pin" maxlength="6" placeholder="••••••" type="password"/>
+</div>
+<span class="font-caption text-caption text-text-muted">Aksi sensitif membutuhkan otorisasi kredensial Owner warkop.</span>
+</div>
+<!-- Action Buttons -->
+<div class="flex items-center justify-end gap-space-md pt-space-xs">
+<button class="h-12 px-space-lg rounded-xl bg-surface-variant text-secondary font-label-lg text-label-lg hover:bg-surface-container transition-colors" onclick="document.getElementById('modal-ganti-qr').classList.add('hidden')" type="button">
+          Batal
+        </button>
+<button class="h-12 px-space-lg rounded-xl bg-error text-on-error font-label-lg text-label-lg hover:opacity-95 shadow-sm active:scale-[0.98] transition-all flex items-center gap-2" onclick="alert('QR Meja 4 berhasil diregenerasi dan dicatat di audit log.'); document.getElementById('modal-ganti-qr').classList.add('hidden');" type="button">
+<span class="material-symbols-outlined text-[18px]">sync</span>
+<span>Ganti QR</span>
+</button>
+</div>
+</div>
+</div>
+</div></main></div></body></html>

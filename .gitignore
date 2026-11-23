@@ -1,0 +1,28 @@
+# Node / Next.js
+node_modules/
+.next/
+out/
+dist/
+apps/web/node_modules/
+apps/web/.next/
+apps/web/out/
+apps/web/.env*.local
+
+# Laravel / PHP
+apps/api/vendor/
+apps/api/node_modules/
+apps/api/.env
+apps/api/storage/*.key
+apps/api/storage/logs/*.log
+apps/api/storage/framework/cache/data/*
+apps/api/storage/framework/sessions/*
+apps/api/storage/framework/views/*
+apps/api/storage/app/private/*
+apps/api/database/*.sqlite
+apps/api/database/*.sqlite-journal
+apps/api/.phpunit.result.cache
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+*.log

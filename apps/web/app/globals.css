@@ -1,0 +1,61 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: var(--font-jakarta), "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* Rustic Modern Brand Palette & Stitch Tokens */
+  --color-nav-espresso: #3B2922;
+  --color-dark-walnut: #5A4032;
+  --color-canvas-cream: #F6F0E6;
+  --color-surface-cream: #FFFCF7;
+  --color-surface-variant: #EFE6D8;
+  --color-surface-container-low: #F8F3ED;
+  --color-surface-container: #F3EDE8;
+  --color-surface-container-high: #EDE7E2;
+  --color-surface-container-highest: #E7E1DD;
+  --color-border-sand: #D9C5AA;
+  --color-border-strong: #9C8570;
+
+  --color-primary: #854225;
+  --color-primary-container: #A3593A;
+  --color-primary-hover: #8F4C31;
+  --color-primary-subtle: #F3DDD0;
+  --color-on-primary: #FFFCF7;
+  --color-on-primary-subtle: #7A3F27;
+  --color-accent-terracotta: #B76E4B;
+
+  --color-secondary: #5A4032;
+  --color-secondary-container: #FFD8C4;
+  --color-on-secondary-fixed: #2B170B;
+
+  --color-tertiary: #556048;
+  --color-tertiary-container: #69735A;
+  --color-success-subtle: #E4E8DA;
+
+  --color-warning: #7A5A0A;
+  --color-warning-subtle: #F6E7BF;
+
+  --color-error: #B3402E;
+  --color-error-subtle: #F5DAD3;
+  --color-on-error: #FFFCF7;
+
+  --color-on-surface: #292724;
+  --color-on-surface-variant: #5A4032;
+  --color-text-muted: #7A6757;
+}
+
+html,
+body {
+  background-color: #F6F0E6;
+  color: #292724;
+  font-family: var(--font-jakarta), "Plus Jakarta Sans", sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+.soft-shadow {
+  box-shadow: 0 1px 2px rgba(59, 41, 34, 0.05), 0 8px 20px rgba(59, 41, 34, 0.06);
+}

@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+
+<html lang="id"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"secondary-fixed-dim":"#e4bfac","surface-container-lowest":"#ffffff","error-container":"#ffdad6","on-error-container":"#93000a","warning-subtle":"#F6E7BF","background":"#fef8f3","primary":"#854225","success-subtle":"#E4E8DA","tertiary-container":"#667158","surface-dim":"#ded9d4","secondary-container":"#ffd8c4","on-error":"#ffffff","surface-bright":"#fef8f3","on-primary":"#ffffff","on-secondary-fixed-variant":"#5b4133","error":"#B3402E","inverse-on-surface":"#f6f0eb","error-subtle":"#F5DAD3","surface-cream":"#FFFCF7","canvas-cream":"#F6F0E6","on-tertiary-fixed-variant":"#404a34","tertiary-fixed-dim":"#bfcbad","on-primary-container":"#ffece6","on-background":"#1d1b18","outline":"#87736c","primary-fixed-dim":"#ffb598","surface-tint":"#914b2d","border-strong":"#9C8570","on-secondary":"#ffffff","tertiary":"#4d5841","surface":"#fef8f3","surface-variant":"#e7e1dd","accent-terracotta":"#B76E4B","inverse-surface":"#32302d","surface-container-low":"#f8f3ed","secondary-fixed":"#ffdbca","tertiary-fixed":"#dbe7c8","surface-container-highest":"#e7e1dd","surface-container-high":"#ede7e2","on-surface":"#1d1b18","on-surface-variant":"#54433d","outline-variant":"#d9c2b9","on-primary-subtle":"#7A3F27","warning":"#7A5A0A","on-tertiary":"#ffffff","primary-container":"#a3593a","primary-fixed":"#ffdbce","on-secondary-fixed":"#2b170b","text-muted":"#7A6757","border-sand":"#D9C5AA","on-primary-fixed":"#370e00","nav-espresso":"#3B2922","on-secondary-container":"#795c4d","on-primary-fixed-variant":"#743418","surface-container":"#f3ede8","inverse-primary":"#ffb598","on-tertiary-container":"#e8f5d6","on-tertiary-fixed":"#151e0b","secondary":"#755849","primary-subtle":"#F3DDD0"},borderRadius:{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},spacing:{"space-xs":"0.25rem","space-md":"0.75rem","margin-tablet":"1.5rem","space-sm":"0.5rem","margin-desktop":"2rem","gutter":"1rem","space-lg":"1rem","margin":"1rem","gutter-tablet":"1.25rem","space-xl":"1.5rem"},fontFamily:{"label-md":["Plus Jakarta Sans"],"body-md":["Plus Jakarta Sans"],"headline-md":["Plus Jakarta Sans"],"label-lg":["Plus Jakarta Sans"],"headline-sm":["Plus Jakarta Sans"],"title-md":["Plus Jakarta Sans"],"title-lg":["Plus Jakarta Sans"],"caption":["Plus Jakarta Sans"],"headline-lg-mobile":["Plus Jakarta Sans"],"body-lg":["Plus Jakarta Sans"],"headline-lg":["Plus Jakarta Sans"]},fontSize:{"label-md":["12px",{lineHeight:"16px",letterSpacing:"0.02em",fontWeight:"600"}],"body-md":["14px",{lineHeight:"20px",fontWeight:"400"}],"headline-md":["24px",{lineHeight:"32px",letterSpacing:"-0.01em",fontWeight:"700"}],"label-lg":["14px",{lineHeight:"20px",fontWeight:"600"}],"headline-sm":["20px",{lineHeight:"28px",fontWeight:"600"}],"title-md":["16px",{lineHeight:"22px",fontWeight:"600"}],"title-lg":["18px",{lineHeight:"24px",fontWeight:"600"}],"caption":["12px",{lineHeight:"16px",fontWeight:"500"}],"headline-lg-mobile":["26px",{lineHeight:"32px",letterSpacing:"-0.01em",fontWeight:"700"}],"body-lg":["16px",{lineHeight:"24px",fontWeight:"400"}],"headline-lg":["32px",{lineHeight:"40px",letterSpacing:"-0.02em",fontWeight:"700"}]}}}};</script></head><body class="bg-canvas-cream font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-[240px] bg-nav-espresso text-canvas-cream z-50 flex flex-col justify-between shadow-[2px_0_12px_rgba(59,41,34,0.12)]"><div class="flex flex-col flex-1 overflow-y-auto"><div class="p-space-lg flex items-center gap-space-sm"><div class="w-10 h-10 rounded-xl bg-primary-container text-surface-cream flex items-center justify-center font-headline-sm text-headline-sm">WTN</div><div class="flex flex-col"><span class="font-title-md text-title-md text-surface-cream leading-tight">Warkop Teras Nenek</span><span class="font-caption text-caption text-secondary-fixed-dim">Owner Workspace</span></div></div><nav class="flex flex-col gap-space-md px-space-sm py-space-xs" data-active-classes="bg-[#4d362d] text-surface-cream font-label-lg border-l-[3px] border-primary-container pl-[13px]"><div class="flex flex-col gap-space-xs"><span class="px-space-md py-space-xs font-caption text-caption uppercase tracking-wider text-secondary-fixed-dim/70">Operasional</span><a class="flex items-center px-space-md py-space-sm rounded-lg text-secondary-fixed-dim hover:bg-[#4a342b] hover:text-surface-cream transition-all font-label-lg text-label-lg" data-path="overview" href="#">Overview</a><a class="flex items-center px-space-md py-space-sm rounded-lg text-secondary-fixed-dim hover:bg-[#4a342b] hover:text-surface-cream transition-all font-label-lg text-label-lg" data-path="pesanan" href="#">Pesanan</a><a class="flex items-center px-space-md py-space-sm rounded-lg text-secondary-fixed-dim hover:bg-[#4a342b] hover:text-surface-cream transition-all font-label-lg text-label-lg" data-path="menu" href="#">Menu</a><a class="flex items-center px-space-md py-space-sm rounded-lg text-secondary-fixed-dim hover:bg-[#4a342b] hover:text-surface-cream transition-all font-label-lg text-label-lg" data-path="meja-and-qr" href="#">Meja &amp; QR</a></div><div class="flex flex-col gap-space-xs"><span class="px-space-md py-space-xs font-caption text-caption uppercase tracking-wider text-secondary-fixed-dim/70">Stok &amp; Keuangan</span><a class="flex items-center px-space-md py-space-sm rounded-lg text-secondary-fixed-dim hover:bg-[#4a342b] hover:text-surface-cream transition-all font-label-lg text-label-lg" data-path="inventory" href="#">Inventory</a><a class="flex items-center px-space-md py-space-sm rounded-lg text-secondary-fixed-dim hover:bg-[#4a342b] hover:text-surface-cream transition-all font-label-lg text-label-lg" data-path="keuangan" href="#">Keuangan</a></div><div class="flex flex-col gap-space-xs"><span class="px-space-md py-space-xs font-caption text-caption uppercase tracking-wider text-secondary-fixed-dim/70">Laporan</span><a class="flex items-center px-space-md py-space-sm rounded-lg text-secondary-fixed-dim hover:bg-[#4a342b] hover:text-surface-cream transition-all font-label-lg text-label-lg" data-path="laporan-karyawan" href="#">Laporan Karyawan</a><a class="flex items-center px-space-md py-space-sm rounded-lg bg-[#4d362d] text-surface-cream font-label-lg text-label-lg border-l-[3px] border-primary-container pl-[13px] transition-all" data-path="rating" href="#">Rating</a><a class="flex items-center px-space-md py-space-sm rounded-lg text-secondary-fixed-dim hover:bg-[#4a342b] hover:text-surface-cream transition-all font-label-lg text-label-lg" data-path="analitik" href="#">Analitik</a></div><div class="flex flex-col gap-space-xs"><span class="px-space-md py-space-xs font-caption text-caption uppercase tracking-wider text-secondary-fixed-dim/70">Sistem</span><a class="flex items-center px-space-md py-space-sm rounded-lg text-secondary-fixed-dim hover:bg-[#4a342b] hover:text-surface-cream transition-all font-label-lg text-label-lg" data-path="pengaturan" href="#">Pengaturan</a><a class="flex items-center px-space-md py-space-sm rounded-lg text-secondary-fixed-dim hover:bg-[#4a342b] hover:text-surface-cream transition-all font-label-lg text-label-lg" data-path="audit-log" href="#">Audit Log</a></div></nav></div><div class="p-space-md bg-[#30211a] flex items-center justify-between gap-space-xs"><div class="flex items-center gap-space-sm min-w-0"><div class="w-9 h-9 rounded-full bg-primary flex items-center justify-center flex-shrink-0"><span class="material-symbols-outlined text-on-primary text-[20px]">person</span></div><div class="flex flex-col min-w-0"><span class="font-label-md text-label-md text-surface-cream truncate">Nenek Sari</span><span class="font-caption text-caption text-secondary-fixed-dim truncate">Owner</span></div></div><a class="w-9 h-9 rounded-lg flex items-center justify-center text-secondary-fixed-dim hover:text-surface-cream hover:bg-[#4a342b] transition-colors" data-path="login" href="#" title="Keluar"><span class="material-symbols-outlined text-[20px]">logout</span></a></div></aside><div class="pl-[240px]"><header class="fixed top-0 left-[240px] right-0 h-16 bg-surface-cream/90 backdrop-blur-md shadow-[0_1px_8px_rgba(59,41,34,0.05)] z-40 flex items-center justify-between px-margin-desktop"><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-xs px-space-sm py-1 rounded-full bg-success-subtle text-tertiary font-label-md text-label-md"><span class="w-2 h-2 rounded-full bg-tertiary"></span><span>Kedai Utama • Buka</span></div><span class="font-caption text-caption text-text-muted">WIB (UTC+7)</span></div><div class="flex items-center gap-space-md"><div class="relative flex items-center"><span class="material-symbols-outlined absolute left-space-md text-text-muted text-[18px]">search</span><input class="h-10 pl-9 pr-space-md bg-canvas-cream border border-border-sand rounded-xl text-on-surface font-body-md text-body-md placeholder:text-text-muted focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container w-64" placeholder="Cari ulasan, staf, menu..." type="text"/></div><button class="w-10 h-10 rounded-xl bg-canvas-cream flex items-center justify-center text-on-surface hover:bg-surface-container transition-colors relative" type="button"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-2.5 right-2.5 w-2 h-2 rounded-full bg-error"></span></button><div class="flex items-center gap-space-xs pl-space-xs"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><span class="font-label-md text-label-md text-on-surface hidden lg:inline">Nenek Sari (Owner)</span></div></div></header><main class="relative pt-16 min-h-screen bg-canvas-cream"><div class="flex flex-col w-full">
+<div class="px-margin-desktop py-space-xl flex flex-col gap-space-xl max-w-[1440px] mx-auto w-full">
+<!-- Header Area -->
+<header class="flex flex-col md:flex-row md:items-center justify-between gap-space-md">
+<div class="flex flex-col gap-space-xs">
+<h1 class="font-headline-lg text-headline-lg text-[#292724] tracking-tight">Rating</h1>
+<p class="font-body-md text-body-md text-[#5A4032]">Evaluasi kepuasan pelanggan per pesanan selesai untuk menjaga kualitas layanan dan rasa.</p>
+</div>
+<div class="flex items-center gap-space-sm flex-wrap">
+<!-- Period Selector Dropdown Button -->
+<button class="h-11 px-space-md bg-surface-cream rounded-xl text-[#292724] font-label-lg text-label-lg flex items-center gap-space-xs shadow-sm hover:bg-canvas-cream transition-colors min-h-[44px]" style="box-shadow: 0 0 0 1px #D9C5AA;" type="button">
+<span class="material-symbols-outlined text-[20px] text-primary">calendar_today</span>
+<span>30 hari terakhir</span>
+<span class="material-symbols-outlined text-[18px] text-text-muted ml-space-xs">expand_more</span>
+</button>
+<!-- Secondary Action Button -->
+<button class="h-11 px-space-lg bg-surface-cream rounded-xl text-[#292724] font-label-lg text-label-lg flex items-center gap-space-xs shadow-sm hover:bg-canvas-cream transition-colors min-h-[44px]" style="box-shadow: 0 0 0 1px #D9C5AA;" type="button">
+<span class="material-symbols-outlined text-[20px] text-text-muted">download</span>
+<span>Unduh Rekap Ulasan</span>
+</button>
+</div>
+</header>
+<!-- Top Section: Summary Row (Single Container) -->
+<section class="bg-surface-cream rounded-[20px] p-6 shadow-sm" style="box-shadow: 0 0 0 1px #D9C5AA;">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+<!-- Left Side: Overall Score & Summary -->
+<div class="lg:col-span-5 flex flex-col gap-space-sm sm:pr-8 lg:border-r lg:border-[#E8DEC8]">
+<span class="font-caption text-caption uppercase tracking-wider text-text-muted font-semibold">Skor Kepuasan Keseluruhan</span>
+<div class="flex items-baseline gap-space-sm">
+<span class="font-headline-lg text-[52px] leading-none font-bold text-[#292724] tabular-nums">4,6</span>
+<span class="font-title-lg text-title-lg text-text-muted">/ 5,0</span>
+</div>
+<!-- 5 Stars Visual (4.6) -->
+<div aria-label="Rating 4.6 dari 5 bintang" class="flex items-center gap-1 my-1">
+<span class="material-symbols-outlined text-[26px] text-accent-terracotta" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[26px] text-accent-terracotta" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[26px] text-accent-terracotta" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[26px] text-accent-terracotta" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[26px] text-accent-terracotta" style="font-variation-settings: 'FILL' 1;">star_half</span>
+</div>
+<div class="flex flex-col gap-0.5">
+<span class="font-label-lg text-label-lg text-[#292724] font-semibold tabular-nums">128 rating dari pesanan selesai</span>
+<span class="font-caption text-caption text-text-muted">Skala 1,0 – 5,0 · Hanya 1 rating per order lunas</span>
+</div>
+</div>
+<!-- Right Side: Star Distribution Breakdown -->
+<div class="lg:col-span-7 flex flex-col gap-space-sm">
+<div class="flex justify-between items-center mb-1">
+<span class="font-label-md text-label-md text-[#5A4032] uppercase tracking-wider">Distribusi Bintang</span>
+<span class="font-caption text-caption text-text-muted">Berdasarkan 128 pesanan</span>
+</div>
+<div class="flex flex-col gap-2.5">
+<!-- 5 Bintang -->
+<div class="flex items-center gap-space-md text-body-md font-body-md">
+<div class="w-20 text-[#292724] font-semibold text-right flex items-center justify-end gap-1">
+<span>5</span>
+<span class="material-symbols-outlined text-[16px] text-accent-terracotta" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<div class="flex-1 h-3 rounded-full bg-border-sand/40 overflow-hidden">
+<div class="h-full bg-primary-container rounded-full" style="width: 70.3%;"></div>
+</div>
+<div class="w-24 text-right tabular-nums text-[#292724] font-semibold text-caption font-caption">
+                90 <span class="text-text-muted font-normal">(70,3%)</span>
+</div>
+</div>
+<!-- 4 Bintang -->
+<div class="flex items-center gap-space-md text-body-md font-body-md">
+<div class="w-20 text-[#292724] font-semibold text-right flex items-center justify-end gap-1">
+<span>4</span>
+<span class="material-symbols-outlined text-[16px] text-accent-terracotta" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<div class="flex-1 h-3 rounded-full bg-border-sand/40 overflow-hidden">
+<div class="h-full bg-primary-container rounded-full" style="width: 20.3%;"></div>
+</div>
+<div class="w-24 text-right tabular-nums text-[#292724] font-semibold text-caption font-caption">
+                26 <span class="text-text-muted font-normal">(20,3%)</span>
+</div>
+</div>
+<!-- 3 Bintang -->
+<div class="flex items-center gap-space-md text-body-md font-body-md">
+<div class="w-20 text-[#292724] font-semibold text-right flex items-center justify-end gap-1">
+<span>3</span>
+<span class="material-symbols-outlined text-[16px] text-accent-terracotta" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<div class="flex-1 h-3 rounded-full bg-border-sand/40 overflow-hidden">
+<div class="h-full bg-primary-container rounded-full" style="width: 5.5%;"></div>
+</div>
+<div class="w-24 text-right tabular-nums text-[#292724] font-semibold text-caption font-caption">
+                7 <span class="text-text-muted font-normal">(5,5%)</span>
+</div>
+</div>
+<!-- 2 Bintang -->
+<div class="flex items-center gap-space-md text-body-md font-body-md">
+<div class="w-20 text-[#292724] font-semibold text-right flex items-center justify-end gap-1">
+<span>2</span>
+<span class="material-symbols-outlined text-[16px] text-accent-terracotta" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<div class="flex-1 h-3 rounded-full bg-border-sand/40 overflow-hidden">
+<div class="h-full bg-primary-container rounded-full" style="width: 2.3%;"></div>
+</div>
+<div class="w-24 text-right tabular-nums text-[#292724] font-semibold text-caption font-caption">
+                3 <span class="text-text-muted font-normal">(2,3%)</span>
+</div>
+</div>
+<!-- 1 Bintang -->
+<div class="flex items-center gap-space-md text-body-md font-body-md">
+<div class="w-20 text-[#292724] font-semibold text-right flex items-center justify-end gap-1">
+<span>1</span>
+<span class="material-symbols-outlined text-[16px] text-accent-terracotta" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<div class="flex-1 h-3 rounded-full bg-border-sand/40 overflow-hidden">
+<div class="h-full bg-primary-container rounded-full" style="width: 1.6%;"></div>
+</div>
+<div class="w-24 text-right tabular-nums text-[#292724] font-semibold text-caption font-caption">
+                2 <span class="text-text-muted font-normal">(1,6%)</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Middle Section: Trend SVG Line Chart -->
+<section class="bg-surface-cream rounded-[20px] p-6 shadow-sm flex flex-col gap-space-lg" style="box-shadow: 0 0 0 1px #D9C5AA;">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm">
+<div class="flex flex-col gap-0.5">
+<h2 class="font-title-lg text-title-lg text-[#292724]">Tren Rata-Rata Rating Mingguan</h2>
+<p class="font-caption text-caption text-text-muted">Pergerakan skor rata-rata mingguan (skala 4,0 hingga 5,0)</p>
+</div>
+<!-- Insight Badge -->
+<div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-success-subtle text-tertiary font-label-md text-label-md self-start sm:self-auto">
+<span class="material-symbols-outlined text-[18px]">trending_up</span>
+<span>Tren Stabil Positif (+0,2 poin dalam 30 hari)</span>
+</div>
+</div>
+<!-- Chart Canvas / SVG Container -->
+<div class="w-full overflow-x-auto">
+<div class="min-w-[640px] w-full pt-6 pb-2">
+<svg class="w-full h-56 select-none" preserveaspectratio="none" viewbox="0 0 800 240">
+<!-- Guidelines & Y Labels (Skala 4.0 - 5.0) -->
+<!-- 5.0: Y=20 -->
+<line stroke="#D9C5AA" stroke-dasharray="4,4" stroke-width="1" x1="60" x2="780" y1="20" y2="20"></line>
+<text fill="#7A6757" font-family="Plus Jakarta Sans" font-size="12" text-anchor="end" x="45" y="24">5,0</text>
+<!-- 4.8: Y=56 -->
+<line stroke="#D9C5AA" stroke-dasharray="4,4" stroke-width="1" x1="60" x2="780" y1="56" y2="56"></line>
+<text fill="#7A6757" font-family="Plus Jakarta Sans" font-size="12" text-anchor="end" x="45" y="60">4,8</text>
+<!-- 4.6: Y=92 -->
+<line stroke="#D9C5AA" stroke-dasharray="4,4" stroke-width="1" x1="60" x2="780" y1="92" y2="92"></line>
+<text fill="#7A6757" font-family="Plus Jakarta Sans" font-size="12" text-anchor="end" x="45" y="96">4,6</text>
+<!-- 4.4: Y=128 -->
+<line stroke="#D9C5AA" stroke-dasharray="4,4" stroke-width="1" x1="60" x2="780" y1="128" y2="128"></line>
+<text fill="#7A6757" font-family="Plus Jakarta Sans" font-size="12" text-anchor="end" x="45" y="132">4,4</text>
+<!-- 4.2: Y=164 -->
+<line stroke="#D9C5AA" stroke-dasharray="4,4" stroke-width="1" x1="60" x2="780" y1="164" y2="164"></line>
+<text fill="#7A6757" font-family="Plus Jakarta Sans" font-size="12" text-anchor="end" x="45" y="168">4,2</text>
+<!-- 4.0: Y=200 -->
+<line stroke="#D9C5AA" stroke-width="1" x1="60" x2="780" y1="200" y2="200"></line>
+<text fill="#7A6757" font-family="Plus Jakarta Sans" font-size="12" text-anchor="end" x="45" y="204">4,0</text>
+<!-- Area Fill Under Curve -->
+<!-- Points: 
+                 W1 (X=140, Y=128) -> 4.4
+                 W2 (X=330, Y=110) -> 4.5
+                 W3 (X=520, Y=92)  -> 4.6
+                 W4 (X=710, Y=92)  -> 4.6
+            -->
+<polygon fill="#F3DDD0" fill-opacity="0.45" points="140,200 140,128 330,110 520,92 710,92 710,200"></polygon>
+<!-- Trend Polyline -->
+<polyline fill="none" points="140,128 330,110 520,92 710,92" stroke="#A3593A" stroke-linecap="round" stroke-linejoin="round" stroke-width="3.5"></polyline>
+<!-- Data Point 1 (W1: 4.4) -->
+<g class="cursor-pointer">
+<rect fill="#3B2922" height="22" rx="6" width="48" x="116" y="98"></rect>
+<text fill="#FFFCF7" font-family="Plus Jakarta Sans" font-size="11" font-weight="700" text-anchor="middle" x="140" y="113">4,4</text>
+<circle cx="140" cy="128" fill="#A3593A" r="6" stroke="#FFFCF7" stroke-width="2.5"></circle>
+</g>
+<!-- Data Point 2 (W2: 4.5) -->
+<g class="cursor-pointer">
+<rect fill="#3B2922" height="22" rx="6" width="48" x="306" y="80"></rect>
+<text fill="#FFFCF7" font-family="Plus Jakarta Sans" font-size="11" font-weight="700" text-anchor="middle" x="330" y="95">4,5</text>
+<circle cx="330" cy="110" fill="#A3593A" r="6" stroke="#FFFCF7" stroke-width="2.5"></circle>
+</g>
+<!-- Data Point 3 (W3: 4.6) -->
+<g class="cursor-pointer">
+<rect fill="#3B2922" height="22" rx="6" width="48" x="496" y="62"></rect>
+<text fill="#FFFCF7" font-family="Plus Jakarta Sans" font-size="11" font-weight="700" text-anchor="middle" x="520" y="77">4,6</text>
+<circle cx="520" cy="92" fill="#A3593A" r="6" stroke="#FFFCF7" stroke-width="2.5"></circle>
+</g>
+<!-- Data Point 4 (W4: 4.6) -->
+<g class="cursor-pointer">
+<rect fill="#3B2922" height="22" rx="6" width="48" x="686" y="62"></rect>
+<text fill="#FFFCF7" font-family="Plus Jakarta Sans" font-size="11" font-weight="700" text-anchor="middle" x="710" y="77">4,6</text>
+<circle cx="710" cy="92" fill="#A3593A" r="6" stroke="#FFFCF7" stroke-width="2.5"></circle>
+</g>
+<!-- X-Axis Labels -->
+<text fill="#292724" font-family="Plus Jakarta Sans" font-size="12" font-weight="600" text-anchor="middle" x="140" y="224">Minggu 1</text>
+<text fill="#7A6757" font-family="Plus Jakarta Sans" font-size="11" text-anchor="middle" x="140" y="238">1–7 Nov</text>
+<text fill="#292724" font-family="Plus Jakarta Sans" font-size="12" font-weight="600" text-anchor="middle" x="330" y="224">Minggu 2</text>
+<text fill="#7A6757" font-family="Plus Jakarta Sans" font-size="11" text-anchor="middle" x="330" y="238">8–14 Nov</text>
+<text fill="#292724" font-family="Plus Jakarta Sans" font-size="12" font-weight="600" text-anchor="middle" x="520" y="224">Minggu 3</text>
+<text fill="#7A6757" font-family="Plus Jakarta Sans" font-size="11" text-anchor="middle" x="520" y="238">15–21 Nov</text>
+<text fill="#292724" font-family="Plus Jakarta Sans" font-size="12" font-weight="600" text-anchor="middle" x="710" y="224">Minggu 4</text>
+<text fill="#7A6757" font-family="Plus Jakarta Sans" font-size="11" text-anchor="middle" x="710" y="238">22–28 Nov</text>
+</svg>
+</div>
+</div>
+</section>
+<!-- Bottom Section: Customer Reviews Table/List -->
+<section class="bg-surface-cream rounded-[20px] p-6 shadow-sm flex flex-col gap-space-lg" style="box-shadow: 0 0 0 1px #D9C5AA;">
+<!-- Top Section Header & Filter Chips -->
+<div class="flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<h2 class="font-title-lg text-title-lg text-[#292724]">Ulasan &amp; Komentar Pelanggan</h2>
+<span class="px-2.5 py-0.5 rounded-full bg-canvas-cream text-text-muted font-caption text-caption tabular-nums font-semibold">128 total ulasan</span>
+</div>
+</div>
+<!-- Filter Chips -->
+<div class="flex items-center gap-space-sm flex-wrap">
+<button class="h-10 px-4 rounded-full bg-nav-espresso text-surface-cream font-label-lg text-label-lg flex items-center justify-center transition-all min-h-[40px]" type="button">
+            Semua (128)
+          </button>
+<button class="h-10 px-4 rounded-full bg-[#EFE6D8] text-[#5A4032] hover:bg-[#E5DBCB] font-label-lg text-label-lg flex items-center justify-center transition-all min-h-[40px]" type="button">
+            1–2 Bintang (5)
+          </button>
+<button class="h-10 px-4 rounded-full bg-[#EFE6D8] text-[#5A4032] hover:bg-[#E5DBCB] font-label-lg text-label-lg flex items-center justify-center transition-all min-h-[40px]" type="button">
+            Ada Komentar (78)
+          </button>
+<button class="h-10 px-4 rounded-full bg-[#EFE6D8] text-[#5A4032] hover:bg-[#E5DBCB] font-label-lg text-label-lg flex items-center justify-center transition-all min-h-[40px]" type="button">
+            Bintang 5 (90)
+          </button>
+</div>
+</div>
+<!-- Reviews Item Rows (Flat discipline, separated by subtle borders) -->
+<div class="flex flex-col divide-y divide-[#EADFCF]">
+<!-- Row 1 -->
+<article class="py-space-lg flex flex-col lg:flex-row lg:items-start justify-between gap-space-md first:pt-2">
+<div class="flex flex-col gap-space-xs flex-1">
+<div class="flex items-center gap-space-sm flex-wrap">
+<div aria-label="5 dari 5 bintang" class="flex items-center text-accent-terracotta">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<span class="font-label-md text-label-md text-[#292724] font-bold tabular-nums">5,0 / 5</span>
+<span class="text-border-sand font-caption text-caption">•</span>
+<time class="font-caption text-caption text-text-muted">22 Nov 2026 · 19.45 WIB</time>
+</div>
+<!-- Comment -->
+<p class="font-body-md text-body-md text-[#292724] font-medium leading-relaxed">
+              “Kopi susunya pas, tempatnya adem.”
+            </p>
+<!-- Order Link Badge & Items -->
+<div class="flex items-center gap-space-sm flex-wrap pt-0.5">
+<a class="inline-flex items-center gap-1 text-primary-container hover:text-primary font-label-md text-label-md font-semibold bg-primary-subtle/50 px-2.5 py-1 rounded-md transition-colors min-h-[30px]" href="#">
+<span class="material-symbols-outlined text-[16px]">receipt_long</span>
+<span>Order #0031</span>
+</a>
+<span class="font-caption text-caption text-[#5A4032]">Meja 3 · 2 Kopi Susu, 1 Roti Bakar</span>
+</div>
+</div>
+<!-- Staff/Meta info -->
+<div class="flex items-center gap-2 self-start lg:self-center shrink-0">
+<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-canvas-cream text-text-muted font-caption text-caption border border-[#E0D3C1]">
+<span class="material-symbols-outlined text-[16px]">person</span>
+<span>Barista: Budi</span>
+</div>
+</div>
+</article>
+<!-- Row 2 -->
+<article class="py-space-lg flex flex-col lg:flex-row lg:items-start justify-between gap-space-md">
+<div class="flex flex-col gap-space-xs flex-1">
+<div class="flex items-center gap-space-sm flex-wrap">
+<div aria-label="3 dari 5 bintang" class="flex items-center text-accent-terracotta">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[20px]">star</span>
+<span class="material-symbols-outlined text-[20px]">star</span>
+</div>
+<span class="font-label-md text-label-md text-[#292724] font-bold tabular-nums">3,0 / 5</span>
+<span class="text-border-sand font-caption text-caption">•</span>
+<time class="font-caption text-caption text-text-muted">22 Nov 2026 · 20.15 WIB</time>
+</div>
+<!-- Comment -->
+<p class="font-body-md text-body-md text-[#292724] font-medium leading-relaxed">
+              “Pesanan agak lama saat ramai.”
+            </p>
+<!-- Order Link Badge & Items -->
+<div class="flex items-center gap-space-sm flex-wrap pt-0.5">
+<a class="inline-flex items-center gap-1 text-primary-container hover:text-primary font-label-md text-label-md font-semibold bg-primary-subtle/50 px-2.5 py-1 rounded-md transition-colors min-h-[30px]" href="#">
+<span class="material-symbols-outlined text-[16px]">receipt_long</span>
+<span>Order #0028</span>
+</a>
+<span class="font-caption text-caption text-[#5A4032]">Meja 7 · 3 Indomie, 3 Es Teh Tarik</span>
+</div>
+</div>
+<!-- Quick Action / Note Tag -->
+<div class="flex items-center gap-2 self-start lg:self-center shrink-0">
+<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-warning-subtle text-warning font-label-md text-label-md border border-[#EDDCAC]">
+<span class="material-symbols-outlined text-[16px]">schedule</span>
+<span>Perlu evaluasi waktu racik saat shift ramai</span>
+</div>
+</div>
+</article>
+<!-- Row 3 -->
+<article class="py-space-lg flex flex-col lg:flex-row lg:items-start justify-between gap-space-md">
+<div class="flex flex-col gap-space-xs flex-1">
+<div class="flex items-center gap-space-sm flex-wrap">
+<div aria-label="5 dari 5 bintang" class="flex items-center text-accent-terracotta">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<span class="font-label-md text-label-md text-[#292724] font-bold tabular-nums">5,0 / 5</span>
+<span class="text-border-sand font-caption text-caption">•</span>
+<time class="font-caption text-caption text-text-muted">21 Nov 2026 · 16.30 WIB</time>
+</div>
+<!-- Comment -->
+<p class="font-body-md text-body-md text-[#292724] font-medium leading-relaxed">
+              “Indomie enak, sambal dipisah sesuai catatan.”
+            </p>
+<!-- Order Link Badge & Items -->
+<div class="flex items-center gap-space-sm flex-wrap pt-0.5">
+<a class="inline-flex items-center gap-1 text-primary-container hover:text-primary font-label-md text-label-md font-semibold bg-primary-subtle/50 px-2.5 py-1 rounded-md transition-colors min-h-[30px]" href="#">
+<span class="material-symbols-outlined text-[16px]">receipt_long</span>
+<span>Order #0019</span>
+</a>
+<span class="font-caption text-caption text-[#5A4032]">Meja 4 · 1 Indomie Goreng Telur, 1 Kopi Hitam</span>
+</div>
+</div>
+<!-- Tag -->
+<div class="flex items-center gap-2 self-start lg:self-center shrink-0">
+<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-success-subtle text-tertiary font-label-md text-label-md border border-[#D0DBC2]">
+<span class="material-symbols-outlined text-[16px]">check_circle</span>
+<span>Penyajian Sesuai Catatan</span>
+</div>
+</div>
+</article>
+<!-- Row 4 -->
+<article class="py-space-lg flex flex-col lg:flex-row lg:items-start justify-between gap-space-md">
+<div class="flex flex-col gap-space-xs flex-1">
+<div class="flex items-center gap-space-sm flex-wrap">
+<div aria-label="4 dari 5 bintang" class="flex items-center text-accent-terracotta">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[20px]">star</span>
+</div>
+<span class="font-label-md text-label-md text-[#292724] font-bold tabular-nums">4,0 / 5</span>
+<span class="text-border-sand font-caption text-caption">•</span>
+<time class="font-caption text-caption text-text-muted">20 Nov 2026 · 14.10 WIB</time>
+</div>
+<!-- Comment -->
+<p class="font-body-md text-body-md text-[#292724] font-medium leading-relaxed">
+              “Es kopi kurang manis, padahal minta 100%.”
+            </p>
+<!-- Order Link Badge & Items -->
+<div class="flex items-center gap-space-sm flex-wrap pt-0.5">
+<a class="inline-flex items-center gap-1 text-primary-container hover:text-primary font-label-md text-label-md font-semibold bg-primary-subtle/50 px-2.5 py-1 rounded-md transition-colors min-h-[30px]" href="#">
+<span class="material-symbols-outlined text-[16px]">receipt_long</span>
+<span>Order #0044</span>
+</a>
+<span class="font-caption text-caption text-[#5A4032]">Meja 2 · 2 Kopi Susu Gula Aren</span>
+</div>
+</div>
+<!-- Tag -->
+<div class="flex items-center gap-2 self-start lg:self-center shrink-0">
+<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#F3DDD0] text-on-primary-subtle font-label-md text-label-md border border-border-sand">
+<span class="material-symbols-outlined text-[16px]">tune</span>
+<span>Konsistensi Resep</span>
+</div>
+</div>
+</article>
+<!-- Row 5 -->
+<article class="py-space-lg flex flex-col lg:flex-row lg:items-start justify-between gap-space-md">
+<div class="flex flex-col gap-space-xs flex-1">
+<div class="flex items-center gap-space-sm flex-wrap">
+<div aria-label="2 dari 5 bintang" class="flex items-center text-accent-terracotta">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[20px]">star</span>
+<span class="material-symbols-outlined text-[20px]">star</span>
+<span class="material-symbols-outlined text-[20px]">star</span>
+</div>
+<span class="font-label-md text-label-md text-[#292724] font-bold tabular-nums">2,0 / 5</span>
+<span class="text-border-sand font-caption text-caption">•</span>
+<time class="font-caption text-caption text-text-muted">19 Nov 2026 · 21.05 WIB</time>
+</div>
+<!-- Comment (Empty) -->
+<p class="font-body-md text-body-md text-text-muted italic leading-relaxed">
+              (Pelanggan tidak meninggalkan komentar tertulis)
+            </p>
+<!-- Order Link Badge & Items -->
+<div class="flex items-center gap-space-sm flex-wrap pt-0.5">
+<a class="inline-flex items-center gap-1 text-primary-container hover:text-primary font-label-md text-label-md font-semibold bg-primary-subtle/50 px-2.5 py-1 rounded-md transition-colors min-h-[30px]" href="#">
+<span class="material-symbols-outlined text-[16px]">receipt_long</span>
+<span>Order #0012</span>
+</a>
+<span class="font-caption text-caption text-[#5A4032]">Meja 5 · 1 Kopi Hitam, 1 Pisang Goreng</span>
+</div>
+</div>
+<div class="flex items-center gap-2 self-start lg:self-center shrink-0">
+<div class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-canvas-cream text-text-muted font-caption text-caption">
+<span>Tanpa catatan staf</span>
+</div>
+</div>
+</article>
+</div>
+<!-- Pagination & Bottom Controls -->
+<div class="pt-space-md border-t border-[#EADFCF] flex flex-col sm:flex-row items-center justify-between gap-space-md">
+<span class="font-caption text-caption text-text-muted tabular-nums">
+          Menampilkan <strong class="text-[#292724] font-semibold">5</strong> dari <strong class="text-[#292724] font-semibold">128</strong> ulasan pelanggan
+        </span>
+<!-- Pagination Buttons -->
+<nav aria-label="Navigasi Halaman" class="flex items-center gap-1">
+<button aria-label="Halaman sebelumnya" class="w-9 h-9 rounded-lg flex items-center justify-center text-text-muted hover:bg-canvas-cream transition-colors" disabled="" type="button">
+<span class="material-symbols-outlined text-[18px]">chevron_left</span>
+</button>
+<button aria-current="page" class="w-9 h-9 rounded-lg bg-nav-espresso text-surface-cream font-label-md text-label-md flex items-center justify-center" type="button">
+            1
+          </button>
+<button class="w-9 h-9 rounded-lg text-[#292724] hover:bg-canvas-cream font-label-md text-label-md flex items-center justify-center transition-colors" type="button">
+            2
+          </button>
+<button class="w-9 h-9 rounded-lg text-[#292724] hover:bg-canvas-cream font-label-md text-label-md flex items-center justify-center transition-colors" type="button">
+            3
+          </button>
+<span class="w-7 text-center text-text-muted font-caption">...</span>
+<button class="w-9 h-9 rounded-lg text-[#292724] hover:bg-canvas-cream font-label-md text-label-md flex items-center justify-center transition-colors" type="button">
+            26
+          </button>
+<button aria-label="Halaman berikutnya" class="w-9 h-9 rounded-lg flex items-center justify-center text-[#292724] hover:bg-canvas-cream transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">chevron_right</span>
+</button>
+</nav>
+</div>
+<!-- Informative Footnote -->
+<footer class="pt-space-xs flex items-start gap-space-xs text-text-muted">
+<span class="material-symbols-outlined text-[18px] text-text-muted shrink-0 mt-0.5">info</span>
+<p class="font-caption text-caption leading-relaxed">
+          Rating diberikan oleh pelanggan melalui halaman status pesanan QR setelah pesanan lunas disajikan. 1 transaksi hanya memiliki 1 hak ulasan untuk menjamin keaslian data kepuasan.
+        </p>
+</footer>
+</section>
+</div>
+</div></main></div></body></html>
