@@ -175,7 +175,7 @@ export default function CashierLayout({
       </aside>
 
       {/* Main Content */}
-      <div className="flex-1 md:pl-56 flex flex-col min-h-screen pb-16 md:pb-0">
+      <div className="flex-1 min-w-0 md:pl-56 flex flex-col min-h-screen pb-16 md:pb-0">
         <header className="sticky top-0 z-30 h-16 bg-white border-b border-slate-200 px-4 sm:px-6 flex items-center justify-between gap-4 no-print">
           <div className="flex items-center gap-2.5">
             <span className="font-bold text-sm text-slate-900 md:hidden">

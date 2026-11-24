@@ -245,7 +245,7 @@ export default function OwnerLayout({
       )}
 
       {/* Main Content */}
-      <div className="flex-1 lg:pl-60 flex flex-col min-h-screen">
+      <div className="flex-1 min-w-0 lg:pl-60 flex flex-col min-h-screen">
         <header className="sticky top-0 z-30 h-16 bg-white border-b border-slate-200 px-4 sm:px-8 flex items-center justify-between gap-4 no-print">
           <div className="flex items-center gap-3">
             <button
