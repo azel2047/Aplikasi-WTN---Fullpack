@@ -368,8 +368,7 @@ export default function CustomerOrderTrackingPage() {
             </div>
           ) : order.payment_status === "PROOF_UPLOADED" ? (
             <p className="text-xs text-on-surface-variant leading-relaxed">
-              Bukti transfer QRIS telah terkirim. Mohon tunggu kasir memverifikasi mutasi
-              merchant sebelum pesanan mulai diracik (sesuai aturan verifikasi manual QRIS).
+              Bukti transfer QRIS sudah diterima. Kasir sedang memverifikasi pembayaran Anda.
             </p>
           ) : order.payment_status === "PAID" ? (
             <p className="text-xs text-on-surface-variant leading-relaxed">
@@ -533,30 +532,30 @@ export default function CustomerOrderTrackingPage() {
         {/* QRIS / CASH PAYMENT INSTRUCTION & MANUAL PROOF UPLOAD (AC-13) */}
         {order.status !== "CANCELLED" && order.payment_status !== "PAID" && (
           <section className="bg-surface-cream border border-border-sand rounded-2xl p-5 soft-shadow space-y-4">
-            <div className="flex items-center justify-between border-b border-surface-variant pb-3">
-              <div>
+            <div className="flex items-center justify-between gap-3 border-b border-surface-variant pb-3">
+              <div className="min-w-0">
                 <span className="text-xs text-text-muted block">
                   Metode Pembayaran
                 </span>
                 <span className="text-sm font-bold text-nav-espresso flex items-center gap-1.5">
                   {order.payment_method === "QRIS" ? (
                     <>
-                      <QrCode className="w-4 h-4 text-primary-container" />
-                      <span>QRIS Statis Warkop Teras Nenek</span>
+                      <QrCode className="w-4 h-4 text-primary-container shrink-0" />
+                      <span className="truncate">QRIS Warkop Teras Nenek</span>
                     </>
                   ) : (
                     <>
-                      <Wallet className="w-4 h-4 text-primary-container" />
+                      <Wallet className="w-4 h-4 text-primary-container shrink-0" />
                       <span>Tunai (Bayar di Kasir)</span>
                     </>
                   )}
                 </span>
               </div>
-              <div className="text-right">
+              <div className="text-right shrink-0">
                 <span className="text-xs text-text-muted block">
                   Total Tagihan
                 </span>
-                <span className="text-lg font-bold text-primary-container tabular-nums">
+                <span className="text-lg font-bold text-primary-container tabular-nums whitespace-nowrap">
                   {formatRupiah(order.total_amount)}
                 </span>
               </div>

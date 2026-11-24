@@ -381,14 +381,7 @@ export default function CustomerTableMenuPage() {
         <div className="max-w-[480px] mx-auto px-4 py-3 flex flex-col gap-2">
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2.5 min-w-0">
-              <Link
-                href="/"
-                aria-label="Kembali ke Beranda"
-                className="w-11 h-11 -ml-1 rounded-full hover:bg-surface-variant flex items-center justify-center text-nav-espresso shrink-0 transition-colors"
-              >
-                <ArrowLeft className="w-5 h-5" />
-              </Link>
-              <div className="w-8 h-8 rounded-lg bg-nav-espresso text-surface-cream flex items-center justify-center font-bold text-xs shrink-0">
+              <div className="w-9 h-9 rounded-xl bg-[#10A352] text-white flex items-center justify-center font-bold text-xs shrink-0">
                 WTN
               </div>
               <div className="min-w-0">
@@ -396,7 +389,7 @@ export default function CustomerTableMenuPage() {
                   {settings.business_name || "Warkop Teras Nenek"}
                 </h1>
                 <p className="text-xs text-text-muted truncate">
-                  Pilih menu &amp; catatan item, kirim ke kasir
+                  Pesan langsung dari meja
                 </p>
               </div>
             </div>
@@ -404,7 +397,7 @@ export default function CustomerTableMenuPage() {
             {/* Table Context Pill */}
             <div className="flex items-center gap-1.5 bg-surface-cream border border-border-sand px-3 py-1.5 rounded-full shrink-0">
               <Utensils className="w-3.5 h-3.5 text-accent-terracotta" />
-              <span className="text-xs font-bold text-nav-espresso">
+              <span className="text-xs font-bold text-nav-espresso whitespace-nowrap">
                 {table.name}
               </span>
             </div>
@@ -514,19 +507,18 @@ export default function CustomerTableMenuPage() {
           </div>
         )}
 
-        {/* Notice Banner: Suasana Teras Warkop */}
-        <div className="p-3.5 rounded-xl bg-surface-cream border border-border-sand flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2.5 min-w-0">
-            <div className="w-8 h-8 rounded-full bg-primary-subtle text-on-primary-subtle flex items-center justify-center shrink-0">
-              <Flame className="w-4 h-4" />
+        {/* Notice Banner */}
+        <div className="p-3 rounded-xl bg-surface-cream border border-border-sand flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 min-w-0">
+            <div className="w-7 h-7 rounded-full bg-primary-subtle text-on-primary-subtle flex items-center justify-center shrink-0">
+              <Flame className="w-3.5 h-3.5" />
             </div>
-            <p className="text-xs sm:text-sm text-on-surface-variant truncate">
-              Pesanan langsung diantar hangat ke{" "}
-              <strong className="text-nav-espresso">{table.name}</strong> ({table.area}).
+            <p className="text-xs text-on-surface-variant truncate">
+              Diantar hangat ke <strong className="text-nav-espresso">{table.name}</strong>
             </p>
           </div>
-          <span className="text-xs text-primary font-semibold shrink-0">
-            Warkop Asli
+          <span className="text-xs text-primary font-semibold shrink-0 whitespace-nowrap">
+            {table.area}
           </span>
         </div>
 
@@ -625,13 +617,13 @@ export default function CustomerTableMenuPage() {
                               e.stopPropagation();
                               openProductModal(product);
                             }}
-                            className={`absolute -bottom-1 -right-1 w-11 h-11 rounded-full flex items-center justify-center shadow-md transition-transform ${
+                            className={`absolute bottom-1.5 right-1.5 w-8 h-8 rounded-full flex items-center justify-center shadow-md transition-transform ${
                               available
                                 ? "bg-primary-container hover:bg-primary-hover text-on-primary active:scale-95 cursor-pointer"
                                 : "bg-surface-variant text-text-muted cursor-not-allowed"
                             }`}
                           >
-                            <Plus className="w-5 h-5" />
+                            <Plus className="w-4 h-4" />
                           </button>
                         </div>
                       </article>

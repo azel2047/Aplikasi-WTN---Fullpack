@@ -146,15 +146,15 @@ export default function OwnerOverviewPage() {
       {/* Low Stock Alert Strip */}
       {lowStock.length > 0 && (
         <div className="p-4 rounded-2xl bg-warning-subtle border border-warning/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
+          <div className="flex items-start gap-3 min-w-0 flex-1">
             <div className="w-9 h-9 rounded-xl bg-warning/15 text-warning flex items-center justify-center shrink-0">
               <AlertTriangle className="w-5 h-5" />
             </div>
-            <div className="text-xs text-warning">
+            <div className="text-xs text-warning min-w-0 flex-1 break-words">
               <span className="font-bold block">
-                Peringatan Stok Bahan Baku ({lowStock.length} bahan menipis/habis)
+                Stok Bahan Menipis ({lowStock.length} bahan)
               </span>
-              <span>
+              <span className="block leading-relaxed">
                 {lowStock
                   .map(
                     (i: any) =>
