@@ -16,6 +16,15 @@ function jsonError(message: string, status = 400) {
   return NextResponse.json({ message }, { status });
 }
 
+const ALLOWED_IMAGE_TYPES = new Set(["image/jpeg", "image/jpg", "image/png", "image/webp"]);
+const MAX_UPLOAD_BYTES = 2 * 1024 * 1024; // 2 MB
+
+function sanitizeProfile(p: any) {
+  if (!p) return null;
+  const { pin: _pin, ...safe } = p;
+  return safe;
+}
+
 async function parseBody(req: NextRequest): Promise<any> {
   const ct = req.headers.get("content-type") || "";
   if (ct.includes("multipart/form-data")) {
@@ -25,11 +34,18 @@ async function parseBody(req: NextRequest): Promise<any> {
       if (typeof v === "string") {
         obj[k] = v;
       } else {
+        if (v.size > MAX_UPLOAD_BYTES) {
+          throw new Error("Ukuran file unggahan maksimal 2 MB.");
+        }
+        const mime = (v.type || "").toLowerCase();
+        if (!ALLOWED_IMAGE_TYPES.has(mime)) {
+          throw new Error("Format file harus berupa gambar (JPG, PNG, atau WEBP).");
+        }
         const buf = Buffer.from(await v.arrayBuffer());
         obj[k] = {
-          name: v.name,
-          type: v.type || "image/png",
-          dataUrl: `data:${v.type || "image/png"};base64,${buf.toString("base64")}`,
+          name: v.name.replace(/[^\w.\-]/g, "_").slice(0, 80),
+          type: mime,
+          dataUrl: `data:${mime};base64,${buf.toString("base64")}`,
         };
       }
     }
@@ -44,16 +60,18 @@ async function parseBody(req: NextRequest): Promise<any> {
 
 function getActor(req: NextRequest, db: WtnDatabase) {
   const authHeader = req.headers.get("authorization") || "";
-  const token = authHeader.replace(/^Bearer\s+/i, "").trim();
+  const headerToken = authHeader.replace(/^Bearer\s+/i, "").trim();
+  const cookieToken = req.cookies.get("wtn_token")?.value || "";
+  const token = headerToken || cookieToken;
   const session = token ? db.auth_tokens[token] : null;
   const profileIdHeader = req.headers.get("x-employee-profile-id");
   const profileId = profileIdHeader ? Number(profileIdHeader) : session?.employee_profile_id;
   const profile = profileId ? db.employee_profiles.find((p) => p.id === profileId) : db.employee_profiles[0];
-  const user = session ? db.users.find((u) => u.id === session.user_id) : null;
+  const user = session ? db.users.find((u) => u.id === session.user_id && u.is_active) : null;
   return {
     user,
     profile,
-    actorName: user?.role === "owner" ? user.name : profile?.name || "Rina Wulandari",
+    actorName: user?.role === "owner" ? user.name : profile?.name || "Kasir",
     actorRole: user?.role || "employee",
     shiftName: session?.shift_name || profile?.default_shift || "Shift Pagi",
   };
@@ -64,10 +82,9 @@ async function handleRequest(req: NextRequest, { params }: { params: Promise<{ s
     return await handleRequestInner(req, params);
   } catch (err: any) {
     console.error("[WTN API ERROR]", err);
-    return NextResponse.json(
-      { message: `Server/DB error: ${err?.message || String(err)}` },
-      { status: 500 }
-    );
+    const msg = String(err?.message || "Terjadi kesalahan internal.");
+    const status = msg.includes("Ukuran file") || msg.includes("Format file") ? 422 : 500;
+    return NextResponse.json({ message: status === 422 ? msg : `Server/DB error: ${msg.slice(0, 140)}` }, { status });
   }
 }
 
@@ -81,7 +98,6 @@ async function handleRequestInner(req: NextRequest, params: Promise<{ slug: stri
       ok: true,
       driver: process.env.DATABASE_URL || process.env.POSTGRES_URL ? "postgresql" : "json",
       tables: db.dining_tables.length,
-      orders: db.orders.length,
     });
   }
   const db = await readDb();
@@ -89,13 +105,17 @@ async function handleRequestInner(req: NextRequest, params: Promise<{ slug: stri
 
   // ================= AUTH =================
   if (method === "GET" && pathStr === "/auth/employee-profiles") {
-    return NextResponse.json({ profiles: db.employee_profiles.filter((p) => p.is_active) });
+    return NextResponse.json({
+      profiles: db.employee_profiles.filter((p) => p.is_active).map(sanitizeProfile),
+    });
   }
 
   if (method === "POST" && pathStr === "/auth/login") {
     const body = await parseBody(req);
+    const emailInput = String(body.email || "").trim().toLowerCase();
+    const passwordInput = String(body.password || "");
     const user = db.users.find(
-      (u) => u.email === body.email && u.password === body.password && u.is_active
+      (u) => u.email.toLowerCase() === emailInput && u.password === passwordInput && u.is_active
     );
     if (!user) return jsonError("Email atau kata sandi tidak sesuai.", 422);
 
@@ -123,31 +143,45 @@ async function handleRequestInner(req: NextRequest, params: Promise<{ slug: stri
     );
     await writeDb(db);
 
-    return NextResponse.json({
+    const res = NextResponse.json({
       token,
       user: { id: user.id, name: user.name, email: user.email, role: user.role },
-      employee_profile: empProfile,
+      employee_profile: sanitizeProfile(empProfile),
     });
+    res.cookies.set("wtn_token", token, {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+      path: "/",
+      maxAge: 60 * 60 * 16,
+    });
+    return res;
   }
 
   if (method === "POST" && pathStr === "/auth/switch-shift") {
+    const actorCheck = getActor(req, db);
+    if (!actorCheck.user) return jsonError("Sesi tidak valid. Silakan login kembali.", 401);
     const body = await parseBody(req);
     const profile = db.employee_profiles.find((p) => p.id === Number(body.employee_profile_id));
     if (!profile) return jsonError("Petugas tidak ditemukan.", 404);
     const authHeader = (req.headers.get("authorization") || "").replace(/^Bearer\s+/i, "").trim();
-    if (authHeader && db.auth_tokens[authHeader]) {
-      db.auth_tokens[authHeader].employee_profile_id = profile.id;
-      db.auth_tokens[authHeader].shift_name = body.shift_name;
+    const token = authHeader || req.cookies.get("wtn_token")?.value || "";
+    if (token && db.auth_tokens[token]) {
+      db.auth_tokens[token].employee_profile_id = profile.id;
+      db.auth_tokens[token].shift_name = body.shift_name;
     }
     await writeDb(db);
-    return NextResponse.json({ employee_profile: profile });
+    return NextResponse.json({ employee_profile: sanitizeProfile(profile) });
   }
 
   if (method === "POST" && pathStr === "/auth/logout") {
     const authHeader = (req.headers.get("authorization") || "").replace(/^Bearer\s+/i, "").trim();
-    if (authHeader) delete db.auth_tokens[authHeader];
+    const token = authHeader || req.cookies.get("wtn_token")?.value || "";
+    if (token) delete db.auth_tokens[token];
     await writeDb(db);
-    return NextResponse.json({ message: "Berhasil keluar." });
+    const res = NextResponse.json({ message: "Berhasil keluar." });
+    res.cookies.delete("wtn_token");
+    return res;
   }
 
   // ================= PUBLIC CUSTOMER =================
@@ -318,8 +352,16 @@ async function handleRequestInner(req: NextRequest, params: Promise<{ slug: stri
     return NextResponse.json({ message: "Terima kasih! Rating Anda tersimpan.", rating, order: enrichOrder(ord, db) }, { status: 201 });
   }
 
-  // ================= CASHIER =================
+  // ================= CASHIER & OWNER RBAC GUARD =================
   const actor = getActor(req, db);
+  if (pathStr.startsWith("/cashier/") || pathStr.startsWith("/owner/")) {
+    if (!actor.user) {
+      return jsonError("Akses ditolak. Silakan login terlebih dahulu.", 401);
+    }
+    if (pathStr.startsWith("/owner/") && actor.user.role !== "owner") {
+      return jsonError("Akses ditolak. Halaman ini khusus Owner.", 403);
+    }
+  }
 
   if (method === "GET" && pathStr === "/cashier/orders") {
     const statusFilter = url.searchParams.get("status");
@@ -1343,22 +1385,26 @@ async function handleRequestInner(req: NextRequest, params: Promise<{ slug: stri
   }
 
   if (method === "GET" && pathStr === "/owner/exports") {
+    const csvSafe = (val: any) => {
+      const s = String(val ?? "").replace(/"/g, '""');
+      return /^[=+\-@]/.test(s) ? `"'${s}"` : `"${s}"`;
+    };
     const type = url.searchParams.get("type") || "sales";
     const lines = [`WARKOP TERAS NENEK - LAPORAN ${type.toUpperCase()}`, ""];
     if (type === "expenses") {
       lines.push("Kode,Tanggal,Nominal,Deskripsi,Petugas");
-      db.expenses.forEach((e) => lines.push(`${e.expense_code},${e.expense_date},${e.amount},"${e.description}","${e.actor_name}"`));
+      db.expenses.forEach((e) => lines.push(`${csvSafe(e.expense_code)},${csvSafe(e.expense_date)},${Number(e.amount)},${csvSafe(e.description)},${csvSafe(e.actor_name)}`));
     } else if (type === "inventory") {
       lines.push("Kode,Bahan,Stok,Satuan,Min");
-      db.ingredients.forEach((i) => lines.push(`${i.code},"${i.name}",${i.current_stock},${i.base_unit},${i.minimum_stock}`));
+      db.ingredients.forEach((i) => lines.push(`${csvSafe(i.code)},${csvSafe(i.name)},${Number(i.current_stock)},${csvSafe(i.base_unit)},${Number(i.minimum_stock)}`));
     } else {
       lines.push("Order,Meja,Status,Metode,StatusBayar,Total,HPP");
-      db.orders.forEach((o) => lines.push(`${o.order_number},"${o.table_name_snapshot}",${o.status},${o.payment_method},${o.payment_status},${o.total_amount},${o.cogs_amount}`));
+      db.orders.forEach((o) => lines.push(`${csvSafe(o.order_number)},${csvSafe(o.table_name_snapshot)},${csvSafe(o.status)},${csvSafe(o.payment_method)},${csvSafe(o.payment_status)},${Number(o.total_amount)},${Number(o.cogs_amount)}`));
     }
     return new NextResponse(lines.join("\n"), {
       headers: {
         "Content-Type": "text/csv; charset=UTF-8",
-        "Content-Disposition": `attachment; filename="wtn-${type}.csv"`,
+        "Content-Disposition": `attachment; filename="wtn-${type.replace(/[^a-z0-9_-]/gi, "")}.csv"`,
       },
     });
   }
@@ -1374,7 +1420,9 @@ function createOrderInternal(
   table: any
 ): { order?: any; error?: string } {
   const itemsInput = Array.isArray(body.items) ? body.items : [];
-  if (itemsInput.length === 0) return { error: "Pesanan harus berisi minimal 1 item." };
+  if (itemsInput.length === 0 || itemsInput.length > 50) {
+    return { error: "Pesanan harus berisi antara 1 hingga 50 item." };
+  }
 
   let subtotal = 0;
   const preparedItems: any[] = [];
@@ -1382,7 +1430,11 @@ function createOrderInternal(
   for (const inp of itemsInput) {
     const prod = db.products.find((p) => p.id === Number(inp.product_id));
     if (!prod || !prod.is_available) return { error: "Salah satu produk tidak tersedia." };
-    const qty = Math.max(1, Number(inp.quantity || 1));
+    const rawQty = Math.floor(Number(inp.quantity || 1));
+    if (!Number.isFinite(rawQty) || rawQty < 1 || rawQty > 100) {
+      return { error: "Jumlah per item harus antara 1 hingga 100." };
+    }
+    const qty = rawQty;
     const note = inp.item_note ? String(inp.item_note).trim().slice(0, 250) : null;
 
     const selectedIds: number[] = Array.isArray(inp.option_value_ids) ? inp.option_value_ids.map(Number) : [];
@@ -1419,7 +1471,7 @@ function createOrderInternal(
     });
   }
 
-  const discount = source === "POS" ? Math.max(0, Number(body.discount_amount || 0)) : 0;
+  const discount = source === "POS" ? Math.min(subtotal, Math.max(0, Math.round(Number(body.discount_amount || 0)))) : 0;
   const taxable = Math.max(0, subtotal - discount);
   const taxPct = db.system_settings.tax_enabled ? Number(db.system_settings.tax_pb1_percentage || 10) : 0;
   const taxAmount = Math.round(taxable * (taxPct / 100));
