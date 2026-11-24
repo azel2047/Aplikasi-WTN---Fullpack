@@ -20,6 +20,7 @@
     "recharts": "^3.11.0"
   },
   "devDependencies": {
+    "@netlify/plugin-nextjs": "^5.16.9",
     "@tailwindcss/turbopack": "4.3.3",
     "@types/node": "^20",
     "@types/pg": "^8.23.1",
