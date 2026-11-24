@@ -352,13 +352,6 @@ export default function CustomerTableMenuPage() {
             {errorMsg ||
               "Token QR meja tidak dapat diverifikasi. Mohon pindai QR Code terbaru pada meja Anda atau minta bantuan kasir."}
           </p>
-          <Link
-            href="/"
-            className="h-12 w-full rounded-xl bg-primary-container hover:bg-primary-hover text-on-primary font-semibold text-sm flex items-center justify-center gap-2 transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            <span>Kembali ke Daftar Meja</span>
-          </Link>
         </div>
       </div>
     );

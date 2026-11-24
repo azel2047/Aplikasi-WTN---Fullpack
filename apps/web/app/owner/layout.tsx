@@ -86,23 +86,11 @@ export default function OwnerLayout({
   useEffect(() => {
     const stored = getStoredAuth();
     if (!stored || stored.user.role !== "owner") {
-      apiFetch("/auth/login", {
-        method: "POST",
-        body: JSON.stringify({
-          email: "owner@warkopterasnenek.id",
-          password: "owner123",
-        }),
-      })
-        .then((res) => {
-          setStoredAuth(res.token, res.user, null);
-          setAuth(getStoredAuth());
-        })
-        .catch(() => router.push("/login"))
-        .finally(() => setReady(true));
-    } else {
-      setAuth(stored);
-      setReady(true);
+      router.replace("/login");
+      return;
     }
+    setAuth(stored);
+    setReady(true);
   }, [router]);
 
   const handleLogout = async () => {
@@ -110,10 +98,10 @@ export default function OwnerLayout({
       await apiFetch("/auth/logout", { method: "POST" });
     } catch {}
     clearStoredAuth();
-    router.push("/login");
+    router.replace("/login");
   };
 
-  if (!ready) {
+  if (!ready || !auth) {
     return (
       <div className="min-h-screen bg-[#F6F8F7] flex items-center justify-center text-xs text-slate-500">
         Memuat Dashboard...
@@ -126,7 +114,7 @@ export default function OwnerLayout({
       {/* Clean White Sidebar matching image.png */}
       <aside className="hidden lg:flex fixed left-0 top-0 h-full w-60 bg-white border-r border-slate-200 z-40 flex-col justify-between no-print">
         <div className="flex-1 overflow-y-auto py-5">
-          <Link href="/" className="px-5 mb-6 flex items-center gap-2.5">
+          <Link href="/owner" className="px-5 mb-6 flex items-center gap-2.5">
             <div className="w-9 h-9 rounded-xl bg-[#10A352] text-white flex items-center justify-center">
               <Coffee className="w-5 h-5" />
             </div>
@@ -270,7 +258,7 @@ export default function OwnerLayout({
               <span>Kasir POS</span>
             </Link>
             <Link
-              href="/"
+              href="/owner/tables"
               className="h-9 px-3.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold hidden sm:flex items-center gap-1.5"
             >
               <QrCode className="w-4 h-4" />

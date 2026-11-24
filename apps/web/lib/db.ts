@@ -618,7 +618,7 @@ export function createInitialSeed(): WtnDatabase {
     },
     users: [
       { id: 1, name: "Nenek Sari", email: "owner@warkopterasnenek.id", password: "owner123", role: "owner", pin: "9999", is_active: true },
-      { id: 2, name: "Akun Kasir Bersama", email: "kasir@warkopterasnenek.id", password: "kasir123", role: "employee", pin: "1234", is_active: true },
+      { id: 2, name: "Kasir", email: "kasir@warkopterasnenek.id", password: "kasir123", role: "employee", pin: "1234", is_active: true },
     ],
     employee_profiles: [
       { id: 1, name: "Rina Wulandari", code: "EMP-01", role_title: "Kasir & Barista", default_shift: "Shift Pagi (07.00 - 15.00)", pin: "1234", is_active: true },

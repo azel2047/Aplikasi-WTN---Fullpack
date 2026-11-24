@@ -207,12 +207,6 @@ export default function CustomerOrderTrackingPage() {
             Pesanan Tidak Ditemukan
           </h1>
           <p className="text-xs text-on-surface-variant">{errorMsg}</p>
-          <Link
-            href="/"
-            className="h-12 w-full rounded-xl bg-primary-container text-on-primary font-semibold text-sm flex items-center justify-center"
-          >
-            Kembali ke Beranda
-          </Link>
         </div>
       </div>
     );
@@ -973,21 +967,13 @@ export default function CustomerOrderTrackingPage() {
             </span>
           </button>
 
-          {order.dining_table?.qr_token ? (
+          {order.dining_table?.qr_token && (
             <Link
               href={`/t/${order.dining_table.qr_token}`}
               className="h-12 px-4 rounded-xl bg-nav-espresso hover:bg-dark-walnut text-canvas-cream text-xs font-bold flex items-center justify-center gap-2 transition-colors"
             >
               <PlusCircle className="w-4 h-4" />
               <span>Tambah Pesanan Baru</span>
-            </Link>
-          ) : (
-            <Link
-              href="/"
-              className="h-12 px-4 rounded-xl bg-nav-espresso hover:bg-dark-walnut text-canvas-cream text-xs font-bold flex items-center justify-center gap-2 transition-colors"
-            >
-              <PlusCircle className="w-4 h-4" />
-              <span>Kembali ke Katalog Meja</span>
             </Link>
           )}
         </section>

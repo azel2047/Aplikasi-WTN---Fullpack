@@ -85,16 +85,13 @@ function getActor(req: NextRequest, db: WtnDatabase) {
   const cookieToken = req.cookies.get("wtn_token")?.value || "";
   const token = headerToken || cookieToken;
   const session = token ? db.auth_tokens[token] : null;
-  const profileIdHeader = req.headers.get("x-employee-profile-id");
-  const profileId = profileIdHeader ? Number(profileIdHeader) : session?.employee_profile_id;
-  const profile = profileId ? db.employee_profiles.find((p) => p.id === profileId) : db.employee_profiles[0];
   const user = session ? db.users.find((u) => u.id === session.user_id && u.is_active) : null;
   return {
     user,
-    profile,
-    actorName: user?.role === "owner" ? user.name : profile?.name || "Kasir",
+    profile: null,
+    actorName: user?.role === "owner" ? user.name : "Kasir",
     actorRole: user?.role || "employee",
-    shiftName: session?.shift_name || profile?.default_shift || "Shift Pagi",
+    shiftName: session?.shift_name || "Operasional Harian",
   };
 }
 
@@ -144,33 +141,36 @@ async function handleRequestInner(req: NextRequest, params: Promise<{ slug: stri
     if (!user) return jsonError("Email atau kata sandi tidak sesuai.", 422);
 
     const token = "wtn_" + randomToken(32);
-    const empProfile =
-      user.role === "employee"
-        ? db.employee_profiles.find((p) => p.id === Number(body.employee_profile_id)) || db.employee_profiles[0]
-        : null;
+    const actorLabel = user.role === "owner" ? user.name : "Kasir";
 
     db.auth_tokens[token] = {
       user_id: user.id,
       role: user.role,
-      employee_profile_id: empProfile?.id,
-      shift_name: body.shift_name || empProfile?.default_shift,
+      shift_name: "Operasional Harian",
     };
 
     recordAudit(
       db,
       "AUTH_LOGIN",
-      empProfile ? empProfile.name : user.name,
+      actorLabel,
       user.role,
       "User",
       user.id,
-      `Login sebagai ${empProfile ? empProfile.name : user.name}`
+      `Login sebagai ${actorLabel}`
     );
     await writeDb(db);
 
+    const displayUser = {
+      id: user.id,
+      name: actorLabel,
+      email: user.email,
+      role: user.role,
+    };
+
     const res = NextResponse.json({
       token,
-      user: { id: user.id, name: user.name, email: user.email, role: user.role },
-      employee_profile: sanitizeProfile(empProfile),
+      user: displayUser,
+      employee_profile: null,
     });
     res.cookies.set("wtn_token", token, {
       httpOnly: true,
