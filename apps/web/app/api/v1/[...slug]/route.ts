@@ -18,6 +18,27 @@ function jsonError(message: string, status = 400) {
 
 const ALLOWED_IMAGE_TYPES = new Set(["image/jpeg", "image/jpg", "image/png", "image/webp"]);
 const MAX_UPLOAD_BYTES = 2 * 1024 * 1024; // 2 MB
+const VALID_ORDER_STATUSES = new Set(["CONFIRMED", "PREPARING", "READY", "COMPLETED", "CANCELLED"]);
+
+// shortcut: in-memory per-instance rate limiter; move to Redis/Upstash if running high-scale multi-region
+const rateBuckets = new Map<string, number[]>();
+function checkRateLimit(req: NextRequest, bucket: string, max: number, windowMs = 60_000): boolean {
+  const ip = (req.headers.get("x-forwarded-for") || "local").split(",")[0].trim();
+  const key = `${bucket}:${ip}`;
+  const now = Date.now();
+  const hits = (rateBuckets.get(key) || []).filter((t) => now - t < windowMs);
+  if (hits.length >= max) return false;
+  hits.push(now);
+  rateBuckets.set(key, hits);
+  return true;
+}
+
+function verifySensitivePin(actor: { user: any; profile: any }, pinInput: any): boolean {
+  const pin = String(pinInput || "").trim();
+  if (!pin) return false;
+  if (actor.user?.role === "owner") return pin === String(actor.user.pin);
+  return pin === String(actor.profile?.pin || "") || pin === String(actor.user?.pin || "");
+}
 
 function sanitizeProfile(p: any) {
   if (!p) return null;
@@ -111,6 +132,9 @@ async function handleRequestInner(req: NextRequest, params: Promise<{ slug: stri
   }
 
   if (method === "POST" && pathStr === "/auth/login") {
+    if (!checkRateLimit(req, "login", 15)) {
+      return jsonError("Terlalu banyak percobaan login. Coba lagi dalam 1 menit.", 429);
+    }
     const body = await parseBody(req);
     const emailInput = String(body.email || "").trim().toLowerCase();
     const passwordInput = String(body.password || "");
@@ -187,7 +211,9 @@ async function handleRequestInner(req: NextRequest, params: Promise<{ slug: stri
   // ================= PUBLIC CUSTOMER =================
   if (method === "GET" && pathStr === "/public/tables") {
     return NextResponse.json({
-      tables: db.dining_tables.filter((t) => t.is_active),
+      tables: db.dining_tables
+        .filter((t) => t.is_active)
+        .map(({ qr_token: _qr, ...safeTable }) => safeTable),
       business_name: db.system_settings.business_name,
     });
   }
@@ -196,9 +222,17 @@ async function handleRequestInner(req: NextRequest, params: Promise<{ slug: stri
     const dataUrl = db.system_settings.qris_image_data_url;
     if (!dataUrl) return jsonError("Belum ada gambar QRIS resmi.", 404);
     const match = /^data:([^;]+);base64,(.+)$/.exec(dataUrl);
-    if (!match) return jsonError("Format QRIS tidak valid.", 404);
+    const mime = (match?.[1] || "").toLowerCase();
+    if (!match || !ALLOWED_IMAGE_TYPES.has(mime)) {
+      return jsonError("Format QRIS tidak valid.", 404);
+    }
     const buf = Buffer.from(match[2], "base64");
-    return new NextResponse(buf, { headers: { "Content-Type": match[1] } });
+    return new NextResponse(buf, {
+      headers: {
+        "Content-Type": mime,
+        "X-Content-Type-Options": "nosniff",
+      },
+    });
   }
 
   const tableMenuMatch = /^\/public\/tables\/([^/]+)\/menu$/.exec(pathStr);
@@ -249,6 +283,9 @@ async function handleRequestInner(req: NextRequest, params: Promise<{ slug: stri
   }
 
   if (method === "POST" && pathStr === "/public/orders") {
+    if (!checkRateLimit(req, "public_order", 20)) {
+      return jsonError("Terlalu banyak permintaan pesanan. Tunggu sebentar.", 429);
+    }
     const body = await parseBody(req);
     const idem = body.idempotency_key || req.headers.get("idempotency-key");
     if (idem) {
@@ -287,6 +324,9 @@ async function handleRequestInner(req: NextRequest, params: Promise<{ slug: stri
     const code = decodeURIComponent(proofMatch[1]);
     const ord = db.orders.find((o) => o.public_code === code);
     if (!ord) return jsonError("Pesanan tidak ditemukan.", 404);
+    if (ord.payment_status === "PAID" || ["COMPLETED", "CANCELLED"].includes(ord.status)) {
+      return jsonError("Status pesanan tidak dapat lagi menerima bukti pembayaran.", 422);
+    }
 
     const body = await parseBody(req);
     const refText = body.proof_reference || (body.proof_file?.name ? `File: ${body.proof_file.name}` : "Bukti QRIS diunggah");
@@ -506,6 +546,9 @@ async function handleRequestInner(req: NextRequest, params: Promise<{ slug: stri
     if (!ord) return jsonError("Pesanan tidak ditemukan.", 404);
     const body = await parseBody(req);
     const nextStatus = String(body.status || "").toUpperCase();
+    if (!VALID_ORDER_STATUSES.has(nextStatus)) {
+      return jsonError("Status pesanan tidak valid.", 422);
+    }
     const prevStatus = ord.status;
 
     if (nextStatus === "COMPLETED" && ord.payment_status !== "PAID") {
@@ -514,6 +557,9 @@ async function handleRequestInner(req: NextRequest, params: Promise<{ slug: stri
 
     if (nextStatus === "CANCELLED") {
       if (!body.reason) return jsonError("Alasan pembatalan wajib diisi.", 422);
+      if (!verifySensitivePin(actor, body.pin)) {
+        return jsonError("PIN konfirmasi petugas tidak sesuai.", 403);
+      }
       ord.status = "CANCELLED";
       ord.cancel_reason = body.reason;
       ord.cancelled_at = new Date().toISOString();
@@ -552,6 +598,9 @@ async function handleRequestInner(req: NextRequest, params: Promise<{ slug: stri
     const ord = db.orders.find((o) => o.id === Number(cashierRefundMatch[1]));
     if (!ord) return jsonError("Pesanan tidak ditemukan.", 404);
     const body = await parseBody(req);
+    if (!verifySensitivePin(actor, body.pin)) {
+      return jsonError("PIN konfirmasi tidak sesuai.", 403);
+    }
     ord.status = "CANCELLED";
     ord.payment_status = "REFUNDED";
     ord.cancel_reason = body.reason || "Refund";
@@ -779,6 +828,9 @@ async function handleRequestInner(req: NextRequest, params: Promise<{ slug: stri
 
   if (method === "POST" && pathStr === "/cashier/closings") {
     const body = await parseBody(req);
+    if (!verifySensitivePin(actor, body.pin)) {
+      return jsonError("PIN konfirmasi petugas tidak sesuai.", 403);
+    }
     const cashDrawer = db.cash_accounts.find((a) => a.code === "CASH_DRAWER");
     const expected = Number(cashDrawer?.current_balance || 0);
     const actual = Number(body.actual_physical_cash || 0);
