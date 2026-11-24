@@ -9,6 +9,7 @@ import {
   readDb,
   recordAudit,
   writeDb,
+  type WtnDatabase,
 } from "@/lib/db";
 
 function jsonError(message: string, status = 400) {
@@ -41,7 +42,7 @@ async function parseBody(req: NextRequest): Promise<any> {
   }
 }
 
-function getActor(req: NextRequest, db: ReturnType<typeof readDb>) {
+function getActor(req: NextRequest, db: WtnDatabase) {
   const authHeader = req.headers.get("authorization") || "";
   const token = authHeader.replace(/^Bearer\s+/i, "").trim();
   const session = token ? db.auth_tokens[token] : null;
@@ -62,7 +63,7 @@ async function handleRequest(req: NextRequest, { params }: { params: Promise<{ s
   const { slug } = await params;
   const method = req.method.toUpperCase();
   const pathStr = "/" + slug.join("/");
-  const db = readDb();
+  const db = await readDb();
   const url = new URL(req.url);
 
   // ================= AUTH =================
@@ -99,7 +100,7 @@ async function handleRequest(req: NextRequest, { params }: { params: Promise<{ s
       user.id,
       `Login sebagai ${empProfile ? empProfile.name : user.name}`
     );
-    writeDb(db);
+    await writeDb(db);
 
     return NextResponse.json({
       token,
@@ -117,14 +118,14 @@ async function handleRequest(req: NextRequest, { params }: { params: Promise<{ s
       db.auth_tokens[authHeader].employee_profile_id = profile.id;
       db.auth_tokens[authHeader].shift_name = body.shift_name;
     }
-    writeDb(db);
+    await writeDb(db);
     return NextResponse.json({ employee_profile: profile });
   }
 
   if (method === "POST" && pathStr === "/auth/logout") {
     const authHeader = (req.headers.get("authorization") || "").replace(/^Bearer\s+/i, "").trim();
     if (authHeader) delete db.auth_tokens[authHeader];
-    writeDb(db);
+    await writeDb(db);
     return NextResponse.json({ message: "Berhasil keluar." });
   }
 
@@ -160,7 +161,7 @@ async function handleRequest(req: NextRequest, { params }: { params: Promise<{ s
       dining_table_id: table.id,
       occurred_at: new Date().toISOString(),
     });
-    writeDb(db);
+    await writeDb(db);
 
     const categories = db.categories
       .filter((c) => c.is_active)
@@ -208,7 +209,7 @@ async function handleRequest(req: NextRequest, { params }: { params: Promise<{ s
     const created = createOrderInternal(db, body, "QR", body.customer_name || `Pelanggan ${table.name}`, table);
     if (created.error) return jsonError(created.error, 422);
 
-    writeDb(db);
+    await writeDb(db);
     return NextResponse.json({ message: "Pesanan berhasil dikirim ke kasir.", order: enrichOrder(created.order, db) }, { status: 201 });
   }
 
@@ -253,7 +254,7 @@ async function handleRequest(req: NextRequest, { params }: { params: Promise<{ s
       reason: "Bukti QRIS diunggah (Menunggu verifikasi manual kasir)",
       created_at: new Date().toISOString(),
     });
-    writeDb(db);
+    await writeDb(db);
     return NextResponse.json({
       message: "Bukti pembayaran terkirim. Menunggu verifikasi kasir.",
       order: enrichOrder(ord, db),
@@ -267,7 +268,7 @@ async function handleRequest(req: NextRequest, { params }: { params: Promise<{ s
     if (!ord) return jsonError("Pesanan tidak ditemukan.", 404);
     ord.waiter_called = true;
     ord.waiter_called_at = new Date().toISOString();
-    writeDb(db);
+    await writeDb(db);
     return NextResponse.json({ message: "Panggilan bantuan terkirim ke kasir.", order: enrichOrder(ord, db) });
   }
 
@@ -292,7 +293,7 @@ async function handleRequest(req: NextRequest, { params }: { params: Promise<{ s
       created_at: new Date().toISOString(),
     };
     db.ratings.unshift(rating);
-    writeDb(db);
+    await writeDb(db);
     return NextResponse.json({ message: "Terima kasih! Rating Anda tersimpan.", rating, order: enrichOrder(ord, db) }, { status: 201 });
   }
 
@@ -374,7 +375,7 @@ async function handleRequest(req: NextRequest, { params }: { params: Promise<{ s
         verified_at: new Date().toISOString(),
       };
       recordAudit(db, "PAYMENT_REJECTED", actor.actorName, actor.actorRole, "Order", ord.id, `Menolak bukti QRIS ${ord.order_number}: ${body.rejection_reason}`);
-      writeDb(db);
+      await writeDb(db);
       return NextResponse.json({ message: `Bukti pembayaran ${ord.order_number} ditolak.`, order: enrichOrder(ord, db) });
     }
 
@@ -427,7 +428,7 @@ async function handleRequest(req: NextRequest, { params }: { params: Promise<{ s
       }
 
       recordAudit(db, "PAYMENT_VERIFIED", actor.actorName, actor.actorRole, "Order", ord.id, `Verifikasi pembayaran ${payMethod} ${ord.order_number}`);
-      writeDb(db);
+      await writeDb(db);
     }
 
     return NextResponse.json({
@@ -475,7 +476,7 @@ async function handleRequest(req: NextRequest, { params }: { params: Promise<{ s
       reason: body.reason || `Status diubah menjadi ${nextStatus}`,
       created_at: new Date().toISOString(),
     });
-    writeDb(db);
+    await writeDb(db);
 
     return NextResponse.json({
       message: `Status ${ord.order_number} diperbarui menjadi ${nextStatus}.`,
@@ -492,7 +493,7 @@ async function handleRequest(req: NextRequest, { params }: { params: Promise<{ s
     ord.payment_status = "REFUNDED";
     ord.cancel_reason = body.reason || "Refund";
     recordAudit(db, "ORDER_REFUNDED", actor.actorName, actor.actorRole, "Order", ord.id, `Refund ${ord.order_number}: ${ord.cancel_reason}`);
-    writeDb(db);
+    await writeDb(db);
     return NextResponse.json({ message: `Refund ${ord.order_number} berhasil dicatat.`, order: enrichOrder(ord, db) });
   }
 
@@ -570,7 +571,7 @@ async function handleRequest(req: NextRequest, { params }: { params: Promise<{ s
       }
     }
 
-    writeDb(db);
+    await writeDb(db);
     return NextResponse.json({
       message: "Pesanan POS berhasil dibuat.",
       order: enrichOrder(ord, db),
@@ -628,7 +629,7 @@ async function handleRequest(req: NextRequest, { params }: { params: Promise<{ s
     }
 
     recordAudit(db, "EXPENSE_CREATED", actor.actorName, actor.actorRole, "Expense", exp.id, `Pengeluaran Rp ${amount}: ${exp.description}`);
-    writeDb(db);
+    await writeDb(db);
     return NextResponse.json({ message: "Pengeluaran berhasil dicatat.", expense: exp }, { status: 201 });
   }
 
@@ -688,7 +689,7 @@ async function handleRequest(req: NextRequest, { params }: { params: Promise<{ s
       submitted_at: new Date().toISOString(),
     };
     db.employee_reports.unshift(rpt);
-    writeDb(db);
+    await writeDb(db);
     return NextResponse.json({ message: "Laporan harian berhasil dikirim.", report: rpt }, { status: 201 });
   }
 
@@ -737,7 +738,7 @@ async function handleRequest(req: NextRequest, { params }: { params: Promise<{ s
     };
     db.cash_closings.unshift(closing);
     recordAudit(db, "CASH_CLOSING", actor.actorName, actor.actorRole, "CashClosing", closing.id, `Closing kas ${closing.closing_code} (Selisih Rp ${variance})`);
-    writeDb(db);
+    await writeDb(db);
     return NextResponse.json({ message: "Penutupan kas berhasil disimpan.", closing }, { status: 201 });
   }
 
@@ -817,7 +818,7 @@ async function handleRequest(req: NextRequest, { params }: { params: Promise<{ s
       is_active: true,
     };
     db.categories.push(cat);
-    writeDb(db);
+    await writeDb(db);
     return NextResponse.json({ message: "Kategori ditambahkan.", category: cat }, { status: 201 });
   }
 
@@ -841,7 +842,7 @@ async function handleRequest(req: NextRequest, { params }: { params: Promise<{ s
     };
     db.products.push(prod);
     recordAudit(db, "PRODUCT_CREATED", actor.actorName, "owner", "Product", id, `Tambah produk: ${prod.name}`);
-    writeDb(db);
+    await writeDb(db);
     return NextResponse.json({ message: "Produk berhasil ditambahkan.", product: enrichProduct(prod, db) }, { status: 201 });
   }
 
@@ -860,14 +861,14 @@ async function handleRequest(req: NextRequest, { params }: { params: Promise<{ s
       ...(body.track_inventory !== undefined ? { track_inventory: Boolean(body.track_inventory) } : {}),
     });
     recordAudit(db, "PRODUCT_UPDATED", actor.actorName, "owner", "Product", prod.id, `Perbarui produk: ${prod.name}`);
-    writeDb(db);
+    await writeDb(db);
     return NextResponse.json({ message: "Produk diperbarui.", product: enrichProduct(prod, db) });
   }
 
   if (method === "DELETE" && ownerProdMatch) {
     const id = Number(ownerProdMatch[1]);
     db.products = db.products.filter((p) => p.id !== id);
-    writeDb(db);
+    await writeDb(db);
     return NextResponse.json({ message: "Produk dihapus." });
   }
 
@@ -887,7 +888,7 @@ async function handleRequest(req: NextRequest, { params }: { params: Promise<{ s
     if (body.is_active !== undefined) tbl.is_active = Boolean(body.is_active);
     if (body.name !== undefined) tbl.name = body.name;
     recordAudit(db, "TABLE_UPDATED", actor.actorName, "owner", "DiningTable", tbl.id, `Update ${tbl.code}`);
-    writeDb(db);
+    await writeDb(db);
     return NextResponse.json({ message: `Meja ${tbl.name} diperbarui.`, table: tbl });
   }
 
@@ -899,7 +900,7 @@ async function handleRequest(req: NextRequest, { params }: { params: Promise<{ s
     tbl.qr_generated_at = new Date().toISOString();
     tbl.is_active = true;
     recordAudit(db, "TABLE_QR_REGENERATED", actor.actorName, "owner", "DiningTable", tbl.id, `Ganti QR token ${tbl.code}`);
-    writeDb(db);
+    await writeDb(db);
     return NextResponse.json({ message: `Token QR ${tbl.name} diperbarui. QR lama tidak berlaku.`, table: tbl });
   }
 
@@ -963,7 +964,7 @@ async function handleRequest(req: NextRequest, { params }: { params: Promise<{ s
       is_active: true,
     };
     db.ingredients.push(ing);
-    writeDb(db);
+    await writeDb(db);
     return NextResponse.json({ message: "Bahan baku ditambahkan.", ingredient: enrichIngredient(ing, db) }, { status: 201 });
   }
 
@@ -990,7 +991,7 @@ async function handleRequest(req: NextRequest, { params }: { params: Promise<{ s
         items,
       });
     }
-    writeDb(db);
+    await writeDb(db);
     return NextResponse.json({ message: "Resep produk berhasil disimpan." });
   }
 
@@ -1073,7 +1074,7 @@ async function handleRequest(req: NextRequest, { params }: { params: Promise<{ s
       });
     }
 
-    writeDb(db);
+    await writeDb(db);
     return NextResponse.json({ message: "Pembelian bahan dicatat & stok bertambah.", purchase }, { status: 201 });
   }
 
@@ -1111,7 +1112,7 @@ async function handleRequest(req: NextRequest, { params }: { params: Promise<{ s
       actor_name: actor.actorName,
       created_at: new Date().toISOString(),
     });
-    writeDb(db);
+    await writeDb(db);
     return NextResponse.json({ message: "Hasil Stock Opname disimpan.", adjustment: adj }, { status: 201 });
   }
 
@@ -1159,7 +1160,7 @@ async function handleRequest(req: NextRequest, { params }: { params: Promise<{ s
     const body = await parseBody(req);
     cls.status = body.status || "LOCKED";
     cls.owner_notes = body.owner_notes || null;
-    writeDb(db);
+    await writeDb(db);
     return NextResponse.json({ message: "Status closing diperbarui.", closing: cls });
   }
 
@@ -1175,7 +1176,7 @@ async function handleRequest(req: NextRequest, { params }: { params: Promise<{ s
     rpt.status = body.status || "reviewed";
     rpt.owner_feedback = body.owner_feedback || null;
     rpt.reviewed_by = actor.actorName;
-    writeDb(db);
+    await writeDb(db);
     return NextResponse.json({ message: "Tinjauan laporan disimpan.", report: rpt });
   }
 
@@ -1291,7 +1292,7 @@ async function handleRequest(req: NextRequest, { params }: { params: Promise<{ s
     if (body.qris_image?.dataUrl) {
       db.system_settings.qris_image_data_url = body.qris_image.dataUrl;
     }
-    writeDb(db);
+    await writeDb(db);
     return NextResponse.json({
       message: "Pengaturan usaha berhasil disimpan.",
       settings: db.system_settings,
@@ -1312,7 +1313,7 @@ async function handleRequest(req: NextRequest, { params }: { params: Promise<{ s
       is_active: true,
     };
     db.employee_profiles.push(emp);
-    writeDb(db);
+    await writeDb(db);
     return NextResponse.json({ message: "Profil karyawan ditambahkan.", employee: emp }, { status: 201 });
   }
 
@@ -1345,7 +1346,7 @@ async function handleRequest(req: NextRequest, { params }: { params: Promise<{ s
 }
 
 function createOrderInternal(
-  db: ReturnType<typeof readDb>,
+  db: WtnDatabase,
   body: any,
   source: "QR" | "POS",
   actorName: string,

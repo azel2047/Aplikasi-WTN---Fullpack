@@ -18,14 +18,17 @@ Buka **`http://localhost:3000`** di browser.
 
 ---
 
-## Cara Deploy Gratis (Vercel / Netlify)
+## Cara Deploy Gratis (Vercel / Netlify + PostgreSQL)
 
-1. Hubungkan repository GitHub ini ke **Vercel** atau **Netlify**.
-2. Atur **Root Directory** ke `apps/web`.
-3. Biarkan build command default (`npm run build`) lalu klik **Deploy**.
-4. Seluruh frontend dan API (`/api/v1/*`) otomatis aktif dalam 1 domain yang sama.
+1. Buat database PostgreSQL gratis di **Neon** (`neon.tech`) atau **Supabase** (`supabase.com`) — atau tambahkan **Vercel Postgres** langsung dari dashboard Vercel.
+2. Hubungkan repository GitHub ini ke **Vercel** atau **Netlify**, atur **Root Directory** ke `apps/web`.
+3. Tambahkan environment variable:
+   ```env
+   DATABASE_URL="postgresql://user:password@host/dbname?sslmode=require"
+   ```
+4. Klik **Deploy**. Tabel `wtn_state` di PostgreSQL otomatis dibuat dan di-seed saat pertama kali diakses.
 
-> **Catatan Production / VPS:** Folder `apps/api` (Laravel REST API + PostgreSQL/SQLite) tetap disediakan di repository ini sebagai opsi migrasi ke VPS / database PostgreSQL penuh saat sistem siap dipakai operasional jangka panjang.
+> Jika `DATABASE_URL` belum diisi saat development lokal, aplikasi otomatis fallback ke file JSON lokal (`apps/web/data/wtn-db.json`).
 
 ---
 

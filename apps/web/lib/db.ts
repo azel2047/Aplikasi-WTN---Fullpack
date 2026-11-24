@@ -1,9 +1,9 @@
 import fs from "fs";
 import path from "path";
 import crypto from "crypto";
+import { Pool } from "pg";
 
-// Self-contained persistent JSON relational store for Full-Stack Next.js
-// Works identically on local dev (Mac/Windows/Linux) AND Vercel/Netlify serverless!
+// PostgreSQL persistence when DATABASE_URL / POSTGRES_URL is set, with local JSON fallback.
 
 export interface WtnDatabase {
   counters: Record<string, number>;
@@ -765,25 +765,82 @@ export function createInitialSeed(): WtnDatabase {
   };
 }
 
+// shortcut: single JSONB row in PostgreSQL; normalize into relational tables if concurrent write volume outgrows single-cafe scale
+const globalForPg = globalThis as unknown as { __wtnPgPool?: Pool; __wtnPgReady?: boolean };
+
+function getPgUrl(): string | null {
+  return process.env.DATABASE_URL || process.env.POSTGRES_URL || null;
+}
+
+function getPgPool(): Pool | null {
+  const url = getPgUrl();
+  if (!url) return null;
+  if (!globalForPg.__wtnPgPool) {
+    const isLocal = /localhost|127\.0\.0\.1/.test(url);
+    globalForPg.__wtnPgPool = new Pool({
+      connectionString: url,
+      ssl: isLocal ? false : { rejectUnauthorized: false },
+      max: 5,
+    });
+  }
+  return globalForPg.__wtnPgPool;
+}
+
+async function ensurePgTable(pool: Pool): Promise<void> {
+  if (globalForPg.__wtnPgReady) return;
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS wtn_state (
+      id TEXT PRIMARY KEY,
+      payload JSONB NOT NULL,
+      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )
+  `);
+  globalForPg.__wtnPgReady = true;
+}
+
 let memoryCache: WtnDatabase | null = null;
 
-export function readDb(): WtnDatabase {
+export async function readDb(): Promise<WtnDatabase> {
+  const pool = getPgPool();
+  if (pool) {
+    await ensurePgTable(pool);
+    const { rows } = await pool.query<{ payload: WtnDatabase }>(
+      "SELECT payload FROM wtn_state WHERE id = 'main'"
+    );
+    if (rows[0]?.payload) return rows[0].payload;
+    const seeded = createInitialSeed();
+    await pool.query(
+      "INSERT INTO wtn_state (id, payload, updated_at) VALUES ('main', $1::jsonb, NOW()) ON CONFLICT (id) DO NOTHING",
+      [JSON.stringify(seeded)]
+    );
+    return seeded;
+  }
+
   if (memoryCache) return memoryCache;
   try {
     if (fs.existsSync(DB_FILE)) {
-      const raw = fs.readFileSync(DB_FILE, "utf8");
-      memoryCache = JSON.parse(raw) as WtnDatabase;
+      memoryCache = JSON.parse(fs.readFileSync(DB_FILE, "utf8")) as WtnDatabase;
       return memoryCache;
     }
   } catch {
     // fallback to initial seed
   }
   memoryCache = createInitialSeed();
-  writeDb(memoryCache);
+  await writeDb(memoryCache);
   return memoryCache;
 }
 
-export function writeDb(db: WtnDatabase): void {
+export async function writeDb(db: WtnDatabase): Promise<void> {
+  const pool = getPgPool();
+  if (pool) {
+    await ensurePgTable(pool);
+    await pool.query(
+      "INSERT INTO wtn_state (id, payload, updated_at) VALUES ('main', $1::jsonb, NOW()) ON CONFLICT (id) DO UPDATE SET payload = EXCLUDED.payload, updated_at = NOW()",
+      [JSON.stringify(db)]
+    );
+    return;
+  }
+
   memoryCache = db;
   try {
     ensureDir(DB_FILE);
