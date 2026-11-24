@@ -754,7 +754,7 @@ async function handleRequest(req: NextRequest, { params }: { params: Promise<{ s
       return { hour: `${String(h).padStart(2, "0")}.00`, short_hour: String(h).padStart(2, "0"), revenue: 0, orders_count: 0 };
     });
     for (const o of paidAll) {
-      const h = new Date(o.created_at).getHours();
+      const h = (new Date(o.created_at).getUTCHours() + 7) % 24;
       if (h >= 8 && h <= 22) {
         hourly[h - 8].revenue += Number(o.total_amount);
         hourly[h - 8].orders_count += 1;
@@ -1205,12 +1205,12 @@ async function handleRequest(req: NextRequest, { params }: { params: Promise<{ s
 
     for (const ev of db.traffic_events) {
       if (ev.event_type === "QR_MENU_VISIT") {
-        const h = new Date(ev.occurred_at).getHours();
+        const h = (new Date(ev.occurred_at).getUTCHours() + 7) % 24;
         if (h >= 8 && h <= 22) hourly[h - 8].qr_visits += 1;
       }
     }
     for (const o of db.orders) {
-      const h = new Date(o.created_at).getHours();
+      const h = (new Date(o.created_at).getUTCHours() + 7) % 24;
       if (h >= 8 && h <= 22) {
         hourly[h - 8].orders_created += 1;
         if (o.payment_status === "PAID") {
