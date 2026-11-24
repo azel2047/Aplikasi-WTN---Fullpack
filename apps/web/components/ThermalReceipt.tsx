@@ -17,8 +17,10 @@ export function ThermalReceipt({
 }: ThermalReceiptProps) {
   if (!order) return null;
 
-  const trackUrl = originUrl
-    ? `${originUrl}/order/${order.public_code}`
+  const resolvedOrigin =
+    originUrl || (typeof window !== "undefined" ? window.location.origin : "");
+  const trackUrl = resolvedOrigin
+    ? `${resolvedOrigin}/order/${order.public_code}`
     : `/order/${order.public_code}`;
 
   const payment = order.latest_payment || {};
@@ -28,10 +30,19 @@ export function ThermalReceipt({
   const wifiSsid = settings?.wifi_ssid || "WarkopTeras_5G";
   const wifiPass = settings?.wifi_password || "ngopidulu123";
 
+  const paymentStatusText =
+    order.payment_status === "PAID"
+      ? "Lunas"
+      : order.payment_status === "PROOF_UPLOADED"
+      ? "Menunggu Verifikasi"
+      : order.payment_status === "REFUNDED"
+      ? "Refund"
+      : "Belum Bayar";
+
   return (
     <div
       id="thermal-receipt-print"
-      className="bg-white text-slate-900 font-mono text-[11px] leading-relaxed p-5 rounded-xl border border-slate-200 max-w-[320px] mx-auto"
+      className="bg-white text-slate-900 font-mono text-[11px] leading-relaxed p-5 rounded-xl border border-slate-200 w-full max-w-[300px] mx-auto"
     >
       {/* Store Header */}
       <div className="text-center pb-3 border-b border-dashed border-slate-300">
@@ -43,24 +54,24 @@ export function ThermalReceipt({
       </div>
 
       {/* Transaction Metadata */}
-      <div className="py-2.5 border-b border-dashed border-slate-300 space-y-0.5 text-[10px]">
-        <div className="flex justify-between">
+      <div className="py-2.5 border-b border-dashed border-slate-300 space-y-1 text-[10px]">
+        <div className="flex justify-between gap-2">
           <span className="text-slate-500">No. Order</span>
           <span className="font-bold">{order.order_number}</span>
         </div>
-        <div className="flex justify-between">
+        <div className="flex justify-between gap-2">
           <span className="text-slate-500">Tanggal</span>
           <span>{formatDateTimeWIB(order.created_at)}</span>
         </div>
-        <div className="flex justify-between">
+        <div className="flex justify-between gap-2">
           <span className="text-slate-500">Layanan</span>
           <span className="font-bold">{order.table_name_snapshot}</span>
         </div>
-        <div className="flex justify-between">
+        <div className="flex justify-between gap-2">
           <span className="text-slate-500">Pelanggan</span>
           <span>{order.customer_name || "Walk-in"}</span>
         </div>
-        <div className="flex justify-between">
+        <div className="flex justify-between gap-2">
           <span className="text-slate-500">Kasir</span>
           <span>{payment.verified_by_name || order.created_by_actor || "Kasir"}</span>
         </div>
@@ -74,7 +85,7 @@ export function ThermalReceipt({
               <span>
                 {item.quantity}x {item.product_name_snapshot}
               </span>
-              <span className="tabular-nums shrink-0">
+              <span className="tabular-nums shrink-0 whitespace-nowrap">
                 {formatRupiah(item.line_total)}
               </span>
             </div>
@@ -96,41 +107,41 @@ export function ThermalReceipt({
       <div className="py-2.5 border-b border-dashed border-slate-300 space-y-1">
         <div className="flex justify-between text-[10px]">
           <span className="text-slate-500">Subtotal</span>
-          <span className="tabular-nums">{formatRupiah(order.subtotal_amount)}</span>
+          <span className="tabular-nums whitespace-nowrap">{formatRupiah(order.subtotal_amount)}</span>
         </div>
         {Number(order.discount_amount) > 0 && (
           <div className="flex justify-between text-[10px]">
             <span className="text-slate-500">Diskon</span>
-            <span className="tabular-nums">-{formatRupiah(order.discount_amount)}</span>
+            <span className="tabular-nums whitespace-nowrap">-{formatRupiah(order.discount_amount)}</span>
           </div>
         )}
         {Number(order.tax_amount) > 0 && (
           <div className="flex justify-between text-[10px]">
             <span className="text-slate-500">PB1 (10%)</span>
-            <span className="tabular-nums">{formatRupiah(order.tax_amount)}</span>
+            <span className="tabular-nums whitespace-nowrap">{formatRupiah(order.tax_amount)}</span>
           </div>
         )}
-        <div className="flex justify-between text-xs font-bold pt-1 border-t border-slate-200">
+        <div className="flex justify-between text-xs font-bold pt-1.5 mt-1 border-t border-slate-200">
           <span>TOTAL</span>
-          <span className="tabular-nums">{formatRupiah(order.total_amount)}</span>
+          <span className="tabular-nums whitespace-nowrap">{formatRupiah(order.total_amount)}</span>
         </div>
 
         <div className="pt-1.5 space-y-0.5 text-[10px]">
-          <div className="flex justify-between">
+          <div className="flex justify-between gap-2">
             <span className="text-slate-500">Pembayaran</span>
-            <span className="font-bold">
-              {order.payment_method} ({order.payment_status === "PAID" ? "LUNAS" : order.payment_status})
+            <span className="font-bold text-right">
+              {order.payment_method} ({paymentStatusText})
             </span>
           </div>
           {order.payment_method === "CASH" && Number(payment.amount_received) > 0 && (
             <>
               <div className="flex justify-between">
                 <span className="text-slate-500">Tunai Diterima</span>
-                <span className="tabular-nums">{formatRupiah(payment.amount_received)}</span>
+                <span className="tabular-nums whitespace-nowrap">{formatRupiah(payment.amount_received)}</span>
               </div>
               <div className="flex justify-between font-bold">
                 <span>Kembalian</span>
-                <span className="tabular-nums">{formatRupiah(payment.change_amount || 0)}</span>
+                <span className="tabular-nums whitespace-nowrap">{formatRupiah(payment.change_amount || 0)}</span>
               </div>
             </>
           )}
@@ -142,12 +153,17 @@ export function ThermalReceipt({
         <div className="inline-block p-1.5 bg-white border border-slate-200 rounded-lg">
           <QRCodeSVG value={trackUrl} size={84} bgColor="#FFFFFF" fgColor="#000000" />
         </div>
-        <div className="text-[10px]">
+        <div className="text-[10px] space-y-0.5">
           <div className="font-bold">Kode: {order.public_code}</div>
           <div className="text-slate-500">Scan QR untuk status &amp; ulasan</div>
         </div>
-        <div className="text-[10px] text-slate-600 pt-1 border-t border-dashed border-slate-200">
-          WiFi: <strong>{wifiSsid}</strong> • Pass: <strong>{wifiPass}</strong>
+        <div className="text-[10px] text-slate-600 pt-2 border-t border-dashed border-slate-200 space-y-0.5">
+          <div>
+            WiFi: <strong>{wifiSsid}</strong>
+          </div>
+          <div>
+            Password: <strong>{wifiPass}</strong>
+          </div>
         </div>
         <div className="text-[10px] font-bold pt-1">
           Terima kasih telah berkunjung!
