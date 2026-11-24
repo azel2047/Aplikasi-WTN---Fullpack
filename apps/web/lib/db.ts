@@ -777,10 +777,20 @@ function getPgPool(): Pool | null {
   if (!url) return null;
   if (!globalForPg.__wtnPgPool) {
     const isLocal = /localhost|127\.0\.0\.1/.test(url);
+    // Strip sslmode query param so pg does not override ssl.rejectUnauthorized=false on Supabase/Neon
+    let cleanUrl = url;
+    try {
+      const u = new URL(url);
+      u.searchParams.delete("sslmode");
+      cleanUrl = u.toString();
+    } catch {
+      // keep raw url if not standard URL
+    }
     globalForPg.__wtnPgPool = new Pool({
-      connectionString: url,
+      connectionString: cleanUrl,
       ssl: isLocal ? false : { rejectUnauthorized: false },
       max: 5,
+      connectionTimeoutMillis: 8000,
     });
   }
   return globalForPg.__wtnPgPool;

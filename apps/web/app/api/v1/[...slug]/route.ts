@@ -60,9 +60,30 @@ function getActor(req: NextRequest, db: WtnDatabase) {
 }
 
 async function handleRequest(req: NextRequest, { params }: { params: Promise<{ slug: string[] }> }) {
+  try {
+    return await handleRequestInner(req, params);
+  } catch (err: any) {
+    console.error("[WTN API ERROR]", err);
+    return NextResponse.json(
+      { message: `Server/DB error: ${err?.message || String(err)}` },
+      { status: 500 }
+    );
+  }
+}
+
+async function handleRequestInner(req: NextRequest, params: Promise<{ slug: string[] }>) {
   const { slug } = await params;
   const method = req.method.toUpperCase();
   const pathStr = "/" + slug.join("/");
+  if (method === "GET" && pathStr === "/health") {
+    const db = await readDb();
+    return NextResponse.json({
+      ok: true,
+      driver: process.env.DATABASE_URL || process.env.POSTGRES_URL ? "postgresql" : "json",
+      tables: db.dining_tables.length,
+      orders: db.orders.length,
+    });
+  }
   const db = await readDb();
   const url = new URL(req.url);
 
