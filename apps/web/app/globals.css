@@ -3,51 +3,51 @@
 @theme inline {
   --font-sans: var(--font-jakarta), "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, sans-serif;
 
-  /* Rustic Modern Brand Palette & Stitch Tokens */
-  --color-nav-espresso: #3B2922;
-  --color-dark-walnut: #5A4032;
-  --color-canvas-cream: #F6F0E6;
-  --color-surface-cream: #FFFCF7;
-  --color-surface-variant: #EFE6D8;
-  --color-surface-container-low: #F8F3ED;
-  --color-surface-container: #F3EDE8;
-  --color-surface-container-high: #EDE7E2;
-  --color-surface-container-highest: #E7E1DD;
-  --color-border-sand: #D9C5AA;
-  --color-border-strong: #9C8570;
+  /* Clean Minimalist White & Emerald Palette (per user reference) */
+  --color-nav-espresso: #0F172A;
+  --color-dark-walnut: #1E293B;
+  --color-canvas-cream: #F6F8F7;
+  --color-surface-cream: #FFFFFF;
+  --color-surface-variant: #F1F5F3;
+  --color-surface-container-low: #F8FAF9;
+  --color-surface-container: #F1F5F3;
+  --color-surface-container-high: #E8EEEC;
+  --color-surface-container-highest: #E2E8F0;
+  --color-border-sand: #E5E7EB;
+  --color-border-strong: #CBD5E1;
 
-  --color-primary: #854225;
-  --color-primary-container: #A3593A;
-  --color-primary-hover: #8F4C31;
-  --color-primary-subtle: #F3DDD0;
-  --color-on-primary: #FFFCF7;
-  --color-on-primary-subtle: #7A3F27;
-  --color-accent-terracotta: #B76E4B;
+  --color-primary: #0D8A44;
+  --color-primary-container: #10A352;
+  --color-primary-hover: #0B7A3B;
+  --color-primary-subtle: #E8F7F0;
+  --color-on-primary: #FFFFFF;
+  --color-on-primary-subtle: #0D7A3E;
+  --color-accent-terracotta: #10A352;
 
-  --color-secondary: #5A4032;
-  --color-secondary-container: #FFD8C4;
-  --color-on-secondary-fixed: #2B170B;
+  --color-secondary: #475569;
+  --color-secondary-container: #E8F7F0;
+  --color-on-secondary-fixed: #0F5132;
 
-  --color-tertiary: #556048;
-  --color-tertiary-container: #69735A;
-  --color-success-subtle: #E4E8DA;
+  --color-tertiary: #10A352;
+  --color-tertiary-container: #16A34A;
+  --color-success-subtle: #E8F7F0;
 
-  --color-warning: #7A5A0A;
-  --color-warning-subtle: #F6E7BF;
+  --color-warning: #B45309;
+  --color-warning-subtle: #FEF3C7;
 
-  --color-error: #B3402E;
-  --color-error-subtle: #F5DAD3;
-  --color-on-error: #FFFCF7;
+  --color-error: #DC2626;
+  --color-error-subtle: #FEE2E2;
+  --color-on-error: #FFFFFF;
 
-  --color-on-surface: #292724;
-  --color-on-surface-variant: #5A4032;
-  --color-text-muted: #7A6757;
+  --color-on-surface: #111827;
+  --color-on-surface-variant: #475569;
+  --color-text-muted: #64748B;
 }
 
 html,
 body {
-  background-color: #F6F0E6;
-  color: #292724;
+  background-color: #F6F8F7;
+  color: #111827;
   font-family: var(--font-jakarta), "Plus Jakarta Sans", sans-serif;
   -webkit-tap-highlight-color: transparent;
 }
@@ -57,5 +57,44 @@ body {
 }
 
 .soft-shadow {
-  box-shadow: 0 1px 2px rgba(59, 41, 34, 0.05), 0 8px 20px rgba(59, 41, 34, 0.06);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 4px 16px rgba(15, 23, 42, 0.04);
+}
+
+/* Dedicated Thermal Receipt Print Mode (80mm Clean Print) */
+@media print {
+  @page {
+    size: 80mm auto;
+    margin: 4mm;
+  }
+
+  body {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+  }
+
+  body * {
+    visibility: hidden !important;
+  }
+
+  #thermal-receipt-print,
+  #thermal-receipt-print * {
+    visibility: visible !important;
+  }
+
+  #thermal-receipt-print {
+    position: fixed !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 72mm !important;
+    max-width: 72mm !important;
+    margin: 0 !important;
+    padding: 4mm !important;
+    box-shadow: none !important;
+    border: none !important;
+    background: #FFFFFF !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
 }

@@ -201,12 +201,12 @@ export default function OwnerOverviewPage() {
               <BarChart data={hourlySales}>
                 <XAxis
                   dataKey="short_hour"
-                  tick={{ fontSize: 11, fill: "#7A6757" }}
-                  axisLine={{ stroke: "#D9C5AA" }}
+                  tick={{ fontSize: 11, fill: "#64748B" }}
+                  axisLine={{ stroke: "#E5E7EB" }}
                   tickLine={false}
                 />
                 <YAxis
-                  tick={{ fontSize: 11, fill: "#7A6757" }}
+                  tick={{ fontSize: 11, fill: "#64748B" }}
                   axisLine={false}
                   tickLine={false}
                   tickFormatter={(v) =>
@@ -220,15 +220,15 @@ export default function OwnerOverviewPage() {
                   ]}
                   labelFormatter={(label) => `Pukul ${label}.00 WIB`}
                   contentStyle={{
-                    backgroundColor: "#FFFCF7",
-                    borderColor: "#D9C5AA",
+                    backgroundColor: "#FFFFFF",
+                    borderColor: "#E5E7EB",
                     borderRadius: "12px",
                     fontSize: "12px",
                   }}
                 />
                 <Bar
                   dataKey="revenue"
-                  fill="#A3593A"
+                  fill="#10A352"
                   radius={[6, 6, 0, 0]}
                 />
               </BarChart>

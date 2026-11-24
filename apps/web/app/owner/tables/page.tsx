@@ -243,8 +243,8 @@ export default function OwnerTablesAndQrPage() {
                   <QRCodeSVG
                     value={`${originUrl}/t/${selectedTable.qr_token}`}
                     size={176}
-                    bgColor="#FFFCF7"
-                    fgColor="#292724"
+                    bgColor="#FFFFFF"
+                    fgColor="#0F172A"
                   />
                 </div>
 
@@ -260,7 +260,7 @@ export default function OwnerTablesAndQrPage() {
                   target="_blank"
                   className="w-full h-11 rounded-xl bg-nav-espresso hover:bg-dark-walnut text-canvas-cream font-bold flex items-center justify-center gap-2"
                 >
-                  <span>Simulasi Buka Link QR {selectedTable.name}</span>
+                  <span>Buka Menu {selectedTable.name}</span>
                   <ExternalLink className="w-4 h-4" />
                 </Link>
 

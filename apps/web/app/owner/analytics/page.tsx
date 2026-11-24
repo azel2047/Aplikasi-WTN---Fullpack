@@ -48,11 +48,10 @@ export default function OwnerAnalyticsPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-nav-espresso tracking-tight">
-            Analitik Traffic &amp; Performa Usaha
+            Analitik &amp; Performa
           </h1>
           <p className="text-xs text-text-muted mt-0.5">
-            Analisis jam operasional, pola kunjungan QR vs transaksi lunas, dan
-            performa menu berbasis data aktual database (AC-30, AC-31).
+            Jam operasional, kunjungan QR, dan performa menu.
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -74,7 +73,7 @@ export default function OwnerAnalyticsPage() {
         </div>
       </div>
 
-      {/* Data Sufficiency & Anti-Slop Honesty Disclosure Banner (AC-31) */}
+      {/* Data Sufficiency Notice */}
       <div
         className={`p-4 rounded-2xl border flex items-start gap-3 text-xs ${
           period.has_sufficient_history
@@ -87,7 +86,7 @@ export default function OwnerAnalyticsPage() {
           <span className="font-bold block">
             {period.has_sufficient_history
               ? "Sampel Data Historis Memadai"
-              : "Label kejujuran data: Data historis belum cukup panjang (AC-31)"}
+              : "Data historis masih terbatas"}
           </span>
           <p className="leading-relaxed">{period.disclosure_message}</p>
         </div>
@@ -177,16 +176,16 @@ export default function OwnerAnalyticsPage() {
               <BarChart data={hourly}>
                 <XAxis
                   dataKey="hour"
-                  tick={{ fontSize: 10, fill: "#7A6757" }}
+                  tick={{ fontSize: 10, fill: "#64748B" }}
                 />
                 <YAxis
                   allowDecimals={false}
-                  tick={{ fontSize: 11, fill: "#7A6757" }}
+                  tick={{ fontSize: 11, fill: "#64748B" }}
                 />
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: "#FFFCF7",
-                    borderColor: "#D9C5AA",
+                    backgroundColor: "#FFFFFF",
+                    borderColor: "#E5E7EB",
                     borderRadius: "12px",
                     fontSize: "12px",
                   }}
@@ -194,13 +193,13 @@ export default function OwnerAnalyticsPage() {
                 <Bar
                   dataKey="qr_visits"
                   name="Scan QR Menu"
-                  fill="#D9C5AA"
+                  fill="#CBD5E1"
                   radius={[4, 4, 0, 0]}
                 />
                 <Bar
                   dataKey="orders_created"
                   name="Order Dibuat"
-                  fill="#3B2922"
+                  fill="#0F172A"
                   radius={[4, 4, 0, 0]}
                 />
               </BarChart>
@@ -222,10 +221,10 @@ export default function OwnerAnalyticsPage() {
               <BarChart data={hourly}>
                 <XAxis
                   dataKey="hour"
-                  tick={{ fontSize: 10, fill: "#7A6757" }}
+                  tick={{ fontSize: 10, fill: "#64748B" }}
                 />
                 <YAxis
-                  tick={{ fontSize: 11, fill: "#7A6757" }}
+                  tick={{ fontSize: 11, fill: "#64748B" }}
                   tickFormatter={(v) =>
                     v >= 1000 ? `${Math.round(v / 1000)}k` : String(v)
                   }
@@ -236,8 +235,8 @@ export default function OwnerAnalyticsPage() {
                     "Omzet Lunas",
                   ]}
                   contentStyle={{
-                    backgroundColor: "#FFFCF7",
-                    borderColor: "#D9C5AA",
+                    backgroundColor: "#FFFFFF",
+                    borderColor: "#E5E7EB",
                     borderRadius: "12px",
                     fontSize: "12px",
                   }}
@@ -245,7 +244,7 @@ export default function OwnerAnalyticsPage() {
                 <Bar
                   dataKey="revenue"
                   name="Omzet (Rp)"
-                  fill="#A3593A"
+                  fill="#10A352"
                   radius={[4, 4, 0, 0]}
                 />
               </BarChart>

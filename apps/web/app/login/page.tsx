@@ -254,18 +254,15 @@ export default function LoginPage() {
             </button>
           </form>
 
-          {/* Quick Demo Credentials Info */}
+          {/* Default Account Reference */}
           <div className="pt-3 border-t border-surface-variant text-[11px] text-text-muted space-y-1">
-            <div className="font-bold text-nav-espresso">
-              Info Akun Demo (Pre-filled):
-            </div>
             <div>
-              • <strong>Kasir Bersama:</strong>{" "}
-              <code>kasir@warkopterasnenek.id</code> / <code>kasir123</code> (PIN Aksi Sensitif:{" "}
+              <strong>Kasir:</strong>{" "}
+              <code>kasir@warkopterasnenek.id</code> / <code>kasir123</code> (PIN:{" "}
               <code>1234</code>)
             </div>
             <div>
-              • <strong>Owner:</strong> <code>owner@warkopterasnenek.id</code> /{" "}
+              <strong>Owner:</strong> <code>owner@warkopterasnenek.id</code> /{" "}
               <code>owner123</code> (PIN: <code>9999</code>)
             </div>
           </div>
@@ -273,7 +270,7 @@ export default function LoginPage() {
       </main>
 
       <footer className="text-center text-xs text-text-muted pb-2">
-        Warkop Teras Nenek — Sistem Operasional Terintegrasi
+        Warkop Teras Nenek
       </footer>
     </div>
   );

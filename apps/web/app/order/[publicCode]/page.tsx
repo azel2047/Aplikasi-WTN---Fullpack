@@ -585,8 +585,8 @@ export default function CustomerOrderTrackingPage() {
                       <QRCodeSVG
                         value={`00020101021126580014ID.CO.QRIS.WWW01189360001400000000005204581253033605802ID5918WARKOP TERAS NENEK6010YOGYAKARTA6304${order.order_number}`}
                         size={168}
-                        bgColor="#FFFCF7"
-                        fgColor="#292724"
+                        bgColor="#FFFFFF"
+                        fgColor="#0F172A"
                       />
                     )}
                   </div>

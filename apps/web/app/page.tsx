@@ -4,15 +4,12 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { apiFetch } from "@/lib/api";
 import {
-  Coffee,
   QrCode,
   MonitorCheck,
   LayoutDashboard,
   ArrowRight,
   Search,
-  MapPin,
-  Wifi,
-  CheckCircle2,
+  Coffee,
 } from "lucide-react";
 
 interface PublicTable {
@@ -28,7 +25,7 @@ interface PublicTable {
 export default function HomePage() {
   const [tables, setTables] = useState<PublicTable[]>([]);
   const [loading, setLoading] = useState(true);
-  const [trackCode, setTrackCode] = useState("ORD-0042-DEMO4");
+  const [trackCode, setTrackCode] = useState("");
 
   useEffect(() => {
     apiFetch<{ tables: PublicTable[] }>("/public/tables")
@@ -38,259 +35,124 @@ export default function HomePage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-canvas-cream text-on-surface flex flex-col">
-      {/* Top Navbar */}
-      <header className="bg-nav-espresso text-canvas-cream border-b border-dark-walnut">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-primary-container text-on-primary flex items-center justify-center font-bold text-base">
-              WTN
+    <div className="min-h-screen bg-[#F6F8F7] text-slate-900 flex flex-col">
+      {/* Clean Minimal Top Bar */}
+      <header className="bg-white border-b border-slate-200 sticky top-0 z-40">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-2.5">
+            <div className="w-9 h-9 rounded-xl bg-[#10A352] text-white flex items-center justify-center">
+              <Coffee className="w-5 h-5" />
             </div>
-            <div>
-              <span className="font-bold text-lg tracking-tight block leading-tight">
-                Warkop Teras Nenek
-              </span>
-              <span className="text-xs text-border-sand block">
-                Kopi Tubruk, Susu Aren &amp; Masakan Hangat Teras
-              </span>
-            </div>
+            <span className="font-bold text-base tracking-tight text-slate-900">
+              Warkop Teras Nenek
+            </span>
           </div>
 
-          <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-2">
             <Link
-              href="/login"
-              className="h-11 px-4 rounded-xl bg-dark-walnut hover:bg-primary-container text-surface-cream text-xs sm:text-sm font-semibold flex items-center gap-2 transition-colors"
+              href="/cashier/pos"
+              className="h-9 px-3.5 rounded-lg bg-[#E8F7F0] hover:bg-[#d5f2e4] text-[#0D7A3E] text-xs font-semibold flex items-center gap-1.5 transition-colors"
             >
               <MonitorCheck className="w-4 h-4" />
-              <span>Portal Kasir &amp; Owner</span>
+              <span>Kasir POS</span>
+            </Link>
+            <Link
+              href="/owner"
+              className="h-9 px-3.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center gap-1.5 transition-colors"
+            >
+              <LayoutDashboard className="w-4 h-4" />
+              <span>Owner</span>
             </Link>
           </div>
         </div>
       </header>
 
       <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-8 space-y-8">
-        {/* Hero Welcome Surface */}
-        <section className="bg-surface-cream border border-border-sand rounded-[20px] p-6 sm:p-8 soft-shadow">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-            <div className="lg:col-span-7 space-y-4">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-subtle text-on-primary-subtle text-xs font-semibold">
-                <Coffee className="w-3.5 h-3.5" />
-                <span>Pemesanan Mandiri Tanpa Registrasi Akun</span>
-              </div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-nav-espresso tracking-tight leading-snug">
-                Selamat Datang di Teras Nenek. Pilih Meja atau Pindai QR untuk Memesan.
-              </h1>
-              <p className="text-sm sm:text-base text-on-surface-variant leading-relaxed">
-                Nikmati racikan kopi tubruk robusta, kopi susu gula aren murni, teh tarik, dan
-                indomie hangat. Setiap item pesanan dapat dilengkapi catatan khusus (takaran
-                gula, es, tingkat pedas) langsung ke barista &amp; dapur kami.
-              </p>
-
-              <div className="flex flex-wrap items-center gap-4 pt-2 text-xs text-text-muted">
-                <span className="inline-flex items-center gap-1.5">
-                  <MapPin className="w-4 h-4 text-primary-container" />
-                  Jl. Teras Rindang No. 14, Yogyakarta
-                </span>
-                <span className="inline-flex items-center gap-1.5">
-                  <Wifi className="w-4 h-4 text-tertiary" />
-                  WiFi: <strong className="text-on-surface">WarkopTeras_5G</strong> (Sandi:{" "}
-                  <code className="bg-surface-variant px-1.5 py-0.5 rounded text-nav-espresso font-semibold">
-                    ngopidulu123
-                  </code>
-                  )
-                </span>
-              </div>
-            </div>
-
-            {/* Quick Order Tracking Box */}
-            <div className="lg:col-span-5 bg-canvas-cream border border-border-sand rounded-2xl p-5 space-y-4">
-              <div className="flex items-center justify-between">
-                <h2 className="text-base font-bold text-nav-espresso">
-                  Cek Status Pesanan Aktif
-                </h2>
-                <span className="text-xs px-2.5 py-0.5 rounded-full bg-success-subtle text-tertiary font-semibold">
-                  Realtime
-                </span>
-              </div>
-              <p className="text-xs text-text-muted">
-                Masukkan kode pesanan Anda (contoh: <code className="font-mono font-semibold">ORD-0042-DEMO4</code> atau <code className="font-mono font-semibold">ORD-0040-DEMO1</code>) untuk memantau status atau memberi rating.
-              </p>
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  if (trackCode.trim()) {
-                    window.location.href = `/order/${encodeURIComponent(trackCode.trim())}`;
-                  }
-                }}
-                className="flex gap-2"
-              >
-                <div className="relative flex-1">
-                  <Search className="w-4 h-4 text-text-muted absolute left-3.5 top-1/2 -translate-y-1/2" />
-                  <input
-                    type="text"
-                    value={trackCode}
-                    onChange={(e) => setTrackCode(e.target.value)}
-                    placeholder="Kode Order (mis. ORD-0042-DEMO4)"
-                    className="w-full h-12 pl-10 pr-3 rounded-xl bg-surface-cream border border-border-sand text-sm font-medium text-on-surface focus:outline-none focus:border-primary-container"
-                  />
-                </div>
-                <button
-                  type="submit"
-                  className="h-12 px-5 rounded-xl bg-primary-container hover:bg-primary-hover text-on-primary text-sm font-semibold shrink-0 transition-colors cursor-pointer"
-                >
-                  Lacak
-                </button>
-              </form>
-              <div className="flex flex-wrap gap-2 pt-1">
-                <Link
-                  href="/order/ORD-0042-DEMO4"
-                  className="text-xs px-3 py-1.5 rounded-lg bg-surface-cream border border-border-sand hover:border-primary-container text-secondary font-medium transition-colors"
-                >
-                  Demo #0042 (Meja 4 · Bukti QRIS)
-                </Link>
-                <Link
-                  href="/order/ORD-0041-DEMO2"
-                  className="text-xs px-3 py-1.5 rounded-lg bg-surface-cream border border-border-sand hover:border-primary-container text-secondary font-medium transition-colors"
-                >
-                  Demo #0041 (Meja 7 · Diracik)
-                </Link>
-                <Link
-                  href="/order/ORD-0040-DEMO1"
-                  className="text-xs px-3 py-1.5 rounded-lg bg-surface-cream border border-border-sand hover:border-primary-container text-secondary font-medium transition-colors"
-                >
-                  Demo #0040 (Meja 2 · Selesai &amp; Rating)
-                </Link>
-              </div>
-            </div>
+        {/* Clean Minimal Hero + Order Tracker */}
+        <section className="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+          <div className="space-y-2 max-w-xl">
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
+              Pilih Meja untuk Memesan
+            </h1>
+            <p className="text-sm text-slate-500">
+              Pesan langsung dari meja tanpa antre, atau lacak status pesanan aktif Anda.
+            </p>
           </div>
+
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (trackCode.trim()) {
+                window.location.href = `/order/${encodeURIComponent(trackCode.trim())}`;
+              }
+            }}
+            className="flex gap-2 w-full lg:w-auto lg:min-w-[360px]"
+          >
+            <div className="relative flex-1">
+              <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <input
+                type="text"
+                value={trackCode}
+                onChange={(e) => setTrackCode(e.target.value)}
+                placeholder="Masukkan kode pesanan (ORD-...)"
+                className="w-full h-11 pl-10 pr-3 rounded-xl bg-[#F6F8F7] border border-slate-200 text-xs text-slate-900 focus:outline-none focus:border-[#10A352]"
+              />
+            </div>
+            <button
+              type="submit"
+              className="h-11 px-5 rounded-xl bg-[#10A352] hover:bg-[#0D8A44] text-white text-xs font-semibold shrink-0 transition-colors cursor-pointer"
+            >
+              Lacak
+            </button>
+          </form>
         </section>
 
-        {/* 9 Table QR Simulators (AC-01, AC-02, AC-04) */}
+        {/* 9 Tables Grid */}
         <section className="space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-            <div>
-              <h2 className="text-xl font-bold text-nav-espresso">
-                9 Meja Pelanggan — Simulasi Scan QR Meja
-              </h2>
-              <p className="text-xs sm:text-sm text-text-muted">
-                Klik salah satu meja di bawah untuk membuka halaman pemesanan QR unik meja tersebut.
-              </p>
-            </div>
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-success-subtle text-tertiary text-xs font-semibold self-start sm:self-auto">
-              <CheckCircle2 className="w-3.5 h-3.5" />
-              <span>9 Meja Aktif Terdaftar</span>
-            </span>
+          <div className="flex items-center justify-between">
+            <h2 className="text-base font-bold text-slate-900">Daftar Meja (1–9)</h2>
+            <span className="text-xs text-slate-500">{tables.length} meja aktif</span>
           </div>
 
           {loading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
               {[...Array(9)].map((_, i) => (
                 <div
                   key={i}
-                  className="h-32 rounded-2xl bg-surface-cream border border-border-sand animate-pulse p-5"
+                  className="h-28 rounded-2xl bg-white border border-slate-200 animate-pulse"
                 />
               ))}
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
               {tables.map((t) => (
                 <Link
                   key={t.id}
                   href={`/t/${t.qr_token}`}
-                  className="group bg-surface-cream border border-border-sand hover:border-primary-container rounded-2xl p-5 soft-shadow transition-all flex flex-col justify-between gap-4"
+                  className="group bg-white border border-slate-200 hover:border-[#10A352] rounded-2xl p-5 transition-all flex flex-col justify-between gap-4"
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs font-bold px-2.5 py-0.5 rounded-md bg-surface-variant text-nav-espresso tabular-nums">
-                          {t.code}
-                        </span>
-                        <span className="text-base font-bold text-nav-espresso group-hover:text-primary-container transition-colors">
-                          {t.name}
-                        </span>
-                      </div>
-                      <p className="text-xs text-text-muted mt-1">
-                        {t.area} • Kapasitas {t.capacity} kursi
-                      </p>
+                      <span className="text-base font-bold text-slate-900 group-hover:text-[#10A352] transition-colors block">
+                        {t.name}
+                      </span>
+                      <span className="text-xs text-slate-500">
+                        {t.area} • {t.capacity} kursi
+                      </span>
                     </div>
-                    <div className="w-10 h-10 rounded-xl bg-primary-subtle text-on-primary-subtle flex items-center justify-center shrink-0 group-hover:bg-primary-container group-hover:text-on-primary transition-colors">
-                      <QrCode className="w-5 h-5" />
+                    <div className="w-9 h-9 rounded-xl bg-[#E8F7F0] text-[#10A352] flex items-center justify-center shrink-0">
+                      <QrCode className="w-4 h-4" />
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between pt-2 border-t border-surface-variant text-xs font-semibold text-primary-container">
-                    <span>Buka Menu {t.name}</span>
+                  <div className="flex items-center justify-between text-xs font-semibold text-[#10A352]">
+                    <span>Buka Menu</span>
                     <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </div>
                 </Link>
               ))}
             </div>
           )}
-        </section>
-
-        {/* Role Portals Card Strip */}
-        <section className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-          <div className="bg-surface-cream border border-border-sand rounded-2xl p-6 flex flex-col justify-between gap-4">
-            <div className="space-y-2">
-              <div className="w-10 h-10 rounded-xl bg-nav-espresso text-canvas-cream flex items-center justify-center">
-                <MonitorCheck className="w-5 h-5" />
-              </div>
-              <h3 className="text-lg font-bold text-nav-espresso">
-                Aplikasi Kasir &amp; Barista (Cashier Web App)
-              </h3>
-              <p className="text-xs sm:text-sm text-text-muted leading-relaxed">
-                Satu antrean terpadu untuk pesanan QR meja dan POS manual. Verifikasi pembayaran
-                tunai &amp; QRIS statis, ubah status racikan, catat pengeluaran, laporan harian shift,
-                dan closing kas.
-              </p>
-            </div>
-            <div className="flex flex-wrap items-center gap-3 pt-2">
-              <Link
-                href="/cashier/orders"
-                className="h-11 px-4 rounded-xl bg-primary-container hover:bg-primary-hover text-on-primary text-xs sm:text-sm font-semibold inline-flex items-center gap-2 transition-colors"
-              >
-                <span>Buka Antrean Kasir</span>
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-              <Link
-                href="/cashier/pos"
-                className="h-11 px-4 rounded-xl bg-surface-variant hover:bg-border-sand/50 text-nav-espresso text-xs sm:text-sm font-semibold inline-flex items-center gap-2 transition-colors"
-              >
-                <span>POS Manual</span>
-              </Link>
-            </div>
-          </div>
-
-          <div className="bg-surface-cream border border-border-sand rounded-2xl p-6 flex flex-col justify-between gap-4">
-            <div className="space-y-2">
-              <div className="w-10 h-10 rounded-xl bg-dark-walnut text-canvas-cream flex items-center justify-center">
-                <LayoutDashboard className="w-5 h-5" />
-              </div>
-              <h3 className="text-lg font-bold text-nav-espresso">
-                Owner Dashboard &amp; Manajemen Usaha
-              </h3>
-              <p className="text-xs sm:text-sm text-text-muted leading-relaxed">
-                Pantau omzet aktual, kelola katalog menu, cetak QR 9 meja, stok bahan baku &amp;
-                resep produk, laporan laba/rugi &amp; HPP tanpa double-counting, laporan karyawan,
-                rating pelanggan, serta analitik jam ramai/sepi.
-              </p>
-            </div>
-            <div className="flex flex-wrap items-center gap-3 pt-2">
-              <Link
-                href="/owner"
-                className="h-11 px-4 rounded-xl bg-nav-espresso hover:bg-dark-walnut text-canvas-cream text-xs sm:text-sm font-semibold inline-flex items-center gap-2 transition-colors"
-              >
-                <span>Buka Dashboard Owner</span>
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-              <Link
-                href="/owner/tables"
-                className="h-11 px-4 rounded-xl bg-surface-variant hover:bg-border-sand/50 text-nav-espresso text-xs sm:text-sm font-semibold inline-flex items-center gap-2 transition-colors"
-              >
-                <span>Kelola 9 Meja &amp; QR</span>
-              </Link>
-            </div>
-          </div>
         </section>
       </main>
     </div>

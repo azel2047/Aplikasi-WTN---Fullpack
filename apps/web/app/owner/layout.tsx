@@ -24,6 +24,7 @@ import {
   History,
   LogOut,
   MonitorCheck,
+  Coffee,
   Menu,
   X,
 } from "lucide-react";
@@ -49,12 +50,7 @@ const OWNER_NAV_GROUPS: Array<{ title: string; items: OwnerNavItem[] }> = [
   {
     title: "STOK & KEUANGAN",
     items: [
-      {
-        href: "/owner/inventory/ingredients",
-        label: "Inventory",
-        icon: Package,
-        matchPrefix: "/owner/inventory",
-      },
+      { href: "/owner/inventory/ingredients", label: "Inventory", icon: Package, matchPrefix: "/owner/inventory" },
       { href: "/owner/finance", label: "Keuangan", icon: Wallet },
       { href: "/owner/expenses", label: "Pengeluaran", icon: Receipt },
     ],
@@ -62,7 +58,7 @@ const OWNER_NAV_GROUPS: Array<{ title: string; items: OwnerNavItem[] }> = [
   {
     title: "LAPORAN",
     items: [
-      { href: "/owner/reports", label: "Laporan Karyawan", icon: FileBarChart },
+      { href: "/owner/reports", label: "Laporan Shift", icon: FileBarChart },
       { href: "/owner/ratings", label: "Rating", icon: Star },
       { href: "/owner/analytics", label: "Analitik", icon: BarChart3 },
     ],
@@ -90,8 +86,6 @@ export default function OwnerLayout({
   useEffect(() => {
     const stored = getStoredAuth();
     if (!stored || stored.user.role !== "owner") {
-      // Auto-authenticate demo owner account if directly opened so evaluation works seamlessly,
-      // while full login/logout remains available at /login
       apiFetch("/auth/login", {
         method: "POST",
         body: JSON.stringify({
@@ -103,9 +97,7 @@ export default function OwnerLayout({
           setStoredAuth(res.token, res.user, null);
           setAuth(getStoredAuth());
         })
-        .catch(() => {
-          router.push("/login");
-        })
+        .catch(() => router.push("/login"))
         .finally(() => setReady(true));
     } else {
       setAuth(stored);
@@ -123,35 +115,33 @@ export default function OwnerLayout({
 
   if (!ready) {
     return (
-      <div className="min-h-screen bg-canvas-cream flex items-center justify-center text-sm text-text-muted">
-        Memuat Owner Workspace Warkop Teras Nenek...
+      <div className="min-h-screen bg-[#F6F8F7] flex items-center justify-center text-xs text-slate-500">
+        Memuat Dashboard...
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-canvas-cream text-on-surface flex">
-      {/* Desktop Sidebar (240px fixed per Stitch Overview/Inventory/Finance) */}
-      <aside className="hidden lg:flex fixed left-0 top-0 h-full w-[240px] bg-nav-espresso text-canvas-cream z-50 flex-col justify-between border-r border-dark-walnut">
+    <div className="min-h-screen bg-[#F6F8F7] text-slate-900 flex">
+      {/* Clean White Sidebar matching image.png */}
+      <aside className="hidden lg:flex fixed left-0 top-0 h-full w-60 bg-white border-r border-slate-200 z-40 flex-col justify-between no-print">
         <div className="flex-1 overflow-y-auto py-5">
-          <Link href="/" className="px-5 mb-6 flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-primary-container text-on-primary flex items-center justify-center font-bold text-base">
-              WTN
+          <Link href="/" className="px-5 mb-6 flex items-center gap-2.5">
+            <div className="w-9 h-9 rounded-xl bg-[#10A352] text-white flex items-center justify-center">
+              <Coffee className="w-5 h-5" />
             </div>
             <div>
-              <span className="font-bold text-sm text-surface-cream block leading-tight">
-                Warkop Teras Nenek
+              <span className="font-bold text-sm text-slate-900 block leading-tight">
+                Teras Nenek
               </span>
-              <span className="text-[11px] text-border-sand block">
-                Owner Workspace
-              </span>
+              <span className="text-[11px] text-slate-500 block">Owner</span>
             </div>
           </Link>
 
           <nav className="px-3 space-y-5">
             {OWNER_NAV_GROUPS.map((group) => (
               <div key={group.title} className="space-y-1">
-                <span className="px-3 text-[11px] font-bold uppercase tracking-wider text-border-sand/70 block">
+                <span className="px-3 text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
                   {group.title}
                 </span>
                 {group.items.map((item) => {
@@ -160,17 +150,16 @@ export default function OwnerLayout({
                     ? pathname === item.href
                     : item.matchPrefix
                     ? pathname?.startsWith(item.matchPrefix)
-                    : pathname === item.href ||
-                      pathname?.startsWith(item.href + "/");
+                    : pathname === item.href || pathname?.startsWith(item.href + "/");
 
                   return (
                     <Link
                       key={item.href}
                       href={item.href}
-                      className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                      className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-colors ${
                         isActive
-                          ? "bg-[#4d362d] text-surface-cream border-l-[3px] border-primary-container font-bold"
-                          : "text-border-sand hover:bg-[#4a342b] hover:text-surface-cream"
+                          ? "bg-[#E8F7F0] text-[#10A352] font-bold"
+                          : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                       }`}
                     >
                       <Icon className="w-4 h-4 shrink-0" />
@@ -183,49 +172,47 @@ export default function OwnerLayout({
           </nav>
         </div>
 
-        <div className="p-4 bg-[#30211a] border-t border-dark-walnut flex items-center justify-between gap-2">
+        <div className="p-4 border-t border-slate-100 flex items-center justify-between gap-2">
           <div className="flex items-center gap-2.5 min-w-0">
-            <div className="w-8 h-8 rounded-full bg-primary-container text-on-primary flex items-center justify-center text-xs font-bold shrink-0">
+            <div className="w-8 h-8 rounded-full bg-[#10A352] text-white flex items-center justify-center text-xs font-bold shrink-0">
               NS
             </div>
             <div className="min-w-0">
-              <span className="text-xs font-bold text-surface-cream truncate block">
+              <span className="text-xs font-bold text-slate-900 truncate block">
                 {auth?.user?.name || "Nenek Sari"}
               </span>
-              <span className="text-[10px] text-border-sand truncate block">
-                Owner • Admin Pusat
-              </span>
+              <span className="text-[10px] text-slate-500 block">Owner</span>
             </div>
           </div>
           <button
             type="button"
             onClick={handleLogout}
             title="Keluar"
-            className="w-8 h-8 rounded-lg text-border-sand hover:bg-dark-walnut hover:text-surface-cream flex items-center justify-center cursor-pointer"
+            className="w-8 h-8 rounded-lg text-slate-400 hover:bg-red-50 hover:text-red-600 flex items-center justify-center cursor-pointer"
           >
             <LogOut className="w-4 h-4" />
           </button>
         </div>
       </aside>
 
-      {/* Mobile Drawer Sidebar */}
+      {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="lg:hidden fixed inset-0 z-50 bg-nav-espresso/70 flex">
-          <div className="w-64 bg-nav-espresso text-canvas-cream h-full flex flex-col justify-between p-4">
+        <div className="lg:hidden fixed inset-0 z-50 bg-slate-900/40 flex no-print">
+          <div className="w-64 bg-white h-full flex flex-col justify-between p-4 border-r border-slate-200">
             <div className="overflow-y-auto space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-dark-walnut">
-                <span className="font-bold text-sm">Warkop Teras Nenek</span>
+              <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+                <span className="font-bold text-sm text-slate-900">Teras Nenek</span>
                 <button
                   type="button"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="w-8 h-8 rounded-lg bg-dark-walnut flex items-center justify-center"
+                  className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center"
                 >
                   <X className="w-4 h-4" />
                 </button>
               </div>
               {OWNER_NAV_GROUPS.map((group) => (
                 <div key={group.title} className="space-y-1">
-                  <span className="text-[10px] font-bold uppercase text-border-sand/70">
+                  <span className="text-[10px] font-bold uppercase text-slate-400">
                     {group.title}
                   </span>
                   {group.items.map((item) => {
@@ -235,7 +222,7 @@ export default function OwnerLayout({
                         key={item.href}
                         href={item.href}
                         onClick={() => setMobileMenuOpen(false)}
-                        className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold text-canvas-cream hover:bg-dark-walnut"
+                        className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold text-slate-700 hover:bg-[#E8F7F0] hover:text-[#10A352]"
                       >
                         <Icon className="w-4 h-4" />
                         <span>{item.label}</span>
@@ -248,7 +235,7 @@ export default function OwnerLayout({
             <button
               type="button"
               onClick={handleLogout}
-              className="h-10 rounded-xl bg-error text-on-error text-xs font-bold flex items-center justify-center gap-2"
+              className="h-10 rounded-xl bg-red-50 text-red-600 text-xs font-bold flex items-center justify-center gap-2"
             >
               <LogOut className="w-4 h-4" />
               <span>Keluar</span>
@@ -257,41 +244,37 @@ export default function OwnerLayout({
         </div>
       )}
 
-      {/* Main Content Area */}
-      <div className="flex-1 lg:pl-[240px] flex flex-col min-h-screen">
-        {/* Top Header */}
-        <header className="sticky top-0 z-40 h-16 bg-surface-cream border-b border-border-sand px-4 sm:px-8 flex items-center justify-between gap-4">
+      {/* Main Content */}
+      <div className="flex-1 lg:pl-60 flex flex-col min-h-screen">
+        <header className="sticky top-0 z-30 h-16 bg-white border-b border-slate-200 px-4 sm:px-8 flex items-center justify-between gap-4 no-print">
           <div className="flex items-center gap-3">
             <button
               type="button"
               onClick={() => setMobileMenuOpen(true)}
-              className="lg:hidden w-10 h-10 rounded-xl bg-canvas-cream border border-border-sand flex items-center justify-center text-nav-espresso"
+              className="lg:hidden w-9 h-9 rounded-lg bg-slate-100 flex items-center justify-center text-slate-700"
             >
               <Menu className="w-5 h-5" />
             </button>
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-success-subtle text-tertiary text-xs font-bold">
-              <span className="w-2 h-2 rounded-full bg-tertiary" />
-              <span>Outlet Utama • Buka</span>
-            </div>
-            <span className="hidden sm:inline text-xs text-text-muted">
-              Data Aktual Database (Tanpa Simulasi Dummy)
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#E8F7F0] text-[#0D7A3E] text-xs font-semibold">
+              <span className="w-2 h-2 rounded-full bg-[#10A352]" />
+              <span>Buka</span>
             </span>
           </div>
 
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2">
             <Link
-              href="/cashier/orders"
-              className="h-10 px-3.5 rounded-xl bg-canvas-cream border border-border-sand hover:border-primary-container text-xs font-bold text-nav-espresso flex items-center gap-1.5 transition-colors"
+              href="/cashier/pos"
+              className="h-9 px-3.5 rounded-lg bg-[#E8F7F0] hover:bg-[#d5f2e4] text-[#0D7A3E] text-xs font-semibold flex items-center gap-1.5"
             >
-              <MonitorCheck className="w-4 h-4 text-primary-container" />
-              <span>Terminal Kasir</span>
+              <MonitorCheck className="w-4 h-4" />
+              <span>Kasir POS</span>
             </Link>
             <Link
               href="/"
-              className="h-10 px-3.5 rounded-xl bg-surface-variant hover:bg-border-sand/60 text-xs font-bold text-nav-espresso hidden sm:flex items-center gap-1.5"
+              className="h-9 px-3.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold hidden sm:flex items-center gap-1.5"
             >
               <QrCode className="w-4 h-4" />
-              <span>9 QR Meja</span>
+              <span>QR Meja</span>
             </Link>
           </div>
         </header>

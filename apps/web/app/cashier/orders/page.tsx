@@ -26,7 +26,9 @@ import {
   ExternalLink,
   KeyRound,
   RotateCcw,
+  Printer,
 } from "lucide-react";
+import { ThermalReceipt } from "@/components/ThermalReceipt";
 
 export default function CashierOrdersQueuePage() {
   const [orders, setOrders] = useState<any[]>([]);
@@ -55,6 +57,7 @@ export default function CashierOrdersQueuePage() {
   const [cancelReason, setCancelReason] = useState<string>("");
   const [sensitivePin, setSensitivePin] = useState<string>("1234");
   const [restoreStockOnCancel, setRestoreStockOnCancel] = useState<boolean>(true);
+  const [receiptOrder, setReceiptOrder] = useState<any | null>(null);
 
   const [actionLoading, setActionLoading] = useState(false);
   const [feedbackMsg, setFeedbackMsg] = useState<string | null>(null);
@@ -475,14 +478,24 @@ export default function CashierOrdersQueuePage() {
                   </p>
                 </div>
 
-                <Link
-                  href={`/order/${selectedOrder.public_code}`}
-                  target="_blank"
-                  className="h-9 px-3 rounded-lg bg-surface-variant hover:bg-border-sand/60 text-nav-espresso text-xs font-semibold flex items-center gap-1 shrink-0"
-                >
-                  <span>Layar Pelanggan</span>
-                  <ExternalLink className="w-3.5 h-3.5" />
-                </Link>
+                <div className="flex items-center gap-1.5 shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => setReceiptOrder(selectedOrder)}
+                    className="h-9 px-3 rounded-lg bg-[#E8F7F0] hover:bg-[#d5f2e4] text-[#0D7A3E] text-xs font-semibold flex items-center gap-1.5 cursor-pointer"
+                  >
+                    <Printer className="w-3.5 h-3.5" />
+                    <span>Struk</span>
+                  </button>
+                  <Link
+                    href={`/order/${selectedOrder.public_code}`}
+                    target="_blank"
+                    className="h-9 px-3 rounded-lg bg-surface-variant hover:bg-border-sand/60 text-nav-espresso text-xs font-semibold flex items-center gap-1"
+                  >
+                    <span>Lacak</span>
+                    <ExternalLink className="w-3.5 h-3.5" />
+                  </Link>
+                </div>
               </div>
 
               {/* Status & Payment Badges */}
@@ -974,7 +987,7 @@ export default function CashierOrdersQueuePage() {
               <div className="space-y-1">
                 <label className="text-xs font-bold text-nav-espresso flex items-center gap-1.5">
                   <KeyRound className="w-3.5 h-3.5 text-primary-container" />
-                  <span>PIN Konfirmasi Petugas (Demo: 1234)</span>
+                  <span>PIN Konfirmasi Petugas</span>
                 </label>
                 <input
                   type="password"
@@ -1003,6 +1016,48 @@ export default function CashierOrdersQueuePage() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* THERMAL RECEIPT MODAL */}
+      {receiptOrder && (
+        <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-[2px] flex items-center justify-center p-4 overflow-y-auto">
+          <div className="bg-white rounded-3xl max-w-sm w-full p-5 shadow-2xl space-y-4 my-auto">
+            <div className="flex items-center justify-between no-print">
+              <span className="text-sm font-bold text-slate-900">
+                Struk Transaksi
+              </span>
+              <button
+                type="button"
+                onClick={() => setReceiptOrder(null)}
+                className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 text-xs cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="bg-[#F6F8F7] rounded-2xl p-3 border border-slate-200 flex justify-center">
+              <ThermalReceipt order={receiptOrder} />
+            </div>
+
+            <div className="grid grid-cols-2 gap-2 no-print">
+              <button
+                type="button"
+                onClick={() => window.print()}
+                className="h-11 rounded-full bg-[#10A352] hover:bg-[#0D8A44] text-white text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer"
+              >
+                <Printer className="w-4 h-4" />
+                <span>Cetak Struk</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setReceiptOrder(null)}
+                className="h-11 rounded-full bg-[#E8F7F0] hover:bg-[#d5f2e4] text-[#0D7A3E] text-xs font-bold cursor-pointer"
+              >
+                Tutup
+              </button>
+            </div>
           </div>
         </div>
       )}
