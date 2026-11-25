@@ -226,7 +226,10 @@ export default function OwnerTablesAndQrPage() {
               </div>
 
               {/* Printable Stand Card Visual */}
-              <div className="p-6 rounded-2xl bg-canvas-cream border-2 border-nav-espresso text-center space-y-3">
+              <div
+                id="table-qr-print"
+                className="p-6 rounded-2xl bg-canvas-cream border-2 border-nav-espresso text-center space-y-3"
+              >
                 <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-nav-espresso text-canvas-cream text-xs font-bold">
                   <QrCode className="w-3.5 h-3.5" />
                   <span>WARKOP TERAS NENEK</span>
