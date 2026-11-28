@@ -88,13 +88,13 @@ export function BrandLogo({
       : "/api/v1/public/logo";
     return (
       <div
-        className={`${className} overflow-hidden bg-white border border-border-sand flex items-center justify-center shrink-0`}
+        className={`${className} !rounded-full overflow-hidden bg-transparent flex items-center justify-center shrink-0`}
       >
         <img
           src={src}
           alt={branding.business_name}
           onError={() => setImgError(true)}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover scale-[1.08]"
         />
       </div>
     );

@@ -124,15 +124,94 @@ export default function OwnerSettingsPage() {
     setQrisPreviewUrl(URL.createObjectURL(file));
   };
 
-  const handleLogoFileChange = (file: File | null) => {
+  const trimAndConvertLogoToWebp = async (file: File): Promise<File> => {
+    const imgUrl = URL.createObjectURL(file);
+    try {
+      const img = await new Promise<HTMLImageElement>((resolve, reject) => {
+        const el = new Image();
+        el.onload = () => resolve(el);
+        el.onerror = () => reject(new Error("Gagal membaca file logo."));
+        el.src = imgUrl;
+      });
+
+      const w = img.naturalWidth || img.width;
+      const h = img.naturalHeight || img.height;
+      const srcCanvas = document.createElement("canvas");
+      srcCanvas.width = w;
+      srcCanvas.height = h;
+      const srcCtx = srcCanvas.getContext("2d");
+      if (!srcCtx) return file;
+      srcCtx.drawImage(img, 0, 0);
+      const { data } = srcCtx.getImageData(0, 0, w, h);
+
+      let minX = w, minY = h, maxX = 0, maxY = 0;
+      for (let y = 0; y < h; y++) {
+        for (let x = 0; x < w; x++) {
+          const i = (y * w + x) * 4;
+          const r = data[i], g = data[i + 1], b = data[i + 2], a = data[i + 3];
+          const isEmpty = a < 20 || (r > 245 && g > 245 && b > 245);
+          if (!isEmpty) {
+            if (x < minX) minX = x;
+            if (y < minY) minY = y;
+            if (x > maxX) maxX = x;
+            if (y > maxY) maxY = y;
+          }
+        }
+      }
+
+      const cropX = minX <= maxX ? minX : 0;
+      const cropY = minY <= maxY ? minY : 0;
+      const cropW = minX <= maxX ? maxX - minX + 1 : w;
+      const cropH = minY <= maxY ? maxY - minY + 1 : h;
+      const outSize = Math.min(512, Math.max(cropW, cropH));
+
+      const outCanvas = document.createElement("canvas");
+      outCanvas.width = outSize;
+      outCanvas.height = outSize;
+      const outCtx = outCanvas.getContext("2d");
+      if (!outCtx) return file;
+      const drawW = Math.round((cropW / Math.max(cropW, cropH)) * outSize);
+      const drawH = Math.round((cropH / Math.max(cropW, cropH)) * outSize);
+      outCtx.drawImage(
+        srcCanvas,
+        cropX,
+        cropY,
+        cropW,
+        cropH,
+        Math.round((outSize - drawW) / 2),
+        Math.round((outSize - drawH) / 2),
+        drawW,
+        drawH
+      );
+
+      const blob: Blob = await new Promise((resolve, reject) => {
+        outCanvas.toBlob(
+          (b) => (b ? resolve(b) : reject(new Error("Gagal memproses logo."))),
+          "image/webp",
+          0.9
+        );
+      });
+      return new File([blob], "logo-warkop.webp", { type: "image/webp" });
+    } finally {
+      URL.revokeObjectURL(imgUrl);
+    }
+  };
+
+  const handleLogoFileChange = async (file: File | null) => {
     setErrorMsg(null);
     if (!file) {
       setLogoFile(null);
       setLogoPreviewUrl(null);
       return;
     }
-    setLogoFile(file);
-    setLogoPreviewUrl(URL.createObjectURL(file));
+    try {
+      const processed = await trimAndConvertLogoToWebp(file);
+      setLogoFile(processed);
+      setLogoPreviewUrl(URL.createObjectURL(processed));
+    } catch {
+      setLogoFile(file);
+      setLogoPreviewUrl(URL.createObjectURL(file));
+    }
   };
 
   const handleSaveSettings = async (e: React.FormEvent) => {
@@ -351,7 +430,7 @@ export default function OwnerSettingsPage() {
               </div>
 
               <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-                <div className="w-16 h-16 rounded-2xl bg-surface-cream border border-border-sand overflow-hidden flex items-center justify-center shrink-0">
+                <div className="w-16 h-16 rounded-full bg-transparent overflow-hidden flex items-center justify-center shrink-0">
                   {logoPreviewUrl || hasCustomLogo ? (
                     <img
                       src={
@@ -361,7 +440,7 @@ export default function OwnerSettingsPage() {
                           : "/api/v1/public/logo")
                       }
                       alt="Logo Warkop"
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover scale-[1.08]"
                     />
                   ) : (
                     <ImageIcon className="w-6 h-6 text-text-muted" />
