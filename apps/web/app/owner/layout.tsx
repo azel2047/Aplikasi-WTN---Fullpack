@@ -80,18 +80,24 @@ export default function OwnerLayout({
 }) {
   const pathname = usePathname();
   const router = useRouter();
+  const branding = useBranding();
   const [auth, setAuth] = useState<StoredAuth | null>(null);
   const [ready, setReady] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
-    const stored = getStoredAuth();
-    if (!stored || stored.user.role !== "owner") {
-      router.replace("/login");
-      return;
-    }
-    setAuth(stored);
-    setReady(true);
+    const syncAuth = () => {
+      const stored = getStoredAuth();
+      if (!stored || stored.user.role !== "owner") {
+        router.replace("/login");
+        return;
+      }
+      setAuth(stored);
+      setReady(true);
+    };
+    syncAuth();
+    window.addEventListener("wtn-auth-updated", syncAuth);
+    return () => window.removeEventListener("wtn-auth-updated", syncAuth);
   }, [router]);
 
   const handleLogout = async () => {
@@ -112,7 +118,7 @@ export default function OwnerLayout({
 
   return (
     <div className="min-h-screen bg-[#F6F8F7] text-slate-900 flex">
-      {/* Clean White Sidebar matching image.png */}
+      {/* Clean White Sidebar */}
       <aside className="hidden lg:flex fixed left-0 top-0 h-full w-60 bg-white border-r border-slate-200 z-40 flex-col justify-between no-print">
         <div className="flex-1 overflow-y-auto py-5">
           <Link href="/owner" className="px-5 mb-6 flex items-center gap-2.5">
@@ -121,9 +127,9 @@ export default function OwnerLayout({
               iconClassName="w-5 h-5"
               fallbackBgClass="bg-[#10A352] text-white"
             />
-            <div>
-              <span className="font-bold text-sm text-slate-900 block leading-tight">
-                Teras Nenek
+            <div className="min-w-0">
+              <span className="font-bold text-sm text-slate-900 block leading-tight truncate">
+                {branding.business_name}
               </span>
               <span className="text-[11px] text-slate-500 block">Owner</span>
             </div>

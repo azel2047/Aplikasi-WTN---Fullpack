@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { apiFetch } from "@/lib/api";
+import { apiFetch, getStoredAuth, setStoredAuth } from "@/lib/api";
 import { notifyBrandingUpdated } from "@/components/BrandLogo";
 import {
   Save,
@@ -286,7 +286,8 @@ export default function OwnerSettingsPage() {
         body: JSON.stringify(payload),
       });
       if (res.profile && typeof window !== "undefined") {
-        localStorage.setItem("wtn_user", JSON.stringify(res.profile));
+        localStorage.setItem("wtn_auth_user", JSON.stringify(res.profile));
+        window.dispatchEvent(new Event("wtn-auth-updated"));
       }
       setCurrentPassword("");
       setNewPassword("");

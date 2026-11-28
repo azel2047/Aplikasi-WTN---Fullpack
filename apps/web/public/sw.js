@@ -1,5 +1,5 @@
 // Network-first PWA service worker + Web Push notification handler
-const CACHE_NAME = "wtn-pwa-v2";
+const CACHE_NAME = "wtn-pwa-v3";
 
 self.addEventListener("install", () => {
   self.skipWaiting();

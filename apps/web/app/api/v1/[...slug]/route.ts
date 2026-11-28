@@ -307,11 +307,13 @@ async function handleRequestInner(req: NextRequest, params: Promise<{ slug: stri
 
   if (method === "GET" && pathStr === "/public/logo") {
     const dataUrl = db.system_settings.logo_image_data_url;
-    if (!dataUrl) return jsonError("Belum ada logo kustom.", 404);
+    if (!dataUrl) {
+      return NextResponse.redirect(new URL("/icons/icon-192.png", req.url));
+    }
     const match = /^data:([^;]+);base64,(.+)$/.exec(dataUrl);
     const mime = (match?.[1] || "").toLowerCase();
     if (!match || !ALLOWED_IMAGE_TYPES.has(mime)) {
-      return jsonError("Format logo tidak valid.", 404);
+      return NextResponse.redirect(new URL("/icons/icon-192.png", req.url));
     }
     const buf = Buffer.from(match[2], "base64");
     return new NextResponse(buf, {
