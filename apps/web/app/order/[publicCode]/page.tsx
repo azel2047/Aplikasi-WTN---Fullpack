@@ -4,6 +4,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { QRCodeSVG } from "qrcode.react";
+import { BrandLogo } from "@/components/BrandLogo";
 import {
   apiFetch,
   formatDateTimeWIB,
@@ -194,9 +195,11 @@ export default function CustomerOrderTrackingPage() {
       <header className="sticky top-0 z-40 bg-canvas-cream border-b border-border-sand">
         <div className="max-w-[480px] mx-auto h-16 px-4 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-10 h-10 rounded-xl bg-primary-container text-on-primary flex items-center justify-center font-bold text-base">
-              W
-            </div>
+            <BrandLogo
+              className="w-10 h-10 rounded-xl"
+              iconClassName="w-5 h-5"
+              fallbackBgClass="bg-primary-container text-on-primary"
+            />
             <div>
               <div className="flex items-center gap-1.5">
                 <span className="font-bold text-sm text-nav-espresso">
@@ -821,12 +824,6 @@ export default function CustomerOrderTrackingPage() {
                 </span>
               </div>
             )}
-            <div className="flex justify-between text-on-surface-variant">
-              <span>PB1 (Pajak Restoran)</span>
-              <span className="font-semibold text-nav-espresso tabular-nums">
-                {formatRupiah(order.tax_amount)}
-              </span>
-            </div>
             <div className="border-t border-border-sand pt-2 flex justify-between items-baseline">
               <span className="text-sm font-bold text-nav-espresso">
                 Total Akhir

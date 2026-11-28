@@ -15,7 +15,7 @@ export default function CashierDailyReportPage() {
   const [reports, setReports] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const [shiftName, setShiftName] = useState<string>("Shift Pagi (07.00 - 15.00)");
+  const [shiftName, setShiftName] = useState<string>("Operasional Harian (Fullday)");
   const [crowdCondition, setCrowdCondition] = useState<"ramai" | "normal" | "sepi">("normal");
   const [crowdPeakNote, setCrowdPeakNote] = useState<string>("");
   const [stockCondition, setStockCondition] = useState<"aman" | "menipis" | "habis">("aman");
@@ -86,7 +86,7 @@ export default function CashierDailyReportPage() {
             </div>
             <div>
               <h1 className="text-base font-bold text-nav-espresso">
-                Laporan Harian Karyawan (Shift Report)
+                Laporan Harian Kasir (Fullday)
               </h1>
               <p className="text-xs text-text-muted">
                 Rekap transaksi otomatis sistem + laporan kondisi lapangan ke Owner
@@ -95,11 +95,11 @@ export default function CashierDailyReportPage() {
           </div>
           <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-surface-variant text-xs font-semibold text-secondary">
             <Lock className="w-3.5 h-3.5" />
-            <span>Angka Sistem Terkunci (AC-25)</span>
+            <span>Angka Sistem Terkunci</span>
           </span>
         </div>
 
-        {/* System-generated transaction metrics (AC-25) */}
+        {/* System-generated transaction metrics */}
         {metrics && (
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             <div className="p-3 rounded-xl bg-canvas-cream border border-border-sand">
@@ -158,28 +158,7 @@ export default function CashierDailyReportPage() {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4 text-xs">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label className="font-bold text-nav-espresso block mb-1">
-                Shift Operasional
-              </label>
-              <select
-                value={shiftName}
-                onChange={(e) => setShiftName(e.target.value)}
-                className="w-full h-11 px-3 rounded-xl bg-canvas-cream border border-border-sand font-semibold text-nav-espresso"
-              >
-                <option value="Shift Pagi (07.00 - 15.00)">
-                  Shift Pagi (07.00 - 15.00)
-                </option>
-                <option value="Shift Sore (15.00 - 22.00)">
-                  Shift Sore (15.00 - 22.00)
-                </option>
-                <option value="Full Day Operasional">
-                  Full Day Operasional
-                </option>
-              </select>
-            </div>
-
+          <div className="grid grid-cols-1 gap-3">
             <div>
               <label className="font-bold text-nav-espresso block mb-1">
                 Kondisi Kunjungan Usaha

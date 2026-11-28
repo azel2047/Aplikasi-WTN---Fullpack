@@ -2,27 +2,33 @@
 
 import React, { useEffect, useState } from "react";
 import { apiFetch } from "@/lib/api";
+import { notifyBrandingUpdated } from "@/components/BrandLogo";
 import {
   Save,
   Upload,
-  UserPlus,
   CheckCircle2,
   AlertTriangle,
   QrCode,
+  Image as ImageIcon,
+  UserCircle2,
 } from "lucide-react";
 
 export default function OwnerSettingsPage() {
   const [settings, setSettings] = useState<any>({});
-  const [employees, setEmployees] = useState<any[]>([]);
   const [hasQrisImage, setHasQrisImage] = useState(false);
   const [qrisFile, setQrisFile] = useState<File | null>(null);
+  const [hasCustomLogo, setHasCustomLogo] = useState(false);
+  const [logoUpdatedAt, setLogoUpdatedAt] = useState<string | null>(null);
+  const [logoFile, setLogoFile] = useState<File | null>(null);
+  const [logoPreviewUrl, setLogoPreviewUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Add Employee Shift Profile Form
-  const [empName, setEmpName] = useState("");
-  const [empRole, setEmpRole] = useState("Kasir & Barista");
-  const [empShift, setEmpShift] = useState("Shift Pagi");
-  const [empPin, setEmpPin] = useState("");
+  // Owner Profile Form
+  const [profileName, setProfileName] = useState("");
+  const [profileEmail, setProfileEmail] = useState("");
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [savingProfile, setSavingProfile] = useState(false);
 
   const [saving, setSaving] = useState(false);
   const [feedback, setFeedback] = useState<string | null>(null);
@@ -33,8 +39,13 @@ export default function OwnerSettingsPage() {
     apiFetch("/owner/settings")
       .then((res) => {
         setSettings(res.settings || {});
-        setEmployees(res.employees || []);
         setHasQrisImage(Boolean(res.has_official_qris_image));
+        setHasCustomLogo(Boolean(res.has_custom_logo));
+        setLogoUpdatedAt(res.logo_updated_at || null);
+        if (res.profile) {
+          setProfileName(res.profile.name || "");
+          setProfileEmail(res.profile.email || "");
+        }
       })
       .catch(() => {})
       .finally(() => setLoading(false));
@@ -113,6 +124,17 @@ export default function OwnerSettingsPage() {
     setQrisPreviewUrl(URL.createObjectURL(file));
   };
 
+  const handleLogoFileChange = (file: File | null) => {
+    setErrorMsg(null);
+    if (!file) {
+      setLogoFile(null);
+      setLogoPreviewUrl(null);
+      return;
+    }
+    setLogoFile(file);
+    setLogoPreviewUrl(URL.createObjectURL(file));
+  };
+
   const handleSaveSettings = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
@@ -128,7 +150,6 @@ export default function OwnerSettingsPage() {
         "business_phone",
         "wifi_ssid",
         "wifi_password",
-        "tax_pb1_percentage",
         "qris_merchant_name",
         "qris_nmid",
         "qris_bank_info",
@@ -141,6 +162,9 @@ export default function OwnerSettingsPage() {
       if (qrisFile) {
         formData.append("qris_image", qrisFile);
       }
+      if (logoFile) {
+        formData.append("logo_image", logoFile);
+      }
 
       const res = await apiFetch("/owner/settings", {
         method: "POST",
@@ -149,8 +173,13 @@ export default function OwnerSettingsPage() {
 
       setSettings(res.settings || {});
       setHasQrisImage(Boolean(res.has_official_qris_image));
+      setHasCustomLogo(Boolean(res.has_custom_logo));
+      setLogoUpdatedAt(res.logo_updated_at || null);
       setQrisFile(null);
       setQrisPreviewUrl(null);
+      setLogoFile(null);
+      setLogoPreviewUrl(null);
+      notifyBrandingUpdated();
       setFeedback(res.message);
     } catch (err: any) {
       setErrorMsg(err.message);
@@ -159,29 +188,34 @@ export default function OwnerSettingsPage() {
     }
   };
 
-  const handleAddEmployee = async (e: React.FormEvent) => {
+  const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSaving(true);
+    setSavingProfile(true);
     setFeedback(null);
     setErrorMsg(null);
     try {
-      const res = await apiFetch("/owner/employees", {
-        method: "POST",
-        body: JSON.stringify({
-          name: empName.trim(),
-          role_title: empRole.trim(),
-          default_shift: empShift,
-          pin: empPin.trim(),
-        }),
+      const payload: any = {
+        name: profileName.trim(),
+        email: profileEmail.trim(),
+      };
+      if (newPassword.trim()) {
+        payload.current_password = currentPassword;
+        payload.new_password = newPassword.trim();
+      }
+      const res = await apiFetch("/owner/profile", {
+        method: "PATCH",
+        body: JSON.stringify(payload),
       });
+      if (res.profile && typeof window !== "undefined") {
+        localStorage.setItem("wtn_user", JSON.stringify(res.profile));
+      }
+      setCurrentPassword("");
+      setNewPassword("");
       setFeedback(res.message);
-      setEmpName("");
-      setEmpPin("");
-      loadSettings();
     } catch (err: any) {
       setErrorMsg(err.message);
     } finally {
-      setSaving(false);
+      setSavingProfile(false);
     }
   };
 
@@ -197,11 +231,11 @@ export default function OwnerSettingsPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-nav-espresso tracking-tight">
-          Pengaturan Usaha, QRIS Resmi &amp; Petugas Shift
+          Pengaturan Usaha, Logo, QRIS &amp; Profil Owner
         </h1>
         <p className="text-xs text-text-muted mt-0.5">
-          Konfigurasi profil Warkop Teras Nenek, unggah gambar QRIS statis resmi
-          merchant, dan kelola daftar identitas karyawan pada akun bersama.
+          Ubah identitas dan logo warkop (otomatis terupdate di halaman pelanggan,
+          kasir, dan owner), unggah QRIS resmi, serta kelola akun owner.
         </p>
       </div>
 
@@ -296,24 +330,65 @@ export default function OwnerSettingsPage() {
                   className="w-full h-11 px-3 rounded-xl bg-canvas-cream border border-border-sand"
                 />
               </div>
-              <div>
-                <label className="font-bold text-nav-espresso block mb-1">
-                  Pajak Restoran PB1 (%)
-                </label>
-                <input
-                  type="number"
-                  min={0}
-                  max={25}
-                  value={settings.tax_pb1_percentage ?? 10}
-                  onChange={(e) =>
-                    setSettings({
-                      ...settings,
-                      tax_pb1_percentage: e.target.value,
-                    })
-                  }
-                  className="w-full h-11 px-3 rounded-xl bg-canvas-cream border border-border-sand font-bold tabular-nums"
-                />
+            </div>
+
+            {/* Dynamic Logo Configuration Block */}
+            <div className="p-4 rounded-xl bg-canvas-cream border border-border-sand space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="font-bold text-nav-espresso flex items-center gap-1.5">
+                  <ImageIcon className="w-4 h-4 text-primary-container" />
+                  <span>Logo Warkop (Otomatis Berubah di Semua Halaman)</span>
+                </span>
+                <span
+                  className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                    hasCustomLogo
+                      ? "bg-success-subtle text-tertiary"
+                      : "bg-surface-variant text-text-muted"
+                  }`}
+                >
+                  {hasCustomLogo ? "Logo Kustom Aktif" : "Logo Default"}
+                </span>
               </div>
+
+              <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                <div className="w-16 h-16 rounded-2xl bg-surface-cream border border-border-sand overflow-hidden flex items-center justify-center shrink-0">
+                  {logoPreviewUrl || hasCustomLogo ? (
+                    <img
+                      src={
+                        logoPreviewUrl ||
+                        (logoUpdatedAt
+                          ? `/api/v1/public/logo?v=${encodeURIComponent(logoUpdatedAt)}`
+                          : "/api/v1/public/logo")
+                      }
+                      alt="Logo Warkop"
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <ImageIcon className="w-6 h-6 text-text-muted" />
+                  )}
+                </div>
+
+                <label className="flex-1 h-11 px-3 rounded-xl bg-surface-cream border border-dashed border-border-strong flex items-center justify-center gap-2 cursor-pointer hover:bg-surface-variant">
+                  <Upload className="w-4 h-4 text-primary-container" />
+                  <span className="truncate">
+                    {logoFile
+                      ? logoFile.name
+                      : "Pilih Logo Baru (PNG / JPG / WEBP, maks 2MB)"}
+                  </span>
+                  <input
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp"
+                    onChange={(e) =>
+                      handleLogoFileChange(e.target.files?.[0] || null)
+                    }
+                    className="hidden"
+                  />
+                </label>
+              </div>
+              <p className="text-[11px] text-text-muted">
+                Logo yang diunggah akan langsung berubah di halaman login,
+                dashboard owner, kasir, dan menu pelanggan.
+              </p>
             </div>
 
             {/* Official QRIS Configuration Block */}
@@ -425,81 +500,81 @@ export default function OwnerSettingsPage() {
           </form>
         </section>
 
-        {/* Right: Employee Shift Profiles on Shared Account */}
+        {/* Right: Owner Profile Management */}
         <aside className="lg:col-span-5 bg-surface-cream border border-border-sand rounded-2xl p-6 soft-shadow space-y-5">
-          <div>
-            <h2 className="text-base font-bold text-nav-espresso">
-              Daftar Identitas Petugas Shift (Akun Bersama)
-            </h2>
-            <p className="text-xs text-text-muted mt-0.5">
-              Daftar karyawan yang dapat dipilih saat login kasir beserta PIN
-              konfirmasi aksi sensitif.
-            </p>
+          <div className="flex items-start gap-3">
+            <div className="w-10 h-10 rounded-xl bg-primary-subtle text-on-primary-subtle flex items-center justify-center shrink-0">
+              <UserCircle2 className="w-5 h-5" />
+            </div>
+            <div>
+              <h2 className="text-base font-bold text-nav-espresso">
+                Profil Akun Owner
+              </h2>
+              <p className="text-xs text-text-muted mt-0.5">
+                Perbarui nama tampilan, email login, atau kata sandi akun owner.
+              </p>
+            </div>
           </div>
 
-          <div className="space-y-2.5">
-            {employees.map((emp) => (
-              <div
-                key={emp.id}
-                className="p-3.5 rounded-xl bg-canvas-cream border border-border-sand flex items-center justify-between text-xs"
-              >
-                <div>
-                  <span className="font-bold text-nav-espresso block">
-                    {emp.name} ({emp.code})
-                  </span>
-                  <span className="text-text-muted">
-                    {emp.role_title} • Default: {emp.default_shift}
-                  </span>
-                </div>
-                <span className="px-2.5 py-0.5 rounded-full bg-success-subtle text-tertiary text-[11px] font-bold">
-                  Aktif
-                </span>
-              </div>
-            ))}
-          </div>
-
-          <form
-            onSubmit={handleAddEmployee}
-            className="pt-4 border-t border-surface-variant space-y-3 text-xs"
-          >
-            <h3 className="font-bold text-nav-espresso">
-              Tambah Identitas Karyawan Baru
-            </h3>
-            <input
-              type="text"
-              required
-              value={empName}
-              onChange={(e) => setEmpName(e.target.value)}
-              placeholder="Nama Lengkap Karyawan"
-              className="w-full h-10 px-3 rounded-xl bg-canvas-cream border border-border-sand"
-            />
-            <div className="grid grid-cols-2 gap-2">
+          <form onSubmit={handleSaveProfile} className="space-y-4 text-xs">
+            <div>
+              <label className="font-bold text-nav-espresso block mb-1">
+                Nama Lengkap Owner
+              </label>
               <input
                 type="text"
                 required
-                value={empRole}
-                onChange={(e) => setEmpRole(e.target.value)}
-                placeholder="Jabatan (mis. Barista)"
-                className="w-full h-10 px-3 rounded-xl bg-canvas-cream border border-border-sand"
+                value={profileName}
+                onChange={(e) => setProfileName(e.target.value)}
+                placeholder="Contoh: Pemilik Warkop Teras Nenek"
+                className="w-full h-11 px-3 rounded-xl bg-canvas-cream border border-border-sand focus:outline-none focus:border-primary-container"
+              />
+            </div>
+
+            <div>
+              <label className="font-bold text-nav-espresso block mb-1">
+                Email Login Owner
+              </label>
+              <input
+                type="email"
+                required
+                value={profileEmail}
+                onChange={(e) => setProfileEmail(e.target.value)}
+                placeholder="owner@warkopterasnenek.id"
+                className="w-full h-11 px-3 rounded-xl bg-canvas-cream border border-border-sand focus:outline-none focus:border-primary-container"
+              />
+            </div>
+
+            <div className="pt-3 border-t border-surface-variant space-y-3">
+              <span className="font-bold text-nav-espresso block">
+                Ganti Kata Sandi (Opsional)
+              </span>
+              <input
+                type="password"
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+                placeholder="Kata sandi saat ini"
+                className="w-full h-10 px-3 rounded-xl bg-canvas-cream border border-border-sand focus:outline-none focus:border-primary-container"
               />
               <input
                 type="password"
-                required
-                minLength={4}
-                maxLength={8}
-                value={empPin}
-                onChange={(e) => setEmpPin(e.target.value)}
-                placeholder="PIN 4-6 Digit"
-                className="w-full h-10 px-3 rounded-xl bg-canvas-cream border border-border-sand font-bold"
+                minLength={6}
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                placeholder="Kata sandi baru (minimal 6 karakter)"
+                className="w-full h-10 px-3 rounded-xl bg-canvas-cream border border-border-sand focus:outline-none focus:border-primary-container"
               />
             </div>
+
             <button
               type="submit"
-              disabled={saving}
-              className="w-full h-11 rounded-xl bg-nav-espresso text-canvas-cream font-bold flex items-center justify-center gap-2 cursor-pointer"
+              disabled={savingProfile}
+              className="w-full h-11 rounded-xl bg-nav-espresso hover:bg-dark-walnut text-canvas-cream font-bold flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
             >
-              <UserPlus className="w-4 h-4" />
-              <span>Tambah Profil Petugas Shift</span>
+              <Save className="w-4 h-4" />
+              <span>
+                {savingProfile ? "Menyimpan Profil..." : "Simpan Profil Owner"}
+              </span>
             </button>
           </form>
         </aside>

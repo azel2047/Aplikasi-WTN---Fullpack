@@ -3,10 +3,12 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { apiFetch, getStoredAuth, setStoredAuth } from "@/lib/api";
-import { Coffee, AlertTriangle, Eye, EyeOff, LogIn } from "lucide-react";
+import { BrandLogo, useBranding } from "@/components/BrandLogo";
+import { AlertTriangle, Eye, EyeOff, LogIn } from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
+  const branding = useBranding();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -56,12 +58,14 @@ export default function LoginPage() {
       <main className="w-full max-w-sm">
         <div className="bg-white border border-slate-200/90 rounded-3xl p-7 sm:p-8 shadow-sm space-y-6">
           <div className="text-center space-y-2.5">
-            <div className="w-12 h-12 rounded-2xl bg-[#10A352] text-white flex items-center justify-center mx-auto shadow-xs">
-              <Coffee className="w-6 h-6" />
-            </div>
+            <BrandLogo
+              className="w-12 h-12 rounded-2xl mx-auto shadow-xs"
+              iconClassName="w-6 h-6"
+              fallbackBgClass="bg-[#10A352] text-white"
+            />
             <div>
               <h1 className="text-xl font-bold text-slate-900 tracking-tight">
-                Warkop Teras Nenek
+                {branding.business_name}
               </h1>
               <p className="text-xs text-slate-500 mt-0.5">
                 Masuk ke sistem operasional

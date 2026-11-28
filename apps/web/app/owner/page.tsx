@@ -562,7 +562,7 @@ export default function OwnerOverviewPage() {
             >
               <div className="flex items-center gap-1 text-text-muted">
                 <FileBarChart className="w-3.5 h-3.5 text-primary-container" />
-                <span>Laporan Shift</span>
+                <span>Laporan Harian</span>
               </div>
               <span className="text-sm font-bold text-nav-espresso mt-1 block">
                 {kpis.pending_reports_count} Perlu Tinjau

@@ -9,7 +9,7 @@ export default function CashierClosingPage() {
   const [closings, setClosings] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const [shiftName, setShiftName] = useState<string>("Shift Pagi (07.00 - 15.00)");
+  const [shiftName, setShiftName] = useState<string>("Operasional Harian (Fullday)");
   const [actualCash, setActualCash] = useState<string>("");
   const [varianceReason, setVarianceReason] = useState<string>("");
   const [pin, setPin] = useState<string>("1234");
@@ -80,7 +80,7 @@ export default function CashierClosingPage() {
           </div>
           <div>
             <h1 className="text-base font-bold text-nav-espresso">
-              Penutupan Kas (Cash Closing Shift)
+              Penutupan Kas Harian (Fullday)
             </h1>
             <p className="text-xs text-text-muted">
               Rekonsiliasi saldo kas sistem vs uang tunai fisik di laci kasir
@@ -147,26 +147,6 @@ export default function CashierClosingPage() {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4 text-xs">
-          <div>
-            <label className="font-bold text-nav-espresso block mb-1">
-              Shift yang Ditutup
-            </label>
-            <select
-              value={shiftName}
-              onChange={(e) => setShiftName(e.target.value)}
-              className="w-full h-11 px-3 rounded-xl bg-canvas-cream border border-border-sand font-semibold text-nav-espresso"
-            >
-              <option value="Shift Pagi (07.00 - 15.00)">
-                Shift Pagi (07.00 - 15.00)
-              </option>
-              <option value="Shift Sore (15.00 - 22.00)">
-                Shift Sore (15.00 - 22.00)
-              </option>
-              <option value="Full Day Operasional">
-                Full Day Operasional
-              </option>
-            </select>
-          </div>
 
           <div>
             <label className="font-bold text-nav-espresso block mb-1">

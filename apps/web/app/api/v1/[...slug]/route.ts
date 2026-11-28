@@ -296,6 +296,33 @@ async function handleRequestInner(req: NextRequest, params: Promise<{ slug: stri
     });
   }
 
+  if (method === "GET" && pathStr === "/public/branding") {
+    return NextResponse.json({
+      business_name: db.system_settings.business_name || "Warkop Teras Nenek",
+      business_tagline: db.system_settings.business_tagline || "Kopi Tubruk & Masakan Hangat",
+      has_custom_logo: Boolean(db.system_settings.logo_image_data_url),
+      logo_updated_at: db.system_settings.logo_updated_at || null,
+    });
+  }
+
+  if (method === "GET" && pathStr === "/public/logo") {
+    const dataUrl = db.system_settings.logo_image_data_url;
+    if (!dataUrl) return jsonError("Belum ada logo kustom.", 404);
+    const match = /^data:([^;]+);base64,(.+)$/.exec(dataUrl);
+    const mime = (match?.[1] || "").toLowerCase();
+    if (!match || !ALLOWED_IMAGE_TYPES.has(mime)) {
+      return jsonError("Format logo tidak valid.", 404);
+    }
+    const buf = Buffer.from(match[2], "base64");
+    return new NextResponse(buf, {
+      headers: {
+        "Content-Type": mime,
+        "Cache-Control": "no-cache",
+        "X-Content-Type-Options": "nosniff",
+      },
+    });
+  }
+
   if (method === "GET" && pathStr === "/public/qris-image") {
     const dataUrl = db.system_settings.qris_image_data_url;
     if (!dataUrl) return jsonError("Belum ada gambar QRIS resmi.", 404);
@@ -308,6 +335,7 @@ async function handleRequestInner(req: NextRequest, params: Promise<{ slug: stri
     return new NextResponse(buf, {
       headers: {
         "Content-Type": mime,
+        "Cache-Control": "no-cache",
         "X-Content-Type-Options": "nosniff",
       },
     });
@@ -1578,27 +1606,101 @@ async function handleRequestInner(req: NextRequest, params: Promise<{ slug: stri
   }
 
   if (method === "GET" && pathStr === "/owner/settings") {
+    const ownerUser = db.users.find((u) => u.id === actor.user?.id) || db.users.find((u) => u.role === "owner");
     return NextResponse.json({
       settings: db.system_settings,
-      employees: db.employee_profiles,
       has_official_qris_image: Boolean(db.system_settings.qris_image_data_url),
+      has_custom_logo: Boolean(db.system_settings.logo_image_data_url),
+      logo_updated_at: db.system_settings.logo_updated_at || null,
+      profile: ownerUser
+        ? { id: ownerUser.id, name: ownerUser.name, email: ownerUser.email, role: ownerUser.role }
+        : null,
     });
   }
 
   if (method === "POST" && pathStr === "/owner/settings") {
     const body = await parseBody(req);
-    const keys = ["business_name", "business_tagline", "business_address", "business_phone", "wifi_ssid", "wifi_password", "tax_pb1_percentage", "qris_merchant_name", "qris_nmid", "qris_bank_info"];
+    const keys = [
+      "business_name",
+      "business_tagline",
+      "business_address",
+      "business_phone",
+      "wifi_ssid",
+      "wifi_password",
+      "qris_merchant_name",
+      "qris_nmid",
+      "qris_bank_info",
+    ];
     for (const k of keys) {
-      if (body[k] !== undefined) db.system_settings[k] = k === "tax_pb1_percentage" ? Number(body[k]) : body[k];
+      if (body[k] !== undefined) db.system_settings[k] = body[k];
     }
+    db.system_settings.tax_enabled = false;
+    db.system_settings.tax_pb1_percentage = 0;
+
     if (body.qris_image?.dataUrl) {
       db.system_settings.qris_image_data_url = body.qris_image.dataUrl;
     }
+    if (body.logo_image?.dataUrl) {
+      db.system_settings.logo_image_data_url = body.logo_image.dataUrl;
+      db.system_settings.logo_updated_at = new Date().toISOString();
+    }
     await writeDb(db);
     return NextResponse.json({
-      message: "Pengaturan usaha berhasil disimpan.",
+      message: "Pengaturan usaha, logo & QRIS berhasil disimpan.",
       settings: db.system_settings,
       has_official_qris_image: Boolean(db.system_settings.qris_image_data_url),
+      has_custom_logo: Boolean(db.system_settings.logo_image_data_url),
+      logo_updated_at: db.system_settings.logo_updated_at || null,
+    });
+  }
+
+  if (method === "PATCH" && pathStr === "/owner/profile") {
+    const body = await parseBody(req);
+    const ownerUser = db.users.find((u) => u.id === actor.user?.id) || db.users.find((u) => u.role === "owner");
+    if (!ownerUser) return jsonError("Akun owner tidak ditemukan.", 404);
+
+    const newName = String(body.name || "").trim();
+    const newEmail = String(body.email || "").trim().toLowerCase();
+    if (!newName) return jsonError("Nama owner tidak boleh kosong.", 422);
+    if (!newEmail || !newEmail.includes("@")) return jsonError("Format email tidak valid.", 422);
+
+    const emailTaken = db.users.some(
+      (u) => u.id !== ownerUser.id && String(u.email || "").toLowerCase() === newEmail
+    );
+    if (emailTaken) return jsonError("Email sudah digunakan oleh akun lain.", 422);
+
+    if (body.new_password) {
+      const currentPass = String(body.current_password || "");
+      const newPass = String(body.new_password || "");
+      if (currentPass !== ownerUser.password) {
+        return jsonError("Password saat ini tidak sesuai.", 401);
+      }
+      if (newPass.length < 6) {
+        return jsonError("Password baru minimal 6 karakter.", 422);
+      }
+      ownerUser.password = newPass;
+    }
+
+    ownerUser.name = newName;
+    ownerUser.email = newEmail;
+    recordAudit(
+      db,
+      "OWNER_PROFILE_UPDATED",
+      ownerUser.name,
+      "owner",
+      "User",
+      ownerUser.id,
+      `Memperbarui profil owner (${ownerUser.name} • ${ownerUser.email})`
+    );
+    await writeDb(db);
+    return NextResponse.json({
+      message: "Profil owner berhasil diperbarui.",
+      profile: {
+        id: ownerUser.id,
+        name: ownerUser.name,
+        email: ownerUser.email,
+        role: ownerUser.role,
+      },
     });
   }
 
@@ -1712,9 +1814,8 @@ function createOrderInternal(
 
   const discount = source === "POS" ? Math.min(subtotal, Math.max(0, Math.round(Number(body.discount_amount || 0)))) : 0;
   const taxable = Math.max(0, subtotal - discount);
-  const taxPct = db.system_settings.tax_enabled ? Number(db.system_settings.tax_pb1_percentage || 10) : 0;
-  const taxAmount = Math.round(taxable * (taxPct / 100));
-  const totalAmount = taxable + taxAmount;
+  const taxAmount = 0;
+  const totalAmount = taxable;
 
   const ordSeq = nextId(db, "order");
   const orderNumber = `#${String(ordSeq).padStart(4, "0")}`;

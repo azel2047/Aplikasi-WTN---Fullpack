@@ -4,6 +4,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { apiFetch, formatRupiah, getOrderStatusLabel } from "@/lib/api";
+import { BrandLogo } from "@/components/BrandLogo";
 import {
   Search,
   Plus,
@@ -273,9 +274,9 @@ export default function CustomerTableMenuPage() {
       const optPrice = item.selectedOptions.reduce((acc, o) => acc + o.price_delta, 0);
       subtotal += (item.product.price + optPrice) * item.quantity;
     });
-    const taxPct = settings.tax_enabled ? Number(settings.tax_pb1_percentage || 10) : 0;
-    const tax = Math.round(subtotal * (taxPct / 100));
-    const total = subtotal + tax;
+    const taxPct = 0;
+    const tax = 0;
+    const total = subtotal;
     return { totalItems, subtotal, taxPct, tax, total };
   }, [cart, settings]);
 
@@ -374,9 +375,11 @@ export default function CustomerTableMenuPage() {
         <div className="max-w-[480px] mx-auto px-4 py-3 flex flex-col gap-2">
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2.5 min-w-0">
-              <div className="w-9 h-9 rounded-xl bg-[#10A352] text-white flex items-center justify-center font-bold text-xs shrink-0">
-                WTN
-              </div>
+              <BrandLogo
+                className="w-9 h-9 rounded-xl"
+                iconClassName="w-5 h-5"
+                fallbackBgClass="bg-[#10A352] text-white"
+              />
               <div className="min-w-0">
                 <h1 className="font-bold text-base text-nav-espresso truncate leading-tight">
                   {settings.business_name || "Warkop Teras Nenek"}

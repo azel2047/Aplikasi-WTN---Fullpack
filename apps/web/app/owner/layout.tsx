@@ -10,6 +10,7 @@ import {
   setStoredAuth,
   StoredAuth,
 } from "@/lib/api";
+import { BrandLogo, useBranding } from "@/components/BrandLogo";
 import {
   LayoutDashboard,
   Receipt,
@@ -58,7 +59,7 @@ const OWNER_NAV_GROUPS: Array<{ title: string; items: OwnerNavItem[] }> = [
   {
     title: "LAPORAN",
     items: [
-      { href: "/owner/reports", label: "Laporan Shift", icon: FileBarChart },
+      { href: "/owner/reports", label: "Laporan Harian", icon: FileBarChart },
       { href: "/owner/ratings", label: "Rating", icon: Star },
       { href: "/owner/analytics", label: "Analitik", icon: BarChart3 },
     ],
@@ -66,7 +67,7 @@ const OWNER_NAV_GROUPS: Array<{ title: string; items: OwnerNavItem[] }> = [
   {
     title: "SISTEM",
     items: [
-      { href: "/owner/settings", label: "Pengaturan", icon: Settings },
+      { href: "/owner/settings", label: "Pengaturan & Profil", icon: Settings },
       { href: "/owner/audit-logs", label: "Audit Log", icon: History },
     ],
   },
@@ -115,9 +116,11 @@ export default function OwnerLayout({
       <aside className="hidden lg:flex fixed left-0 top-0 h-full w-60 bg-white border-r border-slate-200 z-40 flex-col justify-between no-print">
         <div className="flex-1 overflow-y-auto py-5">
           <Link href="/owner" className="px-5 mb-6 flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-[#10A352] text-white flex items-center justify-center">
-              <Coffee className="w-5 h-5" />
-            </div>
+            <BrandLogo
+              className="w-9 h-9 rounded-xl"
+              iconClassName="w-5 h-5"
+              fallbackBgClass="bg-[#10A352] text-white"
+            />
             <div>
               <span className="font-bold text-sm text-slate-900 block leading-tight">
                 Teras Nenek

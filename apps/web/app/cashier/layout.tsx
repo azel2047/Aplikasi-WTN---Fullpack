@@ -9,6 +9,7 @@ import {
   getStoredAuth,
   StoredAuth,
 } from "@/lib/api";
+import { BrandLogo, useBranding } from "@/components/BrandLogo";
 import {
   Clock,
   ShoppingCart,
@@ -74,9 +75,11 @@ export default function CashierLayout({
       <aside className="hidden md:flex fixed left-0 top-0 h-full w-56 bg-white border-r border-slate-200 z-40 flex-col justify-between py-5 px-3 no-print">
         <div className="space-y-6">
           <Link href="/cashier/orders" className="px-2.5 flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-[#10A352] text-white flex items-center justify-center">
-              <Coffee className="w-5 h-5" />
-            </div>
+            <BrandLogo
+              className="w-9 h-9 rounded-xl"
+              iconClassName="w-5 h-5"
+              fallbackBgClass="bg-[#10A352] text-white"
+            />
             <div>
               <span className="font-bold text-sm text-slate-900 block leading-tight">
                 Teras Nenek

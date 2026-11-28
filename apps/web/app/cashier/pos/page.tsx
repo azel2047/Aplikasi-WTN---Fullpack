@@ -148,8 +148,8 @@ export default function CashierManualPosPage() {
     });
     const discount = Math.min(subtotal, Math.max(0, discountAmount));
     const taxable = subtotal - discount;
-    const tax = Math.round(taxable * 0.1);
-    const total = taxable + tax;
+    const tax = 0;
+    const total = taxable;
     return { itemCount, subtotal, discount, tax, total };
   }, [cart, discountAmount]);
 
@@ -473,12 +473,6 @@ export default function CashierManualPosPage() {
               placeholder="Rp 0"
               className="w-24 h-7 px-2 rounded-lg bg-[#F6F8F7] border border-slate-200 text-right text-xs font-semibold tabular-nums text-red-600"
             />
-          </div>
-          <div className="flex justify-between text-slate-500">
-            <span>PB1 (10%)</span>
-            <span className="font-semibold text-slate-900 tabular-nums">
-              {formatRupiah(totals.tax)}
-            </span>
           </div>
           <div className="pt-2 border-t border-slate-100 flex justify-between items-baseline">
             <span className="text-sm font-bold text-slate-900">Total</span>

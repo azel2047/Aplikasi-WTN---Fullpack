@@ -147,12 +147,6 @@ export default function CashierOrderDetailPage() {
               {formatRupiah(order.subtotal_amount)}
             </span>
           </div>
-          <div className="flex justify-between">
-            <span>PB1 (10%)</span>
-            <span className="font-semibold tabular-nums">
-              {formatRupiah(order.tax_amount)}
-            </span>
-          </div>
           <div className="border-t border-border-sand pt-2 flex justify-between text-base font-bold text-nav-espresso">
             <span>Total</span>
             <span className="text-primary-container tabular-nums">

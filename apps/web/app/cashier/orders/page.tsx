@@ -612,12 +612,6 @@ export default function CashierOrdersQueuePage() {
                     </span>
                   </div>
                 )}
-                <div className="flex justify-between text-on-surface-variant">
-                  <span>PB1 (10%)</span>
-                  <span className="font-semibold tabular-nums">
-                    {formatRupiah(selectedOrder.tax_amount)}
-                  </span>
-                </div>
                 <div className="border-t border-border-sand pt-2 flex justify-between items-baseline">
                   <span className="text-sm font-bold text-nav-espresso">
                     Total Tagihan
