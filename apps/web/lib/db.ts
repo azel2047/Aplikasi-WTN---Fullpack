@@ -912,8 +912,9 @@ export function enrichProduct(prod: any, db: WtnDatabase) {
     enrichedRecipe = { ...recipe, items, estimated_cogs: Math.round(estimated_cogs) };
   }
 
+  const { image_data_url: _imgData, ...safeProd } = prod;
   return {
-    ...prod,
+    ...safeProd,
     category: cat,
     recipe: enrichedRecipe,
     effective_available,

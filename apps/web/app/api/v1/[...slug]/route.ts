@@ -323,6 +323,26 @@ async function handleRequestInner(req: NextRequest, params: Promise<{ slug: stri
     });
   }
 
+  const prodImgMatch = /^\/public\/products\/(\d+)\/image$/.exec(pathStr);
+  if (method === "GET" && prodImgMatch) {
+    const prod = db.products.find((p) => p.id === Number(prodImgMatch[1]));
+    const dataUrl = prod?.image_data_url;
+    if (!dataUrl) return jsonError("Gambar produk tidak ditemukan.", 404);
+    const match = /^data:([^;]+);base64,(.+)$/.exec(dataUrl);
+    const mime = (match?.[1] || "").toLowerCase();
+    if (!match || !ALLOWED_IMAGE_TYPES.has(mime)) {
+      return jsonError("Format gambar produk tidak valid.", 404);
+    }
+    const buf = Buffer.from(match[2], "base64");
+    return new NextResponse(buf, {
+      headers: {
+        "Content-Type": mime,
+        "Cache-Control": "public, max-age=31536000, immutable",
+        "X-Content-Type-Options": "nosniff",
+      },
+    });
+  }
+
   if (method === "GET" && pathStr === "/public/qris-image") {
     const dataUrl = db.system_settings.qris_image_data_url;
     if (!dataUrl) return jsonError("Belum ada gambar QRIS resmi.", 404);
@@ -1110,10 +1130,17 @@ async function handleRequestInner(req: NextRequest, params: Promise<{ slug: stri
     return NextResponse.json({ message: "Kategori ditambahkan.", category: cat }, { status: 201 });
   }
 
+  const parseBool = (val: any, fallback: boolean) => {
+    if (val === undefined || val === null || val === "") return fallback;
+    if (typeof val === "boolean") return val;
+    return String(val).toLowerCase() === "true";
+  };
+
   if (method === "POST" && pathStr === "/owner/products") {
     const body = await parseBody(req);
     const id = nextId(db, "product");
-    const prod = {
+    const hasUploadedImg = Boolean(body.image_file?.dataUrl);
+    const prod: any = {
       id,
       category_id: Number(body.category_id),
       sku: `MNU-${String(id).padStart(3, "0")}`,
@@ -1121,10 +1148,13 @@ async function handleRequestInner(req: NextRequest, params: Promise<{ slug: stri
       slug: String(body.name || "menu").toLowerCase().replace(/[^a-z0-9]+/g, "-") + "-" + randomToken(3),
       description: body.description || "",
       price: Number(body.price || 0),
-      image_url: body.image_url || "https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=600&q=80",
+      image_url: hasUploadedImg
+        ? `/api/v1/public/products/${id}/image?v=${Date.now()}`
+        : body.image_url || "",
+      ...(hasUploadedImg ? { image_data_url: body.image_file.dataUrl } : {}),
       unit_label: body.unit_label || "porsi",
-      is_available: body.is_available ?? true,
-      track_inventory: body.track_inventory ?? true,
+      is_available: parseBool(body.is_available, true),
+      track_inventory: parseBool(body.track_inventory, true),
       sort_order: db.products.length + 1,
       options: [],
     };
@@ -1139,14 +1169,22 @@ async function handleRequestInner(req: NextRequest, params: Promise<{ slug: stri
     const prod = db.products.find((p) => p.id === Number(ownerProdMatch[1]));
     if (!prod) return jsonError("Produk tidak ditemukan.", 404);
     const body = await parseBody(req);
+    const hasUploadedImg = Boolean(body.image_file?.dataUrl);
     Object.assign(prod, {
       ...(body.category_id !== undefined ? { category_id: Number(body.category_id) } : {}),
       ...(body.name !== undefined ? { name: body.name } : {}),
       ...(body.description !== undefined ? { description: body.description } : {}),
       ...(body.price !== undefined ? { price: Number(body.price) } : {}),
-      ...(body.image_url !== undefined ? { image_url: body.image_url } : {}),
-      ...(body.is_available !== undefined ? { is_available: Boolean(body.is_available) } : {}),
-      ...(body.track_inventory !== undefined ? { track_inventory: Boolean(body.track_inventory) } : {}),
+      ...(hasUploadedImg
+        ? {
+            image_data_url: body.image_file.dataUrl,
+            image_url: `/api/v1/public/products/${prod.id}/image?v=${Date.now()}`,
+          }
+        : body.image_url !== undefined
+        ? { image_url: body.image_url }
+        : {}),
+      ...(body.is_available !== undefined ? { is_available: parseBool(body.is_available, true) } : {}),
+      ...(body.track_inventory !== undefined ? { track_inventory: parseBool(body.track_inventory, true) } : {}),
     });
     recordAudit(db, "PRODUCT_UPDATED", actor.actorName, "owner", "Product", prod.id, `Perbarui produk: ${prod.name}`);
     await writeDb(db);

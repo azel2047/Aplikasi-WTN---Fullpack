@@ -10,7 +10,53 @@ import {
   CheckCircle2,
   X,
   UtensilsCrossed,
+  Upload,
 } from "lucide-react";
+
+async function convertImageToWebpFile(file: File): Promise<File> {
+  const imgUrl = URL.createObjectURL(file);
+  try {
+    const img = await new Promise<HTMLImageElement>((resolve, reject) => {
+      const el = new Image();
+      el.onload = () => resolve(el);
+      el.onerror = () => reject(new Error("Gagal membaca file gambar."));
+      el.src = imgUrl;
+    });
+
+    const maxDim = 800;
+    let width = img.naturalWidth || img.width;
+    let height = img.naturalHeight || img.height;
+    if (width > maxDim || height > maxDim) {
+      if (width >= height) {
+        height = Math.round((height * maxDim) / width);
+        width = maxDim;
+      } else {
+        width = Math.round((width * maxDim) / height);
+        height = maxDim;
+      }
+    }
+
+    const canvas = document.createElement("canvas");
+    canvas.width = width;
+    canvas.height = height;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) throw new Error("Canvas tidak tersedia di browser.");
+    ctx.drawImage(img, 0, 0, width, height);
+
+    const blob: Blob = await new Promise((resolve, reject) => {
+      canvas.toBlob(
+        (b) => (b ? resolve(b) : reject(new Error("Gagal mengonversi ke WebP."))),
+        "image/webp",
+        0.82
+      );
+    });
+
+    const baseName = file.name.replace(/\.[^/.]+$/, "") || "menu";
+    return new File([blob], `${baseName}.webp`, { type: "image/webp" });
+  } finally {
+    URL.revokeObjectURL(imgUrl);
+  }
+}
 
 export default function OwnerMenuPage() {
   const [categories, setCategories] = useState<any[]>([]);
@@ -25,7 +71,9 @@ export default function OwnerMenuPage() {
   const [name, setName] = useState<string>("");
   const [price, setPrice] = useState<string>("");
   const [description, setDescription] = useState<string>("");
-  const [imageUrl, setImageUrl] = useState<string>("");
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreviewUrl, setImagePreviewUrl] = useState<string>("");
+  const [convertingImg, setConvertingImg] = useState(false);
   const [unitLabel, setUnitLabel] = useState<string>("porsi");
   const [isAvailable, setIsAvailable] = useState<boolean>(true);
   const [trackInventory, setTrackInventory] = useState<boolean>(true);
@@ -60,9 +108,8 @@ export default function OwnerMenuPage() {
     setName("");
     setPrice("12000");
     setDescription("");
-    setImageUrl(
-      "https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=600&q=80"
-    );
+    setImageFile(null);
+    setImagePreviewUrl("");
     setUnitLabel("porsi");
     setIsAvailable(true);
     setTrackInventory(true);
@@ -75,11 +122,26 @@ export default function OwnerMenuPage() {
     setName(p.name);
     setPrice(String(p.price));
     setDescription(p.description || "");
-    setImageUrl(p.image_url || "");
+    setImageFile(null);
+    setImagePreviewUrl(p.image_url || "");
     setUnitLabel(p.unit_label || "porsi");
     setIsAvailable(Boolean(p.is_available));
     setTrackInventory(Boolean(p.track_inventory));
     setIsModalOpen(true);
+  };
+
+  const handleImageSelect = async (file: File | null) => {
+    if (!file) return;
+    setConvertingImg(true);
+    try {
+      const webpFile = await convertImageToWebpFile(file);
+      setImageFile(webpFile);
+      setImagePreviewUrl(URL.createObjectURL(webpFile));
+    } catch (err: any) {
+      alert(err?.message || "Gagal memproses foto menu.");
+    } finally {
+      setConvertingImg(false);
+    }
   };
 
   const handleSaveProduct = async (e: React.FormEvent) => {
@@ -88,27 +150,28 @@ export default function OwnerMenuPage() {
     setFeedback(null);
 
     try {
-      const payload = {
-        category_id: catId,
-        name: name.trim(),
-        price: Number(price),
-        description: description.trim() || null,
-        image_url: imageUrl.trim() || null,
-        unit_label: unitLabel.trim() || "porsi",
-        is_available: isAvailable,
-        track_inventory: trackInventory,
-      };
+      const formData = new FormData();
+      formData.append("category_id", String(catId));
+      formData.append("name", name.trim());
+      formData.append("price", String(Number(price)));
+      formData.append("description", description.trim());
+      formData.append("unit_label", unitLabel.trim() || "porsi");
+      formData.append("is_available", String(isAvailable));
+      formData.append("track_inventory", String(trackInventory));
+      if (imageFile) {
+        formData.append("image_file", imageFile);
+      }
 
       if (editingProduct) {
         const res = await apiFetch(`/owner/products/${editingProduct.id}`, {
           method: "PUT",
-          body: JSON.stringify(payload),
+          body: formData,
         });
         setFeedback(res.message);
       } else {
         const res = await apiFetch("/owner/products", {
           method: "POST",
-          body: JSON.stringify(payload),
+          body: formData,
         });
         setFeedback(res.message);
       }
@@ -437,14 +500,45 @@ export default function OwnerMenuPage() {
 
               <div>
                 <label className="font-bold text-nav-espresso block mb-1">
-                  URL Foto Produk
+                  Foto Menu (Otomatis dikonversi ke WebP)
                 </label>
-                <input
-                  type="text"
-                  value={imageUrl}
-                  onChange={(e) => setImageUrl(e.target.value)}
-                  className="w-full h-10 px-3 rounded-xl bg-canvas-cream border border-border-sand"
-                />
+                <div className="flex items-center gap-3">
+                  <div className="w-16 h-16 rounded-xl bg-canvas-cream border border-border-sand overflow-hidden flex items-center justify-center shrink-0">
+                    {imagePreviewUrl ? (
+                      <img
+                        src={imagePreviewUrl}
+                        alt="Preview Menu"
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <UtensilsCrossed className="w-6 h-6 text-text-muted" />
+                    )}
+                  </div>
+                  <div className="flex-1 space-y-1">
+                    <label className="h-10 px-3 rounded-xl bg-canvas-cream border border-dashed border-border-strong flex items-center justify-center gap-2 cursor-pointer hover:bg-surface-variant font-semibold text-nav-espresso">
+                      <Upload className="w-4 h-4 text-primary-container" />
+                      <span className="truncate">
+                        {convertingImg
+                          ? "Mengonversi ke WebP..."
+                          : imageFile
+                          ? `${imageFile.name} (${Math.max(1, Math.round(imageFile.size / 1024))} KB)`
+                          : "Pilih Foto dari HP / Laptop (JPG, PNG, WEBP)"}
+                      </span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) =>
+                          handleImageSelect(e.target.files?.[0] || null)
+                        }
+                        className="hidden"
+                      />
+                    </label>
+                    <p className="text-[10px] text-text-muted">
+                      Foto otomatis dikompresi ke format .webp agar ringan saat
+                      dibuka pelanggan.
+                    </p>
+                  </div>
+                </div>
               </div>
 
               <div className="flex items-center gap-5 pt-1">
@@ -478,10 +572,14 @@ export default function OwnerMenuPage() {
                 </button>
                 <button
                   type="submit"
-                  disabled={saving}
-                  className="h-11 px-5 rounded-xl bg-primary-container text-on-primary font-bold cursor-pointer"
+                  disabled={saving || convertingImg}
+                  className="h-11 px-5 rounded-xl bg-primary-container text-on-primary font-bold cursor-pointer disabled:opacity-50"
                 >
-                  {saving ? "Menyimpan..." : "Simpan Produk"}
+                  {saving
+                    ? "Menyimpan..."
+                    : convertingImg
+                    ? "Memproses Foto..."
+                    : "Simpan Produk"}
                 </button>
               </div>
             </form>
