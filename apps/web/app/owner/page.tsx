@@ -24,23 +24,182 @@ import {
   FileBarChart,
   ArrowRight,
   RefreshCw,
+  Target,
+  Bell,
+  BellRing,
+  Volume2,
+  CheckCircle2,
 } from "lucide-react";
+
+function urlBase64ToUint8Array(base64String: string) {
+  const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
+  const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
+  const rawData = window.atob(base64);
+  const outputArray = new Uint8Array(rawData.length);
+  for (let i = 0; i < rawData.length; ++i) {
+    outputArray[i] = rawData.charCodeAt(i);
+  }
+  return outputArray;
+}
+
+function playTargetChime() {
+  try {
+    const AudioCtx =
+      window.AudioContext || (window as any).webkitAudioContext;
+    if (!AudioCtx) return;
+    const ctx = new AudioCtx();
+    const notes = [523.25, 659.25, 783.99, 1046.5];
+    notes.forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "triangle";
+      osc.frequency.setValueAtTime(freq, ctx.currentTime + i * 0.11);
+      gain.gain.setValueAtTime(0.18, ctx.currentTime + i * 0.11);
+      gain.gain.exponentialRampToValueAtTime(
+        0.001,
+        ctx.currentTime + i * 0.11 + 0.35
+      );
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(ctx.currentTime + i * 0.11);
+      osc.stop(ctx.currentTime + i * 0.11 + 0.36);
+    });
+  } catch {
+    // Ignore autoplay restriction errors
+  }
+}
 
 export default function OwnerOverviewPage() {
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [targetInput, setTargetInput] = useState("");
+  const [savingTarget, setSavingTarget] = useState(false);
+  const [pushSubscribed, setPushSubscribed] = useState(false);
+  const [pushBusy, setPushBusy] = useState(false);
+  const [pushNotice, setPushNotice] = useState<string | null>(null);
 
   const loadDashboard = () => {
     setLoading(true);
     apiFetch("/owner/dashboard")
-      .then((res) => setData(res))
+      .then((res) => {
+        setData(res);
+        if (res?.kpis?.daily_revenue_target !== undefined) {
+          setTargetInput(String(res.kpis.daily_revenue_target));
+        }
+      })
       .catch(() => {})
       .finally(() => setLoading(false));
   };
 
   useEffect(() => {
     loadDashboard();
+    if (
+      typeof window !== "undefined" &&
+      "serviceWorker" in navigator &&
+      "PushManager" in window
+    ) {
+      navigator.serviceWorker.ready
+        .then((reg) => reg.pushManager.getSubscription())
+        .then((sub) => setPushSubscribed(Boolean(sub)))
+        .catch(() => {});
+    }
   }, []);
+
+  useEffect(() => {
+    if (!data?.kpis?.daily_target_reached || !data?.kpis?.date) return;
+    const key = `wtn_target_chime_${data.kpis.date}`;
+    if (typeof window !== "undefined" && !localStorage.getItem(key)) {
+      localStorage.setItem(key, "1");
+      playTargetChime();
+    }
+  }, [data]);
+
+  const handleSaveTarget = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const numeric = Number(String(targetInput).replace(/\D/g, ""));
+    if (!Number.isFinite(numeric) || numeric < 0) return;
+    setSavingTarget(true);
+    setPushNotice(null);
+    try {
+      const res = await apiFetch("/owner/target", {
+        method: "POST",
+        body: JSON.stringify({ daily_revenue_target: numeric }),
+      });
+      setPushNotice(res.message);
+      loadDashboard();
+    } catch (err: any) {
+      setPushNotice(err.message || "Gagal menyimpan target harian.");
+    } finally {
+      setSavingTarget(false);
+    }
+  };
+
+  const handleEnablePush = async () => {
+    setPushBusy(true);
+    setPushNotice(null);
+    try {
+      if (
+        typeof window === "undefined" ||
+        !("serviceWorker" in navigator) ||
+        !("PushManager" in window) ||
+        !("Notification" in window)
+      ) {
+        setPushNotice(
+          "Browser belum mendukung Web Push. Di iPhone/iPad, silakan install web ini dulu lewat Share → Add to Home Screen lalu buka dari ikon layar utama."
+        );
+        return;
+      }
+
+      const permission = await Notification.requestPermission();
+      if (permission !== "granted") {
+        setPushNotice(
+          "Izin notifikasi ditolak. Aktifkan izin notifikasi di pengaturan browser/HP untuk menerima alarm target."
+        );
+        return;
+      }
+
+      const { publicKey } = await apiFetch("/owner/push/vapid-key");
+      const reg = await navigator.serviceWorker.ready;
+      let subscription = await reg.pushManager.getSubscription();
+      if (!subscription) {
+        subscription = await reg.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: urlBase64ToUint8Array(publicKey),
+        });
+      }
+
+      const res = await apiFetch("/owner/push/subscribe", {
+        method: "POST",
+        body: JSON.stringify({ subscription: subscription.toJSON() }),
+      });
+      setPushSubscribed(true);
+      setPushNotice(res.message);
+      loadDashboard();
+    } catch (err: any) {
+      setPushNotice(
+        err?.message ||
+          "Gagal mengaktifkan notifikasi HP. Pastikan diakses via HTTPS atau PWA terinstall."
+      );
+    } finally {
+      setPushBusy(false);
+    }
+  };
+
+  const handleTestSoundAndPush = async () => {
+    playTargetChime();
+    setPushBusy(true);
+    setPushNotice(null);
+    try {
+      const res = await apiFetch("/owner/push/test", { method: "POST" });
+      setPushNotice(res.message);
+    } catch (err: any) {
+      setPushNotice(
+        err?.message || "Bunyi tes diputar (notifikasi HP belum diaktifkan)."
+      );
+    } finally {
+      setPushBusy(false);
+    }
+  };
 
   if (loading || !data) {
     return (
@@ -56,6 +215,11 @@ export default function OwnerOverviewPage() {
   const topProducts = data.top_products || [];
   const lowStock = data.low_stock_ingredients || [];
   const recentOrders = data.recent_orders || [];
+  const dailyTarget = Number(kpis.daily_revenue_target || 0);
+  const targetPct =
+    dailyTarget > 0
+      ? Math.min(100, Math.round((Number(kpis.today_revenue || 0) / dailyTarget) * 100))
+      : 0;
 
   return (
     <div className="space-y-6">
@@ -141,6 +305,113 @@ export default function OwnerOverviewPage() {
             </div>
           </div>
         </div>
+      </section>
+
+      {/* Daily Revenue Target & PWA Push Notification Card */}
+      <section className="bg-surface-cream border border-border-sand rounded-[20px] p-5 soft-shadow space-y-4">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          <div className="space-y-1">
+            <div className="flex flex-wrap items-center gap-2">
+              <Target className="w-4 h-4 text-primary-container" />
+              <h2 className="text-sm font-bold text-nav-espresso">
+                Target Omzet Harian &amp; Notifikasi HP
+              </h2>
+              {kpis.daily_target_reached ? (
+                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-success-subtle text-tertiary text-[11px] font-bold">
+                  <CheckCircle2 className="w-3.5 h-3.5" />
+                  Target Tercapai!
+                </span>
+              ) : (
+                <span className="px-2.5 py-0.5 rounded-full bg-surface-variant text-text-muted text-[11px] font-bold tabular-nums">
+                  {targetPct}% tercapai
+                </span>
+              )}
+            </div>
+            <p className="text-xs text-text-muted">
+              Omzet hari ini{" "}
+              <strong className="text-nav-espresso tabular-nums">
+                {formatRupiah(kpis.today_revenue)}
+              </strong>{" "}
+              dari target{" "}
+              <strong className="text-nav-espresso tabular-nums">
+                {formatRupiah(dailyTarget)}
+              </strong>
+              . HP owner otomatis berbunyi saat target tersentuh.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2">
+            <form onSubmit={handleSaveTarget} className="flex items-center gap-2">
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold text-text-muted">
+                  Rp
+                </span>
+                <input
+                  type="number"
+                  min={0}
+                  step={10000}
+                  value={targetInput}
+                  onChange={(e) => setTargetInput(e.target.value)}
+                  className="h-10 w-36 pl-9 pr-3 rounded-xl bg-canvas-cream border border-border-sand text-xs font-bold text-nav-espresso tabular-nums focus:outline-none focus:border-primary-container"
+                  placeholder="500000"
+                />
+              </div>
+              <button
+                type="submit"
+                disabled={savingTarget}
+                className="h-10 px-3.5 rounded-xl bg-nav-espresso hover:bg-dark-walnut text-canvas-cream text-xs font-bold cursor-pointer disabled:opacity-50"
+              >
+                {savingTarget ? "Menyimpan..." : "Simpan Target"}
+              </button>
+            </form>
+
+            <button
+              type="button"
+              onClick={handleEnablePush}
+              disabled={pushBusy}
+              className={`h-10 px-3.5 rounded-xl text-xs font-bold flex items-center gap-1.5 cursor-pointer disabled:opacity-50 ${
+                pushSubscribed
+                  ? "bg-success-subtle text-tertiary"
+                  : "bg-primary-container hover:bg-primary-hover text-on-primary"
+              }`}
+            >
+              {pushSubscribed ? (
+                <BellRing className="w-4 h-4" />
+              ) : (
+                <Bell className="w-4 h-4" />
+              )}
+              <span>
+                {pushSubscribed
+                  ? `Notifikasi HP Aktif (${kpis.push_subscriptions_count || 1})`
+                  : "Aktifkan Notifikasi HP"}
+              </span>
+            </button>
+
+            <button
+              type="button"
+              onClick={handleTestSoundAndPush}
+              disabled={pushBusy}
+              className="h-10 px-3 rounded-xl bg-canvas-cream border border-border-sand hover:bg-surface-variant text-nav-espresso text-xs font-bold flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+            >
+              <Volume2 className="w-4 h-4" />
+              <span>Tes Bunyi</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Progress Bar */}
+        <div className="w-full h-2.5 rounded-full bg-surface-variant overflow-hidden">
+          <div
+            className="h-full rounded-full bg-primary-container transition-all duration-500"
+            style={{ width: `${targetPct}%` }}
+          />
+        </div>
+
+        {pushNotice && (
+          <div className="text-xs font-semibold text-tertiary bg-success-subtle px-3.5 py-2.5 rounded-xl">
+            {pushNotice}
+          </div>
+        )}
       </section>
 
       {/* Low Stock Alert Strip */}

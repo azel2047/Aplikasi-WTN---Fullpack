@@ -33,6 +33,7 @@ export interface WtnDatabase {
   system_settings: Record<string, any>;
   audit_logs: any[];
   auth_tokens: Record<string, { user_id: number; role: string; employee_profile_id?: number; shift_name?: string }>;
+  push_subscriptions?: any[];
 }
 
 const DB_FILE =
@@ -748,6 +749,8 @@ export function createInitialSeed(): WtnDatabase {
       qris_nmid: "ID1026000000000",
       qris_bank_info: "QRIS Statis Merchant",
       qris_image_data_url: null,
+      daily_revenue_target: 500000,
+      daily_target_notified_date: null,
     },
     audit_logs: [
       {
@@ -762,6 +765,7 @@ export function createInitialSeed(): WtnDatabase {
       },
     ],
     auth_tokens: {},
+    push_subscriptions: [],
   };
 }
 

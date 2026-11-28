@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import * as webpush from "web-push";
 import {
   deductStockForOrder,
   enrichIngredient,
@@ -14,6 +15,83 @@ import {
 
 function jsonError(message: string, status = 400) {
   return NextResponse.json({ message }, { status });
+}
+
+function getWibDateString(d = new Date()): string {
+  return new Date(d.getTime() + 7 * 60 * 60 * 1000).toISOString().slice(0, 10);
+}
+
+function getOrCreateVapidKeys(db: WtnDatabase): { publicKey: string; privateKey: string; changed: boolean } {
+  if (process.env.VAPID_PUBLIC_KEY && process.env.VAPID_PRIVATE_KEY) {
+    return {
+      publicKey: process.env.VAPID_PUBLIC_KEY,
+      privateKey: process.env.VAPID_PRIVATE_KEY,
+      changed: false,
+    };
+  }
+  const stored = (db as any).vapid_keys;
+  if (stored?.publicKey && stored?.privateKey) {
+    return { publicKey: stored.publicKey, privateKey: stored.privateKey, changed: false };
+  }
+  const keys = webpush.generateVAPIDKeys();
+  (db as any).vapid_keys = { publicKey: keys.publicKey, privateKey: keys.privateKey };
+  return { ...keys, changed: true };
+}
+
+async function sendPushToOwners(
+  db: WtnDatabase,
+  payload: { title: string; body: string; url?: string }
+): Promise<{ sent: number; failed: number }> {
+  const subs = Array.isArray(db.push_subscriptions) ? db.push_subscriptions : [];
+  if (subs.length === 0) return { sent: 0, failed: 0 };
+
+  const { publicKey, privateKey } = getOrCreateVapidKeys(db);
+  webpush.setVapidDetails("mailto:owner@warkopterasnenek.id", publicKey, privateKey);
+
+  let sent = 0;
+  let failed = 0;
+  const expiredEndpoints = new Set<string>();
+
+  await Promise.all(
+    subs.map(async (sub) => {
+      try {
+        await webpush.sendNotification(sub, JSON.stringify(payload));
+        sent += 1;
+      } catch (err: any) {
+        failed += 1;
+        if (err?.statusCode === 404 || err?.statusCode === 410) {
+          expiredEndpoints.add(sub.endpoint);
+        }
+      }
+    })
+  );
+
+  if (expiredEndpoints.size > 0) {
+    db.push_subscriptions = subs.filter((s) => !expiredEndpoints.has(s.endpoint));
+  }
+  return { sent, failed };
+}
+
+async function checkAndNotifyDailyTarget(db: WtnDatabase): Promise<void> {
+  const target = Number(db.system_settings.daily_revenue_target || 0);
+  if (target <= 0) return;
+  const todayWib = getWibDateString();
+  if (db.system_settings.daily_target_notified_date === todayWib) return;
+
+  const todayRevenue = db.orders
+    .filter((o) => o.payment_status === "PAID" && getWibDateString(new Date(o.created_at)) === todayWib)
+    .reduce((sum, o) => sum + Number(o.total_amount || 0), 0);
+
+  if (todayRevenue >= target) {
+    db.system_settings.daily_target_notified_date = todayWib;
+    const revStr = "Rp " + Math.round(todayRevenue).toLocaleString("id-ID");
+    const tgtStr = "Rp " + Math.round(target).toLocaleString("id-ID");
+    await sendPushToOwners(db, {
+      title: "Target Omzet Harian Tercapai!",
+      body: `Omzet hari ini sudah menyentuh ${revStr} (target ${tgtStr}).`,
+      url: "/owner",
+    });
+  }
 }
 
 const ALLOWED_IMAGE_TYPES = new Set(["image/jpeg", "image/jpg", "image/png", "image/webp"]);
@@ -531,6 +609,7 @@ async function handleRequestInner(req: NextRequest, params: Promise<{ slug: stri
       }
 
       recordAudit(db, "PAYMENT_VERIFIED", actor.actorName, actor.actorRole, "Order", ord.id, `Verifikasi pembayaran ${payMethod} ${ord.order_number}`);
+      await checkAndNotifyDailyTarget(db);
       await writeDb(db);
     }
 
@@ -681,6 +760,7 @@ async function handleRequestInner(req: NextRequest, params: Promise<{ slug: stri
           occurred_at: new Date().toISOString(),
         });
       }
+      await checkAndNotifyDailyTarget(db);
     }
 
     await writeDb(db);
@@ -907,12 +987,77 @@ async function handleRequestInner(req: NextRequest, params: Promise<{ slug: stri
         pending_reports_count: db.employee_reports.filter((r) => r.status === "submitted").length,
         avg_rating: avgRating,
         total_ratings: db.ratings.length,
+        daily_revenue_target: Number(db.system_settings.daily_revenue_target || 500000),
+        daily_target_reached:
+          Number(db.system_settings.daily_revenue_target || 0) > 0 &&
+          todayRevenue >= Number(db.system_settings.daily_revenue_target || 0),
+        push_subscriptions_count: Array.isArray(db.push_subscriptions) ? db.push_subscriptions.length : 0,
       },
       hourly_sales: hourly,
       top_products: Object.values(prodMap).sort((a, b) => b.total_qty - a.total_qty).slice(0, 6),
       low_stock_ingredients: enrichedIngs.filter((i) => ["MENIPIS", "HABIS"].includes(i.stock_status)),
       tables: db.dining_tables,
       recent_orders: [...db.orders].sort((a, b) => b.created_at.localeCompare(a.created_at)).slice(0, 8),
+    });
+  }
+
+  if (method === "POST" && pathStr === "/owner/target") {
+    const body = await parseBody(req);
+    const target = Math.max(0, Math.round(Number(body.daily_revenue_target || 0)));
+    db.system_settings.daily_revenue_target = target;
+    const todayWib = getWibDateString();
+    const todayRevenue = db.orders
+      .filter((o) => o.payment_status === "PAID" && getWibDateString(new Date(o.created_at)) === todayWib)
+      .reduce((s, o) => s + Number(o.total_amount || 0), 0);
+    if (todayRevenue < target) {
+      db.system_settings.daily_target_notified_date = null;
+    }
+    recordAudit(db, "DAILY_TARGET_UPDATED", actor.actorName, "owner", "Setting", "daily_revenue_target", `Target omzet harian diubah menjadi Rp ${target.toLocaleString("id-ID")}`);
+    await writeDb(db);
+    return NextResponse.json({
+      message: "Target omzet harian berhasil diperbarui.",
+      daily_revenue_target: target,
+    });
+  }
+
+  if (method === "GET" && pathStr === "/owner/push/vapid-key") {
+    const keys = getOrCreateVapidKeys(db);
+    if (keys.changed) await writeDb(db);
+    return NextResponse.json({ publicKey: keys.publicKey });
+  }
+
+  if (method === "POST" && pathStr === "/owner/push/subscribe") {
+    const body = await parseBody(req);
+    const sub = body.subscription;
+    if (!sub?.endpoint || !sub?.keys?.p256dh || !sub?.keys?.auth) {
+      return jsonError("Data langganan push notification tidak valid.", 422);
+    }
+    if (!Array.isArray(db.push_subscriptions)) db.push_subscriptions = [];
+    const exists = db.push_subscriptions.some((s) => s.endpoint === sub.endpoint);
+    if (!exists) {
+      db.push_subscriptions.push({
+        endpoint: sub.endpoint,
+        keys: { p256dh: sub.keys.p256dh, auth: sub.keys.auth },
+        created_at: new Date().toISOString(),
+      });
+      await writeDb(db);
+    }
+    return NextResponse.json({
+      message: "Notifikasi HP berhasil diaktifkan!",
+      count: db.push_subscriptions.length,
+    });
+  }
+
+  if (method === "POST" && pathStr === "/owner/push/test") {
+    const result = await sendPushToOwners(db, {
+      title: "Tes Notifikasi Warkop Teras Nenek",
+      body: "Notifikasi target omzet harian siap berbunyi di perangkat Anda!",
+      url: "/owner",
+    });
+    await writeDb(db);
+    return NextResponse.json({
+      message: result.sent > 0 ? "Notifikasi tes berhasil dikirim ke perangkat Anda." : "Belum ada perangkat yang mengaktifkan notifikasi.",
+      ...result,
     });
   }
 
@@ -993,6 +1138,48 @@ async function handleRequestInner(req: NextRequest, params: Promise<{ slug: stri
       active_session: db.table_sessions.find((s) => s.dining_table_id === t.id && s.status === "ACTIVE") || null,
     }));
     return NextResponse.json({ tables });
+  }
+
+  if (method === "POST" && pathStr === "/owner/tables") {
+    const body = await parseBody(req);
+    const maxId = db.dining_tables.reduce((m, t) => Math.max(m, Number(t.id || 0)), 0);
+    const newId = maxId + 1;
+    const numStr = String(newId).padStart(2, "0");
+    const name = String(body.name || `Meja ${newId}`).trim().slice(0, 40);
+    const area = String(body.area || "Teras Depan").trim().slice(0, 40);
+    const seatCapacity = Math.min(20, Math.max(1, Math.floor(Number(body.seat_capacity || 4))));
+    const table = {
+      id: newId,
+      code: `TBL-${numStr}`,
+      name,
+      area,
+      seat_capacity: seatCapacity,
+      qr_token: `wtn_tbl${numStr}_${randomToken(18)}`,
+      is_active: true,
+      qr_generated_at: new Date().toISOString(),
+      last_scanned_at: null,
+    };
+    db.dining_tables.push(table);
+    recordAudit(db, "TABLE_CREATED", actor.actorName, "owner", "DiningTable", table.id, `Tambah meja baru ${table.name} (${table.code})`);
+    await writeDb(db);
+    return NextResponse.json({ message: `${table.name} berhasil ditambahkan dan QR siap dicetak.`, table }, { status: 201 });
+  }
+
+  const ownerTableDeleteMatch = /^\/owner\/tables\/(\d+)$/.exec(pathStr);
+  if (method === "DELETE" && ownerTableDeleteMatch) {
+    const id = Number(ownerTableDeleteMatch[1]);
+    const tbl = db.dining_tables.find((t) => t.id === id);
+    if (!tbl) return jsonError("Meja tidak ditemukan.", 404);
+    const hasActiveOrder = db.orders.some(
+      (o) => o.dining_table_id === id && ["PENDING_PAYMENT", "CONFIRMED", "PREPARING", "READY"].includes(o.status)
+    );
+    if (hasActiveOrder) {
+      return jsonError("Meja masih memiliki pesanan aktif. Selesaikan pesanan terlebih dahulu.", 422);
+    }
+    db.dining_tables = db.dining_tables.filter((t) => t.id !== id);
+    recordAudit(db, "TABLE_DELETED", actor.actorName, "owner", "DiningTable", id, `Hapus meja ${tbl.name} (${tbl.code})`);
+    await writeDb(db);
+    return NextResponse.json({ message: `${tbl.name} berhasil dihapus.` });
   }
 
   const ownerTablePatch = /^\/owner\/tables\/(\d+)$/.exec(pathStr);

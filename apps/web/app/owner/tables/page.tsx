@@ -11,6 +11,9 @@ import {
   ExternalLink,
   CheckCircle2,
   Power,
+  Plus,
+  Trash2,
+  X,
 } from "lucide-react";
 
 export default function OwnerTablesAndQrPage() {
@@ -19,13 +22,19 @@ export default function OwnerTablesAndQrPage() {
   const [selectedTableId, setSelectedTableId] = useState<number>(4);
   const [feedback, setFeedback] = useState<string | null>(null);
   const [originUrl, setOriginUrl] = useState<string>("http://localhost:3000");
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [newName, setNewName] = useState("");
+  const [newArea, setNewArea] = useState("Indoor");
+  const [newCapacity, setNewCapacity] = useState("4");
+  const [submitting, setSubmitting] = useState(false);
 
-  const loadTables = () => {
+  const loadTables = (selectId?: number) => {
     setLoading(true);
     apiFetch("/owner/tables")
       .then((res) => {
         const list = res.tables || [];
         setTables(list);
+        if (selectId) setSelectedTableId(selectId);
       })
       .catch(() => {})
       .finally(() => setLoading(false));
@@ -41,10 +50,55 @@ export default function OwnerTablesAndQrPage() {
   const selectedTable =
     tables.find((t) => t.id === selectedTableId) || tables[0] || null;
 
+  const handleCreateTable = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newName.trim()) return;
+    setSubmitting(true);
+    try {
+      const res = await apiFetch("/owner/tables", {
+        method: "POST",
+        body: JSON.stringify({
+          name: newName.trim(),
+          area: newArea.trim() || "Indoor",
+          seat_capacity: Number(newCapacity) || 4,
+        }),
+      });
+      setShowAddModal(false);
+      setNewName("");
+      setNewArea("Indoor");
+      setNewCapacity("4");
+      setFeedback(res.message);
+      loadTables(res.table?.id);
+    } catch (err: any) {
+      alert(err.message);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleDeleteTable = async (table: any) => {
+    if (
+      !window.confirm(
+        `Hapus ${table.name} (${table.code}) secara permanen? QR Code meja ini tidak akan bisa digunakan lagi.`
+      )
+    ) {
+      return;
+    }
+    try {
+      const res = await apiFetch(`/owner/tables/${table.id}`, {
+        method: "DELETE",
+      });
+      setFeedback(res.message);
+      loadTables();
+    } catch (err: any) {
+      alert(err.message);
+    }
+  };
+
   const handleRegenerateQr = async (table: any) => {
     if (
       !window.confirm(
-        `Ganti token QR untuk ${table.name} (${table.code})? QR Code lama yang sudah dicetak akan otomatis dicabut dan tidak bisa membuat pesanan baru (AC-03).`
+        `Ganti token QR untuk ${table.name} (${table.code})? QR Code lama yang sudah dicetak akan otomatis dicabut dan tidak bisa membuat pesanan baru.`
       )
     ) {
       return;
@@ -77,7 +131,7 @@ export default function OwnerTablesAndQrPage() {
 
   return (
     <div className="space-y-6">
-      {/* Page Header matching Stitch Meja & QR */}
+      {/* Page Header */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-3">
@@ -90,12 +144,23 @@ export default function OwnerTablesAndQrPage() {
             </span>
           </div>
           <p className="text-xs text-text-muted mt-1">
-            Kelola 9 meja pelanggan dan konfigurasi unik QR stand meja yang dapat
-            dicetak atau dicabut (AC-01, AC-02, AC-03, AC-32).
+            Kelola {tables.length} meja pelanggan, tambah meja baru otomatis
+            dengan QR stand siap cetak, atau cabut QR lama.
           </p>
         </div>
 
-        <div className="flex items-center gap-2.5">
+        <div className="flex flex-wrap items-center gap-2.5">
+          <button
+            type="button"
+            onClick={() => {
+              setNewName(`Meja ${tables.length + 1}`);
+              setShowAddModal(true);
+            }}
+            className="h-11 px-4 rounded-xl bg-nav-espresso hover:bg-dark-walnut text-canvas-cream text-xs font-bold flex items-center gap-2 shadow-sm cursor-pointer"
+          >
+            <Plus className="w-4 h-4" />
+            <span>Tambah Meja</span>
+          </button>
           <button
             type="button"
             onClick={() => window.print()}
@@ -114,17 +179,17 @@ export default function OwnerTablesAndQrPage() {
         </div>
       )}
 
-      {/* Main 2-Column Layout per Stitch Meja & QR */}
+      {/* Main 2-Column Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        {/* Left Column: 9 Tables List */}
+        {/* Left Column: Tables List */}
         <div className="lg:col-span-7 bg-surface-cream border border-border-sand rounded-[20px] overflow-hidden soft-shadow">
           <div className="p-5 border-b border-surface-variant flex items-center justify-between">
             <div>
               <h2 className="text-base font-bold text-nav-espresso">
-                Daftar 9 Meja &amp; Status Sesi
+                Daftar {tables.length} Meja &amp; Status Sesi
               </h2>
               <span className="text-xs text-text-muted">
-                Klik baris meja untuk melihat, menguji, atau mengganti QR token
+                Klik baris meja untuk melihat, mencetak, atau mengganti QR token
               </span>
             </div>
           </div>
@@ -145,7 +210,7 @@ export default function OwnerTablesAndQrPage() {
                 {loading ? (
                   <tr>
                     <td colSpan={6} className="p-6 text-center text-text-muted">
-                      Memuat daftar 9 meja...
+                      Memuat daftar meja...
                     </td>
                   </tr>
                 ) : (
@@ -294,11 +359,111 @@ export default function OwnerTablesAndQrPage() {
                     </span>
                   </button>
                 </div>
+
+                <button
+                  type="button"
+                  onClick={() => handleDeleteTable(selectedTable)}
+                  className="w-full h-10 rounded-xl border border-border-sand hover:bg-error-subtle hover:text-error text-text-muted font-bold flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
+                >
+                  <Trash2 className="w-4 h-4" />
+                  <span>Hapus {selectedTable.name}</span>
+                </button>
               </div>
             </>
           )}
         </aside>
       </div>
+
+      {/* Add Table Modal */}
+      {showAddModal && (
+        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-[2px] flex items-center justify-center p-4">
+          <div className="w-full max-w-md bg-surface-cream border border-border-sand rounded-2xl p-6 shadow-xl space-y-5">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-base font-bold text-nav-espresso">
+                  Tambah Meja Baru
+                </h3>
+                <p className="text-xs text-text-muted">
+                  Kode meja dan QR Code unik akan dibuat otomatis.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowAddModal(false)}
+                className="w-8 h-8 rounded-lg hover:bg-surface-variant flex items-center justify-center text-text-muted cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <form onSubmit={handleCreateTable} className="space-y-4 text-xs">
+              <div className="space-y-1.5">
+                <label className="font-bold text-nav-espresso block">
+                  Nama Meja
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={newName}
+                  onChange={(e) => setNewName(e.target.value)}
+                  placeholder="Contoh: Meja 10 atau Meja VIP"
+                  className="w-full h-10 px-3.5 rounded-xl bg-canvas-cream border border-border-sand text-nav-espresso focus:outline-none focus:border-primary-container"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1.5">
+                  <label className="font-bold text-nav-espresso block">
+                    Area
+                  </label>
+                  <select
+                    value={newArea}
+                    onChange={(e) => setNewArea(e.target.value)}
+                    className="w-full h-10 px-3 rounded-xl bg-canvas-cream border border-border-sand text-nav-espresso focus:outline-none focus:border-primary-container"
+                  >
+                    <option value="Indoor">Indoor</option>
+                    <option value="Outdoor">Outdoor</option>
+                    <option value="Teras">Teras</option>
+                    <option value="Lantai 2">Lantai 2</option>
+                    <option value="VIP">VIP</option>
+                  </select>
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="font-bold text-nav-espresso block">
+                    Kapasitas Kursi
+                  </label>
+                  <input
+                    type="number"
+                    min={1}
+                    max={20}
+                    value={newCapacity}
+                    onChange={(e) => setNewCapacity(e.target.value)}
+                    className="w-full h-10 px-3.5 rounded-xl bg-canvas-cream border border-border-sand text-nav-espresso tabular-nums focus:outline-none focus:border-primary-container"
+                  />
+                </div>
+              </div>
+
+              <div className="flex items-center justify-end gap-2 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setShowAddModal(false)}
+                  className="h-10 px-4 rounded-xl border border-border-sand text-text-muted font-bold hover:bg-surface-variant cursor-pointer"
+                >
+                  Batal
+                </button>
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="h-10 px-4 rounded-xl bg-primary-container hover:bg-primary-hover text-on-primary font-bold cursor-pointer disabled:opacity-50"
+                >
+                  {submitting ? "Membuat..." : "Simpan & Buat QR"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
