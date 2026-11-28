@@ -1035,7 +1035,7 @@ export default function CustomerTableMenuPage() {
                         paymentMethod === "QRIS" ? "text-border-sand" : "text-text-muted"
                       }`}
                     >
-                      Scan QRIS &amp; unggah bukti bayar
+                      Scan QRIS langsung dari meja
                     </span>
                   </button>
 

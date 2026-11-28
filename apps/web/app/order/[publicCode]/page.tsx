@@ -48,13 +48,6 @@ export default function CustomerOrderTrackingPage() {
   const [order, setOrder] = useState<any>(null);
   const [settings, setSettings] = useState<any>({});
 
-  // QRIS Proof upload form state
-  const [proofReference, setProofReference] = useState("");
-  const [proofFile, setProofFile] = useState<File | null>(null);
-  const [uploadingProof, setUploadingProof] = useState(false);
-  const [proofFeedback, setProofFeedback] = useState<string | null>(null);
-  const [proofError, setProofError] = useState<string | null>(null);
-
   // Call waiter state
   const [callingWaiter, setCallingWaiter] = useState(false);
   const [waiterMessage, setWaiterMessage] = useState<string | null>(null);
@@ -97,44 +90,6 @@ export default function CustomerOrderTrackingPage() {
     const interval = setInterval(() => fetchOrder(true), 6000);
     return () => clearInterval(interval);
   }, [fetchOrder]);
-
-  const handleUploadProof = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!order || uploadingProof) return;
-
-    setUploadingProof(true);
-    setProofError(null);
-    setProofFeedback(null);
-
-    try {
-      const formData = new FormData();
-      if (proofFile) {
-        formData.append("proof_file", proofFile);
-      }
-      if (proofReference.trim()) {
-        formData.append("proof_reference", proofReference.trim());
-      }
-
-      const res = await apiFetch(
-        `/public/orders/${encodeURIComponent(publicCode)}/payment-proof`,
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
-
-      setOrder(res.order);
-      setProofFeedback(
-        res.message ||
-          "Bukti pembayaran terkirim. Kasir sedang memeriksa mutasi sebelum pesanan diracik."
-      );
-      setProofFile(null);
-    } catch (err: any) {
-      setProofError(err.message || "Gagal mengunggah bukti pembayaran.");
-    } finally {
-      setUploadingProof(false);
-    }
-  };
 
   const handleCallWaiter = async () => {
     if (!order || callingWaiter) return;
@@ -375,7 +330,7 @@ export default function CustomerOrderTrackingPage() {
           ) : (
             <p className="text-xs text-on-surface-variant leading-relaxed">
               {order.payment_method === "QRIS"
-                ? "Silakan selesaikan pembayaran QRIS dan unggah bukti transfer di bawah ini agar kasir dapat segera memverifikasi."
+                ? "Silakan scan kode QRIS di bawah ini sesuai nominal tagihan. Pembayaran otomatis terdeteksi di kasir tanpa perlu upload bukti bayar."
                 : `Silakan sebutkan nomor order ${order.order_number} dan bayar tunai sebesar ${formatRupiah(
                     order.total_amount
                   )} di meja kasir.`}
@@ -572,7 +527,7 @@ export default function CustomerOrderTrackingPage() {
                       <img
                         src="/api/v1/public/qris-image"
                         alt="QRIS Resmi Warkop Teras Nenek"
-                        className="w-44 h-44 object-contain"
+                        className="w-56 max-h-80 object-contain rounded-lg"
                       />
                     ) : (
                       <QRCodeSVG
@@ -594,82 +549,16 @@ export default function CustomerOrderTrackingPage() {
                   </p>
                 </div>
 
-                {/* Upload Proof Form */}
-                <form onSubmit={handleUploadProof} className="space-y-3">
-                  <div className="space-y-1">
-                    <label className="text-xs font-bold text-nav-espresso block">
-                      Unggah Bukti Transfer / Catatan Referensi
-                    </label>
-                    <p className="text-[11px] text-text-muted">
-                      Penting: Unggahan bukti tidak otomatis melunasi pesanan. Kasir akan
-                      memverifikasi mutasi merchant secara manual.
-                    </p>
-                  </div>
-
-                  {proofFeedback && (
-                    <div className="p-3 rounded-xl bg-success-subtle text-tertiary text-xs font-semibold">
-                      {proofFeedback}
-                    </div>
-                  )}
-                  {proofError && (
-                    <div className="p-3 rounded-xl bg-error-subtle text-error text-xs font-semibold">
-                      {proofError}
-                    </div>
-                  )}
-
-                  {order.latest_payment?.proof_reference && (
-                    <div className="p-3 rounded-xl bg-surface-variant text-xs space-y-1">
-                      <span className="font-bold text-nav-espresso block">
-                        Bukti Terakhir Tercatat:
-                      </span>
-                      <span className="font-mono text-on-surface-variant block">
-                        {order.latest_payment.proof_reference}
-                      </span>
-                    </div>
-                  )}
-
-                  <input
-                    type="text"
-                    value={proofReference}
-                    onChange={(e) => setProofReference(e.target.value)}
-                    placeholder="Contoh: BCA m-Transfer a.n. Raka Ref 983120"
-                    className="w-full h-11 px-3.5 rounded-xl bg-canvas-cream border border-border-sand text-xs text-on-surface focus:outline-none focus:border-primary-container"
-                  />
-
-                  <div className="flex items-center gap-2">
-                    <label className="flex-1 h-11 px-3 rounded-xl bg-canvas-cream border border-dashed border-border-strong text-xs font-semibold text-secondary flex items-center justify-center gap-2 cursor-pointer hover:bg-surface-variant">
-                      <Upload className="w-4 h-4 text-primary-container" />
-                      <span className="truncate">
-                        {proofFile
-                          ? proofFile.name
-                          : "Pilih Gambar Bukti (JPG/PNG)"}
-                      </span>
-                      <input
-                        type="file"
-                        accept="image/jpeg,image/png,image/webp,application/pdf"
-                        onChange={(e) =>
-                          setProofFile(e.target.files?.[0] || null)
-                        }
-                        className="hidden"
-                      />
-                    </label>
-                  </div>
-
-                  <button
-                    type="submit"
-                    disabled={uploadingProof}
-                    className="w-full h-12 rounded-xl bg-primary-container hover:bg-primary-hover text-on-primary text-xs font-bold flex items-center justify-center gap-2 shadow-sm transition-colors cursor-pointer"
-                  >
-                    <Upload className="w-4 h-4" />
-                    <span>
-                      {uploadingProof
-                        ? "Mengirim Bukti..."
-                        : order.payment_status === "PROOF_UPLOADED"
-                        ? "Perbarui Bukti Pembayaran QRIS"
-                        : "Kirim Bukti Pembayaran QRIS"}
-                    </span>
-                  </button>
-                </form>
+                <div className="p-3.5 rounded-xl bg-success-subtle text-tertiary text-xs leading-relaxed space-y-1">
+                  <span className="font-bold block">
+                    Tidak Perlu Upload Bukti Bayar
+                  </span>
+                  <span>
+                    Setelah transfer QRIS berhasil, notifikasi pembayaran akan
+                    otomatis berbunyi di perangkat QRIS kasir dan pesanan Anda
+                    segera diproses.
+                  </span>
+                </div>
               </div>
             ) : (
               <div className="p-3.5 rounded-xl bg-canvas-cream border border-border-sand text-xs text-on-surface-variant space-y-1.5">

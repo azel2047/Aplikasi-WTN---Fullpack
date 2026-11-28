@@ -44,6 +44,75 @@ export default function OwnerSettingsPage() {
     loadSettings();
   }, []);
 
+  const [qrisPreviewUrl, setQrisPreviewUrl] = useState<string | null>(null);
+  const [convertingPdf, setConvertingPdf] = useState(false);
+
+  const convertPdfToPngFile = async (pdfFile: File): Promise<File> => {
+    const pdfjsLib = await import("pdfjs-dist");
+    pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
+    const arrayBuffer = await pdfFile.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+    const page = await pdf.getPage(1);
+    const baseViewport = page.getViewport({ scale: 1 });
+    const targetWidth = Math.min(1100, Math.max(700, baseViewport.width * 2));
+    const scale = targetWidth / baseViewport.width;
+    const viewport = page.getViewport({ scale });
+
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.round(viewport.width);
+    canvas.height = Math.round(viewport.height);
+    const ctx = canvas.getContext("2d");
+    if (!ctx) throw new Error("Canvas tidak tersedia di browser.");
+    ctx.fillStyle = "#FFFFFF";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    await page.render({ canvasContext: ctx, viewport, canvas }).promise;
+
+    const blob: Blob = await new Promise((resolve, reject) => {
+      canvas.toBlob(
+        (b) => (b ? resolve(b) : reject(new Error("Gagal mengonversi PDF ke gambar."))),
+        "image/png"
+      );
+    });
+
+    const baseName = pdfFile.name.replace(/\.pdf$/i, "") || "qris-resmi";
+    return new File([blob], `${baseName}.png`, { type: "image/png" });
+  };
+
+  const handleQrisFileChange = async (file: File | null) => {
+    setErrorMsg(null);
+    if (!file) {
+      setQrisFile(null);
+      setQrisPreviewUrl(null);
+      return;
+    }
+
+    const isPdf =
+      file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf");
+
+    if (isPdf) {
+      setConvertingPdf(true);
+      try {
+        const pngFile = await convertPdfToPngFile(file);
+        setQrisFile(pngFile);
+        setQrisPreviewUrl(URL.createObjectURL(pngFile));
+      } catch (err: any) {
+        setErrorMsg(
+          err?.message ||
+            "Gagal membaca file PDF QRIS. Pastikan file PDF tidak terkunci password."
+        );
+        setQrisFile(null);
+        setQrisPreviewUrl(null);
+      } finally {
+        setConvertingPdf(false);
+      }
+      return;
+    }
+
+    setQrisFile(file);
+    setQrisPreviewUrl(URL.createObjectURL(file));
+  };
+
   const handleSaveSettings = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
@@ -81,6 +150,7 @@ export default function OwnerSettingsPage() {
       setSettings(res.settings || {});
       setHasQrisImage(Boolean(res.has_official_qris_image));
       setQrisFile(null);
+      setQrisPreviewUrl(null);
       setFeedback(res.message);
     } catch (err: any) {
       setErrorMsg(err.message);
@@ -300,33 +370,56 @@ export default function OwnerSettingsPage() {
 
               <div>
                 <label className="font-semibold text-secondary block mb-1">
-                  Unggah Gambar Stand QRIS Resmi (JPG/PNG)
+                  Unggah Stand QRIS Resmi (PDF / JPG / PNG)
                 </label>
                 <label className="h-11 px-3 rounded-xl bg-surface-cream border border-dashed border-border-strong flex items-center justify-center gap-2 cursor-pointer hover:bg-surface-variant">
                   <Upload className="w-4 h-4 text-primary-container" />
                   <span>
-                    {qrisFile
+                    {convertingPdf
+                      ? "Mengonversi PDF QRIS menjadi gambar..."
+                      : qrisFile
                       ? qrisFile.name
-                      : "Pilih File Gambar QRIS Resmi Merchant"}
+                      : "Pilih File PDF atau Gambar QRIS Resmi Merchant"}
                   </span>
                   <input
                     type="file"
-                    accept="image/jpeg,image/png,image/webp"
-                    onChange={(e) => setQrisFile(e.target.files?.[0] || null)}
+                    accept="application/pdf,.pdf,image/jpeg,image/png,image/webp"
+                    onChange={(e) =>
+                      handleQrisFileChange(e.target.files?.[0] || null)
+                    }
                     className="hidden"
                   />
                 </label>
+
+                {(qrisPreviewUrl || hasQrisImage) && (
+                  <div className="mt-3 p-3 rounded-xl bg-surface-cream border border-border-sand flex flex-col items-center gap-2">
+                    <span className="text-[11px] font-semibold text-text-muted">
+                      {qrisPreviewUrl
+                        ? "Preview QRIS Baru (siap disimpan)"
+                        : "QRIS Resmi Aktif Saat Ini"}
+                    </span>
+                    <img
+                      src={qrisPreviewUrl || "/api/v1/public/qris-image"}
+                      alt="Preview QRIS Resmi"
+                      className="max-h-56 w-auto rounded-lg object-contain border border-border-sand"
+                    />
+                  </div>
+                )}
               </div>
             </div>
 
             <button
               type="submit"
-              disabled={saving}
-              className="w-full h-12 rounded-xl bg-primary-container hover:bg-primary-hover text-on-primary font-bold flex items-center justify-center gap-2 cursor-pointer"
+              disabled={saving || convertingPdf}
+              className="w-full h-12 rounded-xl bg-primary-container hover:bg-primary-hover text-on-primary font-bold flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
             >
               <Save className="w-4 h-4" />
               <span>
-                {saving ? "Menyimpan..." : "Simpan Pengaturan Usaha & QRIS"}
+                {saving
+                  ? "Menyimpan..."
+                  : convertingPdf
+                  ? "Memproses PDF..."
+                  : "Simpan Pengaturan Usaha & QRIS"}
               </span>
             </button>
           </form>
